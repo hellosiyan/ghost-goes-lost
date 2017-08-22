@@ -1,48 +1,63 @@
-'use strict';
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-var webpack = require('webpack');
-var path = require('path');
-var HtmlPlugin = require('html-webpack-plugin');
+const isProduction = process.env.npm_lifecycle_event === 'build'
 
-var env = process.env.NODE_ENV || 'development';
-var isProduction = env === 'production';
+let htmlConfig = {
+  filename: 'index.html',
+  template: 'src/index.html'
+};
 
-var plugins = [
-  new webpack.DefinePlugin({
-    'PRODUCTION': isProduction
-  }),
-  new HtmlPlugin({
-    title: 'js13k-boilerplate'
-  })
-];
-
-if (isProduction) {
-  plugins = plugins.concat([
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false },
-      output: { comments: false }
-    }),
-    new webpack.NoErrorsPlugin()
-  ]);
+if(isProduction) {
+  htmlConfig.inlineSource = '.(js|css)$'
 }
 
-module.exports = {
-  devtool: 'eval',
-
-  entry: {
-    app: './src/main'
-  },
-
+let config = {
+  entry: './src/index.js',
   output: {
-    path: path.join(__dirname, 'build'),
-    filename: 'b.js'
+    path: path.join(__dirname, 'dist'),
+    filename: 'script.js'
   },
-
-  plugins: plugins,
-
-  resolve: {
-    extensions: ['', '.js', 'json']
+  module: {
+    rules: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            ['env', { "modules": false }]
+          ]
+        }
+      }
+    }, {
+      test: /\.css$/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: 'css-loader'
+      })
+    }]
+  },
+  plugins: [
+    new ExtractTextPlugin('style.css'),
+    new HtmlWebpackPlugin(htmlConfig),
+    new HtmlWebpackInlineSourcePlugin()
+  ],
+  stats: 'minimal',
+  devServer: {
+    stats: 'minimal'
   }
-};
+}
+
+if(!isProduction) {
+  config.devtool = 'eval-source-map'
+} else {
+  config.plugins = config.plugins.concat([
+    new webpack.optimize.ModuleConcatenationPlugin()
+  ])
+}
+
+module.exports = config
