@@ -1,3 +1,4 @@
+import IO from './IO'
 import Canvas from './Canvas'
 import Loop from './Loop'
 import {Scene, Rect} from './Drawables'
@@ -22,6 +23,17 @@ a.draw();
 
 let loop = new Loop();
 loop.start(dt => {
-	rect.x++
+	if (IO.left) {
+		rect.x--
+	} else if (IO.right) {
+		rect.x++
+	}
+
+	if (IO.up) {
+		rect.y--
+	} else if (IO.down) {
+		rect.y++
+	}
+	
 	a.draw();
 });
