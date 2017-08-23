@@ -2,6 +2,9 @@ import IO from './IO'
 import Canvas from './Canvas'
 import Loop from './Loop'
 import {Scene, Rect} from './Drawables'
+import NumberSequence from './NumberSequence'
+
+const prng = new NumberSequence(2)
 
 let a = new Canvas();
 a.appendTo(document.body);
