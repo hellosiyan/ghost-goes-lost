@@ -7,63 +7,94 @@ import Obstacle from './Obstacle'
 
 const prng = new NumberSequence(2)
 
-let a = new Canvas();
-a.appendTo(document.body);
+const speed = {
+	move: 80
+}
+
+const size = {
+	grid: 40,
+	me: 20
+}
+
+let cvs = new Canvas();
+cvs.appendTo(document.body);
 
 let scene = new Scene();
-scene.width = a.width;
-scene.height = a.height;
+scene.width = cvs.width;
+scene.height = cvs.height;
 
-let cont = new Container();
-cont.addTo(scene);
-cont.x = 100
-cont.y = 100
-cont.width = 200
-cont.height = 200
+cvs.setScene(scene);
 
-let me = new Rect();
-me.addTo(cont);
-me.set({
-	width: 30,
-	height: 30,
-	x: 20,
-	y: 20
-})
-me.style.color = '#f0f';
-
-let aisle = (new Obstacle()).set({
-	width: 10,
-	height: 10,
-	x: 0,
-	y: -30
+let cont = new Container().set({
+	x: size.grid,
+	y: size.grid,
+	width: size.grid * 8,
+	height: size.grid * 8
 });
-aisle.style.color = '#4e4'
-aisle.addTo(cont);
+cont.addTo(scene);
 
-a.setScene(scene);
-a.draw();
+let me = new Rect().set({
+	width: size.me,
+	height: size.me,
+	x: size.grid,
+	y: size.grid
+});
+me.style.color = '#f0f';
+me.addTo(cont);
+
+let map = [
+	[1,1,1,1,1,1,1,1],
+	[1,0,0,0,0,0,0,1],
+	[1,0,1,0,1,0,0,1],
+	[1,0,1,0,0,1,0,1],
+	[1,0,0,0,0,0,0,1],
+	[1,1,1,0,0,1,1,1],
+	[1,0,0,0,0,0,0,1],
+	[1,1,1,1,1,1,1,1],
+];
+
+let aisles = [];
+
+for (let x = 0; x < map.length; x++) {
+	for (let y = 0; y < map.length; y++) {
+		if (!map[y][x]) continue
+
+		let aisle = new Obstacle().set({
+			width: size.grid,
+			height: size.grid,
+			x: size.grid * x,
+			y: size.grid * y
+		});
+		aisle.style.color = '#4e4'
+		aisle.addTo(cont);
+
+		aisles.push(aisle)
+	}
+}
 
 let loop = new Loop();
 loop.stats(true);
 
 loop.start(dt => {
 	if (IO.left) {
-		me.x-= 1
+		me.x-= speed.move * dt
 	} else if (IO.right) {
-		me.x+= 1
+		me.x+= speed.move * dt
 	}
 
 	if (IO.up) {
-		me.y-= 1
+		me.y-= speed.move * dt
 	} else if (IO.down) {
-		me.y+= 1
+		me.y+= speed.move * dt
 	}
 
-	if (me.intersects(aisle)) {
-		let cri = me.collisionResponseImpulse(aisle);
-		me.x += cri.x
-		me.y += cri.y
+	for (var i = 0; i < aisles.length; i++) {
+		if (me.intersects(aisles[i])) {
+			let cri = me.collisionResponseImpulse(aisles[i]);
+			me.x += cri.x
+			me.y += cri.y
+		}
 	}
 	
-	a.draw();
+	cvs.draw();
 });
