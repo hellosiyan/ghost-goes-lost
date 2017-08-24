@@ -82,9 +82,9 @@ class Drawable extends Obj {
 		}
 
 		if ( this.x > target.x ) {
-			impulse.x = target.x + target.height - this.x
+			impulse.x = target.x + target.width - this.x
 		} else {
-			impulse.x = -1*(this.x + this.height - target.x)
+			impulse.x = -1*(this.x + this.width - target.x)
 		}
 
 		if (Math.abs(impulse.x) > Math.abs(impulse.y)) {
@@ -123,8 +123,8 @@ class Rect extends Drawable{
 }
 
 class Container extends Rect {
-	constructor(...args) {
-		super(...args)
+	constructor() {
+		super()
 
 		this.children = [];
 	}
@@ -161,8 +161,8 @@ class Container extends Rect {
 }
 
 class Scene extends Container {
-	constructor (...args) {
-		super(...args)
+	constructor () {
+		super()
 
 		this.name = 'scene0';
 		this.fps = 20;
