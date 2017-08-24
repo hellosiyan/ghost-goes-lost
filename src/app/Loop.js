@@ -1,19 +1,34 @@
+let stats = require('stats.js')(0)
+
 export default class Loop {
 
 	constructor() {
+		this.play = false;
+		this.showStats = false;
 		this.lastTime = this.timestamp();
 		this.worker = () => {};
+
+		document.body.appendChild( stats.dom );
 	}
 
 	start (fn) {
+		this.play = true;
 		this.worker = fn;
 
 		return this.raf();
+	}
+
+	stats (showStats) {
+		this.showStats = showStats
+	}
+
+	stop () {
+		this.play = false;
 	};
 
 	tick(dt) {
 		this.worker(dt);
-		this.raf();
+		if ( this.play ) this.raf();
 	}
 
 	timestamp () {
@@ -22,6 +37,8 @@ export default class Loop {
 
 	raf () {
 		return window.requestAnimationFrame(() => {
+			this.showStats && stats.begin();
+
 			let now = this.timestamp();
 			let dt = now - this.lastTime;
 	
@@ -34,6 +51,8 @@ export default class Loop {
 			this.lastTime = now;
 	
 			this.tick(dt);
+
+			this.showStats && stats.end();
 		});
 	}
 }
