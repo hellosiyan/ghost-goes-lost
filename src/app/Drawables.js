@@ -1,7 +1,11 @@
+import Obj from './Obj'
+
 export {Style, Point, Drawble, Circle, Rect, Container, Scene};
 
-class Style {
+class Style extends Obj {
 	constructor () {
+		super()
+
 		this.color = '#999'; // Polygons, Points
 		this.lineColor = '#999'; // Polygons, Points
 		this.lineWidth = 1; // Polygons, Points
@@ -12,8 +16,10 @@ class Style {
 	}
 }
 
-class Point {
+class Point extends Obj {
 	constructor () {
+		super()
+
 		this.x = 0;
 		this.y = 0;
 		this.style = new Style();
@@ -29,8 +35,10 @@ class Point {
 	}
 }
 
-class Drawable {
+class Drawable extends Obj {
 	constructor() {
+		super()
+
 		this.x = 0;
 		this.y = 0;
 		this.width = 1;
@@ -50,20 +58,42 @@ class Drawable {
 	}
 
 	intersects (target) {
-		var minY = Math.min(this.y, this.y + this.height, target.y, target.y + target.height);
-		var maxY = Math.max(this.y, this.y + this.height, target.y, target.y + target.height);
-		
-		// Check Y
-		if ( this.height + target.height >= Math.abs(maxY - minY)) {
-			// Check X
-			var minX = Math.min(this.x, this.x + this.width, target.x, target.x + target.width);
-			var maxX = Math.max(this.x, this.x + this.width, target.x, target.x + target.width);
-			if( this.width + target.width >= Math.abs(maxX-minX) ) {
-				return true;
-			}
+		if (this.x < target.x + target.width &&
+			this.x + this.width > target.x &&
+			this.y < target.y + target.height &&
+			this.height + this.y > target.y
+		) {
+			return true;
 		}
-		
+
 		return false;
+	}
+
+	collisionResponseImpulse (target) {
+		let impulse = {
+			x: 0,
+			y: 0
+		}
+
+		if ( this.y > target.y ) {
+			impulse.y = target.y + target.height - this.y
+		} else {
+			impulse.y = -1*(this.y + this.height - target.y)
+		}
+
+		if ( this.x > target.x ) {
+			impulse.x = target.x + target.height - this.x
+		} else {
+			impulse.x = -1*(this.x + this.height - target.x)
+		}
+
+		if (Math.abs(impulse.x) > Math.abs(impulse.y)) {
+			impulse.x = 0
+		} else {
+			impulse.y = 0
+		}
+
+		return impulse;
 	}
 	
 	addTo (...containers) {
@@ -84,10 +114,6 @@ class Circle extends Drawable {
 }
 
 class Rect extends Drawable{
-	constructor(...args) {
-		super(...args);
-	}
-
 	draw (ctx) {
 		ctx.fillStyle = this.style.color;
 		ctx.globalAlpha = this.style.opacity;
@@ -113,6 +139,24 @@ class Container extends Rect {
 		if (ind < 0) return false;
 		this.children.splice(ind, 1);
 		return true;
+	}
+
+	draw (ctx) {
+		super.draw(ctx);
+		this.drawChildren(ctx);
+	}
+
+	drawChildren(ctx) {
+		ctx.save();
+		ctx.translate(this.x, this.y);
+
+		for (let i = this.children.length - 1; i >= 0; i--) {
+			ctx.save(); 
+			this.children[i].draw(ctx)
+			ctx.restore();
+		}
+
+		ctx.restore();
 	}
 }
 
