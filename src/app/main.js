@@ -49,8 +49,8 @@ cont.set({
 let loop = new Loop();
 loop.stats(true);
 
-cvs.draw();
-/*
+// cvs.draw();
+
 loop.start(dt => {
 	if (IO.left) {
 		me.x-= config.speed.move * dt
@@ -74,4 +74,3 @@ loop.start(dt => {
 	
 	cvs.draw();
 });
-*/

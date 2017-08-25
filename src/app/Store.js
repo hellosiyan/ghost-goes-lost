@@ -3,6 +3,9 @@ import Obstacle from './Obstacle'
 import Obj from './Obj'
 import {config} from './config'
 
+// let prng = new NumberSequence(90)
+let prng = new NumberSequence(Math.round(Math.random()*10000))
+
 export default class Store {
 	constructor() {
 		this.aisles = []
@@ -10,8 +13,6 @@ export default class Store {
 	}
 
 	generateMap () {
-		let prng = new NumberSequence(5)
-		// let prng = new NumberSequence(Math.round(Math.random()*10000))
 		let size = {
 			x: 10 + this.difficulty * 2,
 			y: 10 + this.difficulty * 2
@@ -22,7 +23,7 @@ export default class Store {
 			w: size.x, h: size.y, 
 			color: prng.color()
 		})];
-		
+
 		let hasNewRooms = true
 
 		while (hasNewRooms) {
@@ -73,23 +74,59 @@ class Room extends Obj {
 	getAisles () {
 		this.aisles = []
 
+		let vertical = this.w > this.h
+		let padding = Math.round(prng.next())
+		let step = Math.round(prng.next()) + 2
+
+		// Remove random padding for odd lengths 
+		if ( vertical && ((this.w%2) == 1) ) {
+			padding = 0;
+		} else if ( ! vertical && ((this.h%2) == 1) ) {
+			padding = 0;
+		}
+
 		for (let x = this.x; x < this.xMax; x++) {
 			for (let y = this.y; y < this.yMax; y++) {
-				let aisle = new Obstacle().set({
-					width: config.size.grid,
-					height: config.size.grid,
-					x: config.size.grid * x * 1.1,
-					y: config.size.grid * y * 1.1
-				});
-				aisle.style.color = this.color
-				aisle.style.opacity = 0.5
+				let draw = vertical ? (this.xMax - x + padding) % step: (this.yMax - y + padding) % step;
 
-				this.aisles.push(aisle)
+				if (draw) {
+					this.aisles.push(this.createAisle(x, y))
+				}/* else {
+					this.aisles.push(this.createPassage(x, y))
+				}*/
 			}
 		}
 
 		return this.aisles
 	}
+
+	createAisle(x, y) {
+		let aisle = new Obstacle().set({
+			width: config.size.grid,
+			height: config.size.grid,
+			x: config.size.grid * x * 1.1,
+			y: config.size.grid * y * 1.1
+		});
+		aisle.style.color = this.color
+		aisle.style.opacity = 0.9
+
+		return aisle
+	}
+
+
+	createPassage(x, y) {
+		let aisle = new Obstacle().set({
+			width: config.size.grid,
+			height: config.size.grid,
+			x: config.size.grid * x * 1.1,
+			y: config.size.grid * y * 1.1
+		});
+		aisle.style.color = '#333'
+		aisle.style.opacity = 0.6
+
+		return aisle
+	}
+
 
 	divide (prng) {
 		if ( this.size < 24 ) return false;

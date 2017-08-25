@@ -22,6 +22,10 @@ export default class NumberSequence {
 		return array[index]
 	}
 
+	bool () {
+		return this.next() > 0.5
+	}
+
 	color() {
 		return 'rgb(' + Math.floor(this.next()*256) + ',' + Math.floor(this.next()*256) + ',' + Math.floor(this.next()*256) + ')';
 	}
