@@ -10,32 +10,32 @@ export default class Store {
 
     generateMap () {
         let size = {
-            x: 5 + this.difficulty * 2,
-            y: 5 + this.difficulty * 2
+            x: 7 + this.difficulty * 2,
+            y: 7 + this.difficulty * 2
         }
 
-        let rooms = [new Room().set({
-            x: 0, y: 0,
-            w: size.x, h: size.y,
+        let sections = [new Section().set({
+            x: 1, y: 1,
+            w: size.x-2, h: size.y-2,
             color: game.prngs.pcg.color()
         })];
 
-        let hasNewRooms = true
+        let hasNewSections = true
 
-        while (hasNewRooms) {
-            hasNewRooms = false
-            for (var i = 0; i < rooms.length; i++) {
-                let newRoom = rooms[i].divide()
+        while (hasNewSections) {
+            hasNewSections = false
+            for (var i = 0; i < sections.length; i++) {
+                let newSection = sections[i].divide()
 
-                if (!newRoom) continue;
+                if (!newSection) continue;
 
-                hasNewRooms = true
-                rooms.push(newRoom)
+                hasNewSections = true
+                sections.push(newSection)
             }
         }
 
         let aisles = []
-        rooms.forEach(room => aisles = aisles.concat(room.getAisles()))
+        sections.forEach(section => aisles = aisles.concat(section.getAisles()))
 
         return {
             aisles: aisles,
@@ -44,7 +44,7 @@ export default class Store {
     }
 }
 
-class Room extends BaseObject {
+class Section extends BaseObject {
     constructor() {
         super()
 
@@ -113,7 +113,7 @@ class Room extends BaseObject {
         let props = this.w > this.h ? ['x', 'w']: ['y', 'h'];
         let cut = Math.round(this[props[1]] * (0.5 + (game.prngs.pcg.next()-0.5) * 0.2))
 
-        let sibling = new Room().set({
+        let sibling = new Section().set({
             x: this.x,
             y: this.y,
             w: this.w,
