@@ -1,5 +1,3 @@
-import Game from './Game'
-
 const prngs = {};
 
 export default class NumberSequence {

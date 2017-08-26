@@ -1,6 +1,6 @@
 import BaseObject from './BaseObject'
 
-export {Style, Drawble, Circle, Rect, Container};
+export {Style, Drawable, Circle, Rect, Container};
 
 class Style extends BaseObject {
     constructor () {

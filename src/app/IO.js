@@ -1,4 +1,4 @@
-class IO {
+export default class IO {
     constructor () {
         this.up = false
         this.down = false
@@ -30,7 +30,3 @@ class IO {
         onblur = (e) => this.up = this.down = this.left = this.right = false
     }
 }
-
-let io = new IO()
-
-export default io

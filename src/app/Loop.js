@@ -3,6 +3,7 @@ let stats = require('stats.js')(0)
 export default class Loop {
 
     constructor() {
+        this.dt = 0;
         this.play = false;
         this.showStats = false;
         this.lastTime = this.timestamp();
@@ -11,9 +12,9 @@ export default class Loop {
         document.body.appendChild( stats.dom );
     }
 
-    start (fn) {
+    start (worker) {
         this.play = true;
-        this.worker = fn;
+        this.worker = worker;
 
         return this.raf();
     }
@@ -48,6 +49,7 @@ export default class Loop {
                 dt /= 1000;
             }
 
+            this.dt = dt
             this.lastTime = now;
 
             this.tick(dt);

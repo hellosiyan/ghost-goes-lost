@@ -1,9 +1,5 @@
-import IO from './IO'
 import Canvas from './Canvas'
-import Loop from './Loop'
 import {Rect, Container} from './Drawables'
-import NumberSequence from './NumberSequence'
-import Obstacle from './Obstacle'
 import Store from './Store'
 import game from './Game'
 
@@ -29,16 +25,8 @@ let cont = new Container().set({
 cont.addTo(scene);
 cont.style.color = '#000';
 
-let me = new Rect().set({
-    width: game.config.size.me,
-    height: game.config.size.me,
-    x: game.config.size.grid,
-    y: game.config.size.grid
-});
-me.style.color = '#f0f';
-me.addTo(cont);
+game.player.addTo(cont);
 
-let mapSize = {x: 8, y: 8}
 let map = store.generateMap()
 map.aisles.forEach(aisle => aisle.addTo(cont))
 
@@ -47,31 +35,18 @@ cont.set({
     height: store.height * game.config.size.grid
 });
 
-let loop = new Loop();
-loop.stats(true);
-
 cvs.draw();
 /*
-loop.start(dt => {
-    if (IO.left) {
-        me.x-= game.config.speed.move * dt
-    } else if (IO.right) {
-        me.x+= game.config.speed.move * dt
-    }
+game.loop.start(dt => {
+    game.player.move()
 
-    if (IO.up) {
-        me.y-= game.config.speed.move * dt
-    } else if (IO.down) {
-        me.y+= game.config.speed.move * dt
-    }
-
-    for (var i = 0; i < map.aisles.length; i++) {
-        if (me.intersects(map.aisles[i])) {
-            let cri = me.collisionResponseImpulse(map.aisles[i]);
-            me.x += cri.x
-            me.y += cri.y
-        }
-    }
+    // for (var i = 0; i < map.aisles.length; i++) {
+    //     if (me.intersects(map.aisles[i])) {
+    //         let cri = me.collisionResponseImpulse(map.aisles[i]);
+    //         me.x += cri.x
+    //         me.y += cri.y
+    //     }
+    // }
 
     cvs.draw();
 });
