@@ -7,7 +7,7 @@ import game from './Game'
 export default class Store {
     constructor() {
         this.aisles = []
-        this.difficulty = 4
+        this.difficulty = 2
         this.width = 0
         this.height = 0
         this.tiles = new Tiles()
@@ -21,7 +21,7 @@ export default class Store {
         let possibleTiles = Tiles.outsideRadius(
             emptyTiles,
             playerTile,
-            Math.round(Math.max(this.width, this.height)/1.5)
+            Math.round(Math.max(this.width-2, this.height-2)/1.5)
         );
         let momTile = game.prngs.pcg.pick(possibleTiles)
 

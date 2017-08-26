@@ -17,8 +17,6 @@ let scene = new Container().set({
 });
 
 let cont = new Container().set({
-    x: 3,
-    y: 3,
     width: store.width * game.config.size.grid,
     height: store.height * game.config.size.grid
 }).setStyle({
@@ -26,6 +24,11 @@ let cont = new Container().set({
     lineColor: '#f00',
     lineWidth: 2
 });
+
+cont.set({
+    x: Math.round(cvs.width/2 - cont.width/2),
+    y: Math.round(cvs.height/2 - cont.height/2)
+})
 
 cont.addChild(store.drawables)
 cont.addChild(game.player)
@@ -37,6 +40,13 @@ cvs.setScene(scene);
 cvs.appendTo(document.body);
 
 // cvs.draw();
+
+let cameraBoundry = {
+    left: Math.round(cvs.width * 0.35),
+    bottom: cvs.height - Math.round(cvs.height * 0.35),
+    right: cvs.width - Math.round(cvs.width * 0.35),
+    top: Math.round(cvs.height * 0.35)
+}
 
 game.loop.start(dt => {
     game.player.move()
@@ -56,6 +66,20 @@ game.loop.start(dt => {
         return
     }
 
+    let absX = Math.round(cont.x + game.player.x)
+    let absY = Math.round(cont.y + game.player.y)
+
+    if (absX < cameraBoundry.left) {
+        cont.x += cameraBoundry.left - absX;
+    } else if (absX > cameraBoundry.right) {
+        cont.x -= realX - cameraBoundry.right;
+    }
+
+    if (absY < cameraBoundry.top) {
+        cont.y += cameraBoundry.top - absY;
+    } else if (absY > cameraBoundry.bottom) {
+        cont.y -= absY - cameraBoundry.bottom;
+    }
+
     cvs.draw();
 });
-
