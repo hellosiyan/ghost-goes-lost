@@ -27,6 +27,18 @@ export default class Tiles {
         }
     }
 
+    fillRow (row, value) {
+        for (let x = 0; x < this.width; x++) {
+            this.data[this.width * row + x] = value
+        }
+    }
+
+    fillCol (col, value) {
+        for (let y = 0; y < this.height; y++) {
+            this.data[this.width * y + col] = value
+        }
+    }
+
     toString () {
         let string = '';
 

@@ -1,7 +1,7 @@
 export const config = {
     size: {
-        grid: 40,
-        me: 18
+        grid: 30,
+        me: 14
     },
     speed: {
         move: 60

@@ -8,46 +8,46 @@ game.init()
 const store = new Store()
 
 let cvs = new Canvas();
-cvs.appendTo(document.body);
 
-let scene = new Container();
-scene.width = cvs.width;
-scene.height = cvs.height;
+let scene = new Container().set({
+    width: cvs.width,
+    height: cvs.height
+});
 
-cvs.setScene(scene);
+let storeMap = store.createDrawables()
+let aisles = storeMap.children
 
 let cont = new Container().set({
-    x: 0,
-    y: 0,
-    width: game.config.size.grid * 8,
-    height: game.config.size.grid * 8
-});
-cont.addTo(scene);
-cont.style.color = '#000';
-
-game.player.addTo(cont);
-
-let map = store.generateMap()
-map.aisles.forEach(aisle => aisle.addTo(cont))
-
-cont.set({
+    x: 3,
+    y: 3,
     width: store.width * game.config.size.grid,
     height: store.height * game.config.size.grid
+}).setStyle({
+    color: '#ccc',
+    lineColor: '#f00',
+    lineWidth: 2
 });
 
-cvs.draw();
-/*
+cont.addChild(storeMap)
+cont.addChild(game.player)
+
+cont.addTo(scene);
+
+cvs.setScene(scene);
+cvs.appendTo(document.body);
+
+// cvs.draw();
+
 game.loop.start(dt => {
     game.player.move()
 
-    // for (var i = 0; i < map.aisles.length; i++) {
-    //     if (me.intersects(map.aisles[i])) {
-    //         let cri = me.collisionResponseImpulse(map.aisles[i]);
-    //         me.x += cri.x
-    //         me.y += cri.y
-    //     }
-    // }
+    for (var i = 0; i < aisles.length; i++) {
+        if (game.player.intersects(aisles[i])) {
+            let cri = game.player.collisionResponseImpulse(aisles[i]);
+            game.player.x += cri.x
+            game.player.y += cri.y
+        }
+    }
 
     cvs.draw();
 });
-*/

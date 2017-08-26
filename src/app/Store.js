@@ -1,42 +1,102 @@
 import Obstacle from './Obstacle'
 import BaseObject from './BaseObject'
+import {Container} from './Drawables'
 import Tiles from './Tiles'
 import game from './Game'
 
 export default class Store {
     constructor() {
         this.aisles = []
-        this.difficulty = 2
+        this.difficulty = 4
         this.width = 0
         this.height = 0
         this.tiles = new Tiles()
+        this.drawables = new Container()
     }
 
-    generateMap () {
+    createDrawables() {
+        this.constructTiles()
+        this.createBorderDrawables()
+
+        this.tiles.each((x, y, tile) => {
+            if (!tile || tile == 99) return;
+
+            let drawable = new Obstacle().set({
+                x: x * game.config.size.grid,
+                y: y * game.config.size.grid,
+                width: 1 * game.config.size.grid,
+                height: 1 * game.config.size.grid
+            }).setStyle({
+                color: this.sections[tile].color
+            })
+
+            this.drawables.addChild(drawable)
+        })
+
+        return this.drawables
+    }
+
+    createBorderDrawables() {
+        // top
+        this.drawables.addChild(new Obstacle().set({
+            x: 0,
+            y: 0,
+            width: this.width * game.config.size.grid,
+            height: 1 * game.config.size.grid
+        }).setStyle({color: '#000'}))
+
+        // bottom
+        this.drawables.addChild(new Obstacle().set({
+            x: 0,
+            y: (this.height-1) * game.config.size.grid,
+            width: this.width * game.config.size.grid,
+            height: 1 * game.config.size.grid
+        }).setStyle({color: '#000'}))
+
+        // left
+        this.drawables.addChild(new Obstacle().set({
+            x: 0,
+            y: 1 * game.config.size.grid,
+            width: 1 * game.config.size.grid,
+            height: (this.height-2) * game.config.size.grid
+        }).setStyle({color: '#000'}))
+
+        // right
+        this.drawables.addChild(new Obstacle().set({
+            x: (this.width-1) * game.config.size.grid,
+            y: 1 * game.config.size.grid,
+            width: 1 * game.config.size.grid,
+            height: (this.height-2) * game.config.size.grid
+        }).setStyle({color: '#000'}))
+    }
+
+    constructTiles () {
         this.width = 5 + this.difficulty * 2
         this.height = 5 + this.difficulty * 2
 
         this.tiles.resize(this.width, this.height)
+        this.tiles.fillRow(0, 99)
+        this.tiles.fillRow(this.width-1, 99)
+        this.tiles.fillCol(0, 99)
+        this.tiles.fillCol(this.height-1, 99)
 
-        let sections = this.generateSections()
+        this.generateSections()
 
-        sections.forEach((section, sectionKey) =>
+        this.sections.forEach((section, sectionKey) =>
             this.tiles.overlayWith(
                 section.getTiles(), section.x, section.y, sectionKey
             )
         )
 
         console.log('Tiles:\n', this.tiles.toString())
-
-        return {aisles: []}
     }
 
     generateSections () {
-        let sections = [];
-        sections[1] = new Section().set({
-            x: 1, y: 1,
-            w: this.width - 2,
-            h: this.height - 2,
+        this.sections = [];
+        this.sections[1] = new Section().set({
+            x: 2, y: 2,
+            w: this.width - 4,
+            h: this.height - 4,
             color: game.prngs.pcg.color()
         })
 
@@ -44,17 +104,17 @@ export default class Store {
 
         while (hasNewSections) {
             hasNewSections = false
-            for (var i = 1; i < sections.length; i++) {
-                let newSection = sections[i].divide()
+            for (var i = 1; i < this.sections.length; i++) {
+                let newSection = this.sections[i].divide()
 
                 if (!newSection) continue;
 
                 hasNewSections = true
-                sections.push(newSection)
+                this.sections.push(newSection)
             }
         }
 
-        return sections
+        return this.sections
     }
 }
 

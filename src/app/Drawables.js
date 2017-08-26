@@ -9,6 +9,9 @@ class Style extends BaseObject {
         this.color = '#999';
         this.radius = 3;
         this.opacity = 1;
+
+        this.lineColor = '#999';
+        this.lineWidth = 0;
     }
 }
 
@@ -68,6 +71,11 @@ class Drawable extends BaseObject {
     addTo (...containers) {
         containers.forEach(container => container.addChild(this));
     }
+
+    setStyle(styles) {
+        this.style.set(styles)
+        return this
+    }
 }
 
 class Circle extends Drawable {
@@ -87,6 +95,13 @@ class Rect extends Drawable{
         ctx.fillStyle = this.style.color;
         ctx.globalAlpha = this.style.opacity;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        if ( this.style.lineWidth ) {
+            ctx.lineWidth = this.style.lineWidth
+            ctx.strokeStyle = this.style.lineColor
+            ctx.strokeRect(this.x, this.y, this.width, this.height)
+        }
+
         return this;
     }
 }
