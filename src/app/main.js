@@ -5,7 +5,9 @@ import game from './Game'
 
 game.init()
 
-const store = new Store()
+let store = new Store()
+store.createDrawables()
+store.placePeople()
 
 let cvs = new Canvas();
 
@@ -13,9 +15,6 @@ let scene = new Container().set({
     width: cvs.width,
     height: cvs.height
 });
-
-let storeMap = store.createDrawables()
-let aisles = storeMap.children
 
 let cont = new Container().set({
     x: 3,
@@ -28,8 +27,9 @@ let cont = new Container().set({
     lineWidth: 2
 });
 
-cont.addChild(storeMap)
+cont.addChild(store.drawables)
 cont.addChild(game.player)
+cont.addChild(game.mom)
 
 cont.addTo(scene);
 
@@ -41,6 +41,7 @@ cvs.appendTo(document.body);
 game.loop.start(dt => {
     game.player.move()
 
+    let aisles = store.drawables.children
     for (var i = 0; i < aisles.length; i++) {
         if (game.player.intersects(aisles[i])) {
             let cri = game.player.collisionResponseImpulse(aisles[i]);
@@ -49,5 +50,12 @@ game.loop.start(dt => {
         }
     }
 
+    if (game.player.intersects(game.mom)) {
+        game.loop.stop()
+        alert('Yey :>');
+        return
+    }
+
     cvs.draw();
 });
+

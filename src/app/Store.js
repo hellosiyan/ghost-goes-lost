@@ -14,6 +14,23 @@ export default class Store {
         this.drawables = new Container()
     }
 
+    placePeople() {
+        let emptyTiles = this.tiles.filter(0)
+        let playerTile = game.prngs.pcg.pick(emptyTiles)
+
+        let possibleTiles = Tiles.outsideRadius(
+            emptyTiles,
+            playerTile,
+            Math.round(Math.max(this.width, this.height)/1.5)
+        );
+        let momTile = game.prngs.pcg.pick(possibleTiles)
+
+        game.player.x = playerTile.x * game.config.size.grid
+        game.player.y = playerTile.y * game.config.size.grid
+        game.mom.x = momTile.x * game.config.size.grid
+        game.mom.y = momTile.y * game.config.size.grid
+    }
+
     createDrawables() {
         this.constructTiles()
         this.createBorderDrawables()
@@ -32,8 +49,6 @@ export default class Store {
 
             this.drawables.addChild(drawable)
         })
-
-        return this.drawables
     }
 
     createBorderDrawables() {
@@ -87,8 +102,6 @@ export default class Store {
                 section.getTiles(), section.x, section.y, sectionKey
             )
         )
-
-        console.log('Tiles:\n', this.tiles.toString())
     }
 
     generateSections () {

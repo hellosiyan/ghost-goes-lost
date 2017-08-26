@@ -20,7 +20,7 @@ export default class NumberSequence {
     }
 
     pick (array) {
-        let index = this.next() * array.length
+        let index = Math.floor(this.next() * array.length)
         return array[index]
     }
 

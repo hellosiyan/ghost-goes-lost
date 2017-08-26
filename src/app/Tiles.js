@@ -60,6 +60,19 @@ export default class Tiles {
         }
     }
 
+    filter(value) {
+        let filtered = []
+
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                if (this.data[this.width * y + x] == value)
+                    filtered.push({x, y})
+            }
+        }
+
+        return filtered
+    }
+
     overlayWith(tiles, destX, destY, value) {
         for (let x = 0; x < tiles.width; x++) {
             for (let y = 0; y < tiles.height; y++) {
@@ -68,5 +81,19 @@ export default class Tiles {
                 }
             }
         }
+    }
+
+    static outsideRadius(coordinates, center, radius) {
+        let result = []
+        let distance = 0
+
+        for (var i = 0; i < coordinates.length; i++) {
+            distance = Math.abs(coordinates[i].x - center.x) + Math.abs(coordinates[i].y - center.y)
+            if (distance > radius) {
+                result.push(coordinates[i])
+            }
+        }
+
+        return result
     }
 }
