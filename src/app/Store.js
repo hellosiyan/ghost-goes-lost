@@ -1,30 +1,50 @@
 import Obstacle from './Obstacle'
 import BaseObject from './BaseObject'
+import Tiles from './Tiles'
 import game from './Game'
 
 export default class Store {
     constructor() {
         this.aisles = []
-        this.difficulty = 1
+        this.difficulty = 2
+        this.width = 0
+        this.height = 0
+        this.tiles = new Tiles()
     }
 
     generateMap () {
-        let size = {
-            x: 7 + this.difficulty * 2,
-            y: 7 + this.difficulty * 2
-        }
+        this.width = 5 + this.difficulty * 2
+        this.height = 5 + this.difficulty * 2
 
-        let sections = [new Section().set({
+        this.tiles.resize(this.width, this.height)
+
+        let sections = this.generateSections()
+
+        sections.forEach((section, sectionKey) =>
+            this.tiles.overlayWith(
+                section.getTiles(), section.x, section.y, sectionKey
+            )
+        )
+
+        console.log('Tiles:\n', this.tiles.toString())
+
+        return {aisles: []}
+    }
+
+    generateSections () {
+        let sections = [];
+        sections[1] = new Section().set({
             x: 1, y: 1,
-            w: size.x-2, h: size.y-2,
+            w: this.width - 2,
+            h: this.height - 2,
             color: game.prngs.pcg.color()
-        })];
+        })
 
         let hasNewSections = true
 
         while (hasNewSections) {
             hasNewSections = false
-            for (var i = 0; i < sections.length; i++) {
+            for (var i = 1; i < sections.length; i++) {
                 let newSection = sections[i].divide()
 
                 if (!newSection) continue;
@@ -34,13 +54,7 @@ export default class Store {
             }
         }
 
-        let aisles = []
-        sections.forEach(section => aisles = aisles.concat(section.getAisles()))
-
-        return {
-            aisles: aisles,
-            size: size
-        }
+        return sections
     }
 }
 
@@ -55,7 +69,7 @@ class Section extends BaseObject {
         this.color = '#dad'
     }
 
-    get size() {
+    get area() {
         return this.w * this.h
     }
 
@@ -68,7 +82,30 @@ class Section extends BaseObject {
     }
 
     getAisles () {
+        if ( this.hasOwnProperty('aisles') ) {
+            return this.aisles;
+        }
+
         this.aisles = []
+
+        let tiles = this.getTiles()
+
+        tiles.each((x, y, tile) => {
+            if (tile) {
+                this.aisles.push(this.createAisle(this.x + x, this.y + y))
+            }
+        })
+
+        return this.aisles
+    }
+
+    getTiles () {
+        if ( this.hasOwnProperty('tiles') ) {
+            return this.tiles;
+        }
+
+        this.tiles = new Tiles()
+        this.tiles.resize(this.w, this.h)
 
         let vertical = this.w > this.h
         let padding = Math.round(game.prngs.pcg.next())
@@ -86,18 +123,18 @@ class Section extends BaseObject {
                 let draw = vertical ? (this.xMax - x + padding) % step: (this.yMax - y + padding) % step;
 
                 if (draw) {
-                    this.aisles.push(this.createAisle(x, y))
+                    this.tiles.set(x - this.x, y - this.y, 1)
                 }
             }
         }
 
-        return this.aisles
+        return this.tiles
     }
 
     createAisle(x, y) {
         let aisle = new Obstacle().set({
-            width: game.config.size.grid,
-            height: game.config.size.grid,
+            width: game.config.size.grid * 1,
+            height: game.config.size.grid * 1,
             x: game.config.size.grid * x,
             y: game.config.size.grid * y
         });
@@ -108,7 +145,7 @@ class Section extends BaseObject {
     }
 
     divide () {
-        if ( this.size < 24 ) return false;
+        if ( this.area < 24 ) return false;
 
         let props = this.w > this.h ? ['x', 'w']: ['y', 'h'];
         let cut = Math.round(this[props[1]] * (0.5 + (game.prngs.pcg.next()-0.5) * 0.2))

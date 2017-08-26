@@ -12,7 +12,8 @@ class Game {
     }
 
     initPrngs() {
-        this.prngs.pcg = new NumberSequence(Math.round(Math.random()*10000))
+        // this.prngs.pcg = new NumberSequence(Math.round(Math.random()*10000))
+        this.prngs.pcg = new NumberSequence(3)
     }
 }
 

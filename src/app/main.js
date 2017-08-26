@@ -43,15 +43,15 @@ let map = store.generateMap()
 map.aisles.forEach(aisle => aisle.addTo(cont))
 
 cont.set({
-    width: map.size.x * game.config.size.grid,
-    height: map.size.y * game.config.size.grid
+    width: store.width * game.config.size.grid,
+    height: store.height * game.config.size.grid
 });
 
 let loop = new Loop();
 loop.stats(true);
 
-// cvs.draw();
-
+cvs.draw();
+/*
 loop.start(dt => {
     if (IO.left) {
         me.x-= game.config.speed.move * dt
@@ -75,3 +75,4 @@ loop.start(dt => {
 
     cvs.draw();
 });
+*/
