@@ -1,152 +1,131 @@
-import NumberSequence from './NumberSequence'
 import Obstacle from './Obstacle'
-import Obj from './Obj'
-import {config} from './config'
-
-// let prng = new NumberSequence(90)
-let prng = new NumberSequence(Math.round(Math.random()*10000))
+import BaseObject from './BaseObject'
+import game from './Game'
 
 export default class Store {
-	constructor() {
-		this.aisles = []
-		this.difficulty = 5
-	}
+    constructor() {
+        this.aisles = []
+        this.difficulty = 1
+    }
 
-	generateMap () {
-		let size = {
-			x: 10 + this.difficulty * 2,
-			y: 10 + this.difficulty * 2
-		}
+    generateMap () {
+        let size = {
+            x: 5 + this.difficulty * 2,
+            y: 5 + this.difficulty * 2
+        }
 
-		let rooms = [new Room().set({
-			x: 0, y: 0, 
-			w: size.x, h: size.y, 
-			color: prng.color()
-		})];
+        let rooms = [new Room().set({
+            x: 0, y: 0,
+            w: size.x, h: size.y,
+            color: game.prngs.pcg.color()
+        })];
 
-		let hasNewRooms = true
+        let hasNewRooms = true
 
-		while (hasNewRooms) {
-			hasNewRooms = false
-			for (var i = 0; i < rooms.length; i++) {
-				let newRoom = rooms[i].divide(prng)
+        while (hasNewRooms) {
+            hasNewRooms = false
+            for (var i = 0; i < rooms.length; i++) {
+                let newRoom = rooms[i].divide()
 
-				if (!newRoom) continue;
+                if (!newRoom) continue;
 
-				hasNewRooms = true
-				rooms.push(newRoom)
-			}
-		}
+                hasNewRooms = true
+                rooms.push(newRoom)
+            }
+        }
 
-		let aisles = []
-		rooms.forEach(room => aisles = aisles.concat(room.getAisles()))
+        let aisles = []
+        rooms.forEach(room => aisles = aisles.concat(room.getAisles()))
 
-		return {
-			aisles: aisles,
-			size: size
-		}
-	}
+        return {
+            aisles: aisles,
+            size: size
+        }
+    }
 }
 
-class Room extends Obj {
-	constructor() {
-		super()
+class Room extends BaseObject {
+    constructor() {
+        super()
 
-		this.x = 0;
-		this.y = 0;
-		this.w = 0;
-		this.h = 0;
-		this.color = '#dad'
-	}
+        this.x = 0;
+        this.y = 0;
+        this.w = 0;
+        this.h = 0;
+        this.color = '#dad'
+    }
 
-	get size() {
-		return this.w * this.h
-	}
+    get size() {
+        return this.w * this.h
+    }
 
-	get xMax () {
-		return this.x + this.w
-	}
+    get xMax () {
+        return this.x + this.w
+    }
 
-	get yMax () {
-		return this.y + this.h
-	}
+    get yMax () {
+        return this.y + this.h
+    }
 
-	getAisles () {
-		this.aisles = []
+    getAisles () {
+        this.aisles = []
 
-		let vertical = this.w > this.h
-		let padding = Math.round(prng.next())
-		let step = Math.round(prng.next()) + 2
+        let vertical = this.w > this.h
+        let padding = Math.round(game.prngs.pcg.next())
+        let step = Math.round(game.prngs.pcg.next()) + 2
 
-		// Remove random padding for odd lengths 
-		if ( vertical && ((this.w%2) == 1) ) {
-			padding = 0;
-		} else if ( ! vertical && ((this.h%2) == 1) ) {
-			padding = 0;
-		}
+        // Remove random padding for odd lengths
+        if ( vertical && ((this.w%2) == 1) ) {
+            padding = 0;
+        } else if ( ! vertical && ((this.h%2) == 1) ) {
+            padding = 0;
+        }
 
-		for (let x = this.x; x < this.xMax; x++) {
-			for (let y = this.y; y < this.yMax; y++) {
-				let draw = vertical ? (this.xMax - x + padding) % step: (this.yMax - y + padding) % step;
+        for (let x = this.x; x < this.xMax; x++) {
+            for (let y = this.y; y < this.yMax; y++) {
+                let draw = vertical ? (this.xMax - x + padding) % step: (this.yMax - y + padding) % step;
 
-				if (draw) {
-					this.aisles.push(this.createAisle(x, y))
-				}/* else {
-					this.aisles.push(this.createPassage(x, y))
-				}*/
-			}
-		}
+                if (draw) {
+                    this.aisles.push(this.createAisle(x, y))
+                }
+            }
+        }
 
-		return this.aisles
-	}
+        return this.aisles
+    }
 
-	createAisle(x, y) {
-		let aisle = new Obstacle().set({
-			width: config.size.grid,
-			height: config.size.grid,
-			x: config.size.grid * x * 1.1,
-			y: config.size.grid * y * 1.1
-		});
-		aisle.style.color = this.color
-		aisle.style.opacity = 0.9
+    createAisle(x, y) {
+        let aisle = new Obstacle().set({
+            width: game.config.size.grid,
+            height: game.config.size.grid,
+            x: game.config.size.grid * x,
+            y: game.config.size.grid * y
+        });
+        aisle.style.color = this.color
+        aisle.style.opacity = 0.9
 
-		return aisle
-	}
+        return aisle
+    }
 
+    divide () {
+        if ( this.size < 24 ) return false;
 
-	createPassage(x, y) {
-		let aisle = new Obstacle().set({
-			width: config.size.grid,
-			height: config.size.grid,
-			x: config.size.grid * x * 1.1,
-			y: config.size.grid * y * 1.1
-		});
-		aisle.style.color = '#333'
-		aisle.style.opacity = 0.6
+        let props = this.w > this.h ? ['x', 'w']: ['y', 'h'];
+        let cut = Math.round(this[props[1]] * (0.5 + (game.prngs.pcg.next()-0.5) * 0.2))
 
-		return aisle
-	}
+        let sibling = new Room().set({
+            x: this.x,
+            y: this.y,
+            w: this.w,
+            h: this.h
+        })
 
+        sibling.color = game.prngs.pcg.color();
+        sibling[props[0]] += cut
+        sibling[props[1]] -= cut
 
-	divide (prng) {
-		if ( this.size < 24 ) return false;
+        this[props[1]] = cut - 1;
 
-		let props = this.w > this.h ? ['x', 'w']: ['y', 'h'];
-		let cut = Math.round(this[props[1]] * (0.5 + (prng.next()-0.5) * 0.2))
-
-		let sibling = new Room().set({
-			x: this.x,
-			y: this.y,
-			w: this.w,
-			h: this.h
-		})
-
-		sibling.color = prng.color();
-		sibling[props[0]] += cut
-		sibling[props[1]] -= cut
-
-		this[props[1]] = cut - 1;
-
-		return sibling
-	}
+        return sibling
+    }
 }

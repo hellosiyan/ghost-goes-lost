@@ -2,57 +2,57 @@ let stats = require('stats.js')(0)
 
 export default class Loop {
 
-	constructor() {
-		this.play = false;
-		this.showStats = false;
-		this.lastTime = this.timestamp();
-		this.worker = () => {};
+    constructor() {
+        this.play = false;
+        this.showStats = false;
+        this.lastTime = this.timestamp();
+        this.worker = () => {};
 
-		document.body.appendChild( stats.dom );
-	}
+        document.body.appendChild( stats.dom );
+    }
 
-	start (fn) {
-		this.play = true;
-		this.worker = fn;
+    start (fn) {
+        this.play = true;
+        this.worker = fn;
 
-		return this.raf();
-	}
+        return this.raf();
+    }
 
-	stats (showStats) {
-		this.showStats = showStats
-	}
+    stats (showStats) {
+        this.showStats = showStats
+    }
 
-	stop () {
-		this.play = false;
-	};
+    stop () {
+        this.play = false;
+    }
 
-	tick(dt) {
-		this.worker(dt);
-		if ( this.play ) this.raf();
-	}
+    tick(dt) {
+        this.worker(dt);
+        if ( this.play ) this.raf();
+    }
 
-	timestamp () {
-		return window.performance.now();
-	}
+    timestamp () {
+        return window.performance.now();
+    }
 
-	raf () {
-		return window.requestAnimationFrame(() => {
-			this.showStats && stats.begin();
+    raf () {
+        return window.requestAnimationFrame(() => {
+            this.showStats && stats.begin();
 
-			let now = this.timestamp();
-			let dt = now - this.lastTime;
-	
-			if (dt > 999) {
-				dt = 1 / 60;
-			} else {
-				dt /= 1000;
-			}
-	
-			this.lastTime = now;
-	
-			this.tick(dt);
+            let now = this.timestamp();
+            let dt = now - this.lastTime;
 
-			this.showStats && stats.end();
-		});
-	}
+            if (dt > 999) {
+                dt = 1 / 60;
+            } else {
+                dt /= 1000;
+            }
+
+            this.lastTime = now;
+
+            this.tick(dt);
+
+            this.showStats && stats.end();
+        });
+    }
 }

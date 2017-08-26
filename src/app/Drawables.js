@@ -1,170 +1,130 @@
-import Obj from './Obj'
+import BaseObject from './BaseObject'
 
-export {Style, Point, Drawble, Circle, Rect, Container, Scene};
+export {Style, Drawble, Circle, Rect, Container};
 
-class Style extends Obj {
-	constructor () {
-		super()
+class Style extends BaseObject {
+    constructor () {
+        super()
 
-		this.color = '#999'; // Polygons, Points
-		this.lineColor = '#999'; // Polygons, Points
-		this.lineWidth = 1; // Polygons, Points
-		this.fillType = 'stroke'; // Polygons, Points
-		this.skeleton = false; // Polygons
-		this.radius = 3; // Points
-		this.opacity = 1; // Polygons, Points
-	}
+        this.color = '#999';
+        this.radius = 3;
+        this.opacity = 1;
+    }
 }
 
-class Point extends Obj {
-	constructor () {
-		super()
+class Drawable extends BaseObject {
+    constructor() {
+        super()
 
-		this.x = 0;
-		this.y = 0;
-		this.style = new Style();
-		this.visible = true;
-	}
+        this.x = 0;
+        this.y = 0;
+        this.width = 1;
+        this.height = 1;
+        this.visible = true;
+        this.style = new Style();
+    }
 
-	draw () {
-		ctx.beginPath();
-		ctx.fillStyle = this.style.color;
-		ctx.arc(this.x, this.y, this.style.radius, 0, Math.PI*2, true);
-		ctx.closePath();
-		ctx.fill();
-	}
-}
+    draw(){}
 
-class Drawable extends Obj {
-	constructor() {
-		super()
+    intersects (target) {
+        if (this.x < target.x + target.width &&
+            this.x + this.width > target.x &&
+            this.y < target.y + target.height &&
+            this.height + this.y > target.y
+        ) {
+            return true;
+        }
 
-		this.x = 0;
-		this.y = 0;
-		this.width = 1;
-		this.height = 1;
-		this.visible = true;
-		this.style = new Style();
-	}
+        return false;
+    }
 
-	draw(){}
+    collisionResponseImpulse (target) {
+        let impulse = {
+            x: 0,
+            y: 0
+        }
 
-	containsPoint (point) {
-		if(point.x < this.x && point || point.y < this.y ) {
-			return false;
-		} else {
-			return point.x <= this.x+this.height  && this.y <= this.y+this.height;
-		}
-	}
+        if ( this.y > target.y ) {
+            impulse.y = target.y + target.height - this.y
+        } else {
+            impulse.y = -1*(this.y + this.height - target.y)
+        }
 
-	intersects (target) {
-		if (this.x < target.x + target.width &&
-			this.x + this.width > target.x &&
-			this.y < target.y + target.height &&
-			this.height + this.y > target.y
-		) {
-			return true;
-		}
+        if ( this.x > target.x ) {
+            impulse.x = target.x + target.width - this.x
+        } else {
+            impulse.x = -1*(this.x + this.width - target.x)
+        }
 
-		return false;
-	}
+        if (Math.abs(impulse.x) > Math.abs(impulse.y)) {
+            impulse.x = 0
+        } else {
+            impulse.y = 0
+        }
 
-	collisionResponseImpulse (target) {
-		let impulse = {
-			x: 0,
-			y: 0
-		}
+        return impulse;
+    }
 
-		if ( this.y > target.y ) {
-			impulse.y = target.y + target.height - this.y
-		} else {
-			impulse.y = -1*(this.y + this.height - target.y)
-		}
-
-		if ( this.x > target.x ) {
-			impulse.x = target.x + target.width - this.x
-		} else {
-			impulse.x = -1*(this.x + this.width - target.x)
-		}
-
-		if (Math.abs(impulse.x) > Math.abs(impulse.y)) {
-			impulse.x = 0
-		} else {
-			impulse.y = 0
-		}
-
-		return impulse;
-	}
-	
-	addTo (...containers) {
-		containers.forEach(container => container.addChild(this));
-	}
+    addTo (...containers) {
+        containers.forEach(container => container.addChild(this));
+    }
 }
 
 class Circle extends Drawable {
-	draw (ctx) {
-		ctx.fillStyle = this.style.color;
-		ctx.globalAlpha = this.style.opacity;
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.style.radius, 0, Math.PI*2, true);
-		ctx.closePath();
-		ctx.fill();
-		return this;
-	}
+    draw (ctx) {
+        ctx.fillStyle = this.style.color;
+        ctx.globalAlpha = this.style.opacity;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.style.radius, 0, Math.PI*2, true);
+        ctx.closePath();
+        ctx.fill();
+        return this;
+    }
 }
 
 class Rect extends Drawable{
-	draw (ctx) {
-		ctx.fillStyle = this.style.color;
-		ctx.globalAlpha = this.style.opacity;
-		ctx.fillRect(this.x, this.y, this.width, this.height);
-		return this;
-	}
+    draw (ctx) {
+        ctx.fillStyle = this.style.color;
+        ctx.globalAlpha = this.style.opacity;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        return this;
+    }
 }
 
 class Container extends Rect {
-	constructor() {
-		super()
+    constructor() {
+        super()
 
-		this.children = [];
-	}
+        this.children = [];
+    }
 
-	addChild (child) {
-		if(this.children.indexOf(child) >= 0) return;
-		this.children.push(child);
-	}
+    addChild (child) {
+        if(this.children.indexOf(child) >= 0) return;
+        this.children.push(child);
+    }
 
-	removeChild (child) {
-		var ind = this.children.indexOf(child);
-		if (ind < 0) return false;
-		this.children.splice(ind, 1);
-		return true;
-	}
+    removeChild (child) {
+        var ind = this.children.indexOf(child);
+        if (ind < 0) return false;
+        this.children.splice(ind, 1);
+        return true;
+    }
 
-	draw (ctx) {
-		super.draw(ctx);
-		this.drawChildren(ctx);
-	}
+    draw (ctx) {
+        super.draw(ctx);
+        this.drawChildren(ctx);
+    }
 
-	drawChildren(ctx) {
-		ctx.save();
-		ctx.translate(this.x, this.y);
+    drawChildren(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
 
-		for (let i = this.children.length - 1; i >= 0; i--) {
-			ctx.save(); 
-			this.children[i].draw(ctx)
-			ctx.restore();
-		}
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            ctx.save();
+            this.children[i].draw(ctx)
+            ctx.restore();
+        }
 
-		ctx.restore();
-	}
-}
-
-class Scene extends Container {
-	constructor () {
-		super()
-
-		this.name = 'scene0';
-		this.fps = 20;
-	}
+        ctx.restore();
+    }
 }

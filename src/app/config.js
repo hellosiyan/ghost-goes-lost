@@ -1,9 +1,9 @@
 export const config = {
-	size: {
-		grid: 20,
-		me: 10
-	},
-	speed: {
-		move: 60
-	}
+    size: {
+        grid: 40,
+        me: 18
+    },
+    speed: {
+        move: 60
+    }
 }
