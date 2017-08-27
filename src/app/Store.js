@@ -11,7 +11,7 @@ export default class Store {
         this.width = 0
         this.height = 0
         this.tiles = new Tiles()
-        this.drawables = new Container()
+        this.drawable = new Container()
     }
 
     placePeople() {
@@ -33,6 +33,13 @@ export default class Store {
 
     createDrawables() {
         this.constructTiles()
+
+        this.drawable.set({
+            width: this.width * game.config.size.grid,
+            height: this.height * game.config.size.grid,
+            visible: false
+        })
+
         this.createBorderDrawables()
 
         this.tiles.each((x, y, tile) => {
@@ -47,13 +54,15 @@ export default class Store {
                 color: this.sections[tile].color
             })
 
-            this.drawables.addChild(drawable)
+            this.drawable.addChild(drawable)
         })
+
+        this.drawable.cache()
     }
 
     createBorderDrawables() {
         // top
-        this.drawables.addChild(new Obstacle().set({
+        this.drawable.addChild(new Obstacle().set({
             x: 0,
             y: 0,
             width: this.width * game.config.size.grid,
@@ -61,7 +70,7 @@ export default class Store {
         }).setStyle({color: '#000'}))
 
         // bottom
-        this.drawables.addChild(new Obstacle().set({
+        this.drawable.addChild(new Obstacle().set({
             x: 0,
             y: (this.height-1) * game.config.size.grid,
             width: this.width * game.config.size.grid,
@@ -69,7 +78,7 @@ export default class Store {
         }).setStyle({color: '#000'}))
 
         // left
-        this.drawables.addChild(new Obstacle().set({
+        this.drawable.addChild(new Obstacle().set({
             x: 0,
             y: 1 * game.config.size.grid,
             width: 1 * game.config.size.grid,
@@ -77,7 +86,7 @@ export default class Store {
         }).setStyle({color: '#000'}))
 
         // right
-        this.drawables.addChild(new Obstacle().set({
+        this.drawable.addChild(new Obstacle().set({
             x: (this.width-1) * game.config.size.grid,
             y: 1 * game.config.size.grid,
             width: 1 * game.config.size.grid,

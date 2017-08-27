@@ -30,7 +30,8 @@ cont.set({
     y: Math.round(cvs.height/2 - cont.height/2)
 })
 
-cont.addChild(store.drawables)
+store.drawable.parent = cont
+cont.addChild(store.drawable)
 cont.addChild(game.player)
 cont.addChild(game.mom)
 
@@ -39,8 +40,6 @@ cont.addTo(scene);
 cvs.setScene(scene);
 cvs.appendTo(document.body);
 
-// cvs.draw();
-
 let cameraBoundry = {
     left: Math.round(cvs.width * 0.35),
     bottom: cvs.height - Math.round(cvs.height * 0.35),
@@ -48,10 +47,12 @@ let cameraBoundry = {
     top: Math.round(cvs.height * 0.35)
 }
 
+// cvs.draw();
+
 game.loop.start(dt => {
     game.player.move()
 
-    let aisles = store.drawables.children
+    let aisles = store.drawable.children
     for (var i = 0; i < aisles.length; i++) {
         if (game.player.intersects(aisles[i])) {
             let cri = game.player.collisionResponseImpulse(aisles[i]);
@@ -72,7 +73,7 @@ game.loop.start(dt => {
     if (absX < cameraBoundry.left) {
         cont.x += cameraBoundry.left - absX;
     } else if (absX > cameraBoundry.right) {
-        cont.x -= realX - cameraBoundry.right;
+        cont.x -= absX - cameraBoundry.right;
     }
 
     if (absY < cameraBoundry.top) {
@@ -83,3 +84,4 @@ game.loop.start(dt => {
 
     cvs.draw();
 });
+

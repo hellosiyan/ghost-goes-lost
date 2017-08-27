@@ -76,6 +76,31 @@ class Drawable extends BaseObject {
         this.style.set(styles)
         return this
     }
+
+    getImageData() {
+        var offscreenCanvas = document.createElement('canvas');
+        offscreenCanvas.width = this.width;
+        offscreenCanvas.height = this.height;
+
+        var ctx = offscreenCanvas.getContext('2d');
+
+        this.draw(ctx)
+
+        let imageData = ctx.getImageData(0,0,this.width,this.height);
+
+        return imageData;
+    }
+
+    cache() {
+        let imageData = this.getImageData();
+
+        this.draw = function (ctx) {
+            ctx.putImageData(
+                imageData,
+                this.parent.x, this.parent.y
+            )
+        }
+    }
 }
 
 class Circle extends Drawable {
@@ -126,7 +151,10 @@ class Container extends Rect {
     }
 
     draw (ctx) {
-        super.draw(ctx);
+        if (this.visible) {
+            super.draw(ctx);
+        }
+
         this.drawChildren(ctx);
     }
 
@@ -134,7 +162,7 @@ class Container extends Rect {
         ctx.save();
         ctx.translate(this.x, this.y);
 
-        for (let i = this.children.length - 1; i >= 0; i--) {
+        for (let i = 0; i < this.children.length; i++) {
             ctx.save();
             this.children[i].draw(ctx)
             ctx.restore();
