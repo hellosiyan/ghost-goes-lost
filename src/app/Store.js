@@ -5,16 +5,25 @@ import Tiles from './Tiles'
 import game from './Game'
 
 export default class Store {
-    constructor() {
+    constructor(difficulty) {
+        this.difficulty = difficulty
+        this.width = 5 + this.difficulty * 2
+        this.height = 5 + this.difficulty * 2
+
         this.aisles = []
-        this.difficulty = 2
-        this.width = 0
-        this.height = 0
         this.tiles = new Tiles()
-        this.drawable = new Container()
+        this.drawable = new Container().set({
+            width: this.width * game.config.size.grid,
+            height: this.height * game.config.size.grid,
+            visible: false
+        })
+
+        this.generateSections()
+        this.constructTiles()
+        this.createDrawables()
     }
 
-    placePeople() {
+    placePeople(player, mom) {
         let emptyTiles = this.tiles.filter(0)
         let playerTile = game.prngs.pcg.pick(emptyTiles)
 
@@ -25,21 +34,13 @@ export default class Store {
         );
         let momTile = game.prngs.pcg.pick(possibleTiles)
 
-        game.player.x = playerTile.x * game.config.size.grid
-        game.player.y = playerTile.y * game.config.size.grid
-        game.mom.x = momTile.x * game.config.size.grid
-        game.mom.y = momTile.y * game.config.size.grid
+        player.x = playerTile.x * game.config.size.grid
+        player.y = playerTile.y * game.config.size.grid
+        mom.x = momTile.x * game.config.size.grid
+        mom.y = momTile.y * game.config.size.grid
     }
 
     createDrawables() {
-        this.constructTiles()
-
-        this.drawable.set({
-            width: this.width * game.config.size.grid,
-            height: this.height * game.config.size.grid,
-            visible: false
-        })
-
         this.createBorderDrawables()
 
         this.tiles.each((x, y, tile) => {
@@ -95,16 +96,11 @@ export default class Store {
     }
 
     constructTiles () {
-        this.width = 5 + this.difficulty * 2
-        this.height = 5 + this.difficulty * 2
-
         this.tiles.resize(this.width, this.height)
         this.tiles.fillRow(0, 99)
         this.tiles.fillRow(this.width-1, 99)
         this.tiles.fillCol(0, 99)
         this.tiles.fillCol(this.height-1, 99)
-
-        this.generateSections()
 
         this.sections.forEach((section, sectionKey) =>
             this.tiles.overlayWith(
