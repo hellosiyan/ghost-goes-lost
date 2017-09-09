@@ -33,15 +33,19 @@ class IO {
         }
 
         if ( state && this.listeners.length ) {
+            let executeQueue = []
+
             this.listeners = this.listeners.filter((listener) => {
-                // console.log(listener, listener.keys.includes(keyCode))
                 if ( listener.keys.includes(keyCode) ) {
-                    setTimeout(listener.callback, 1)
+                    executeQueue.push(listener.callback)
                     return false
                 }
 
                 return true;
             })
+
+            executeQueue.forEach((callback) => callback())
+
         }
     }
 

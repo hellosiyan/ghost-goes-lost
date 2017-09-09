@@ -25,6 +25,7 @@ class Drawable extends BaseObject {
         this.height = 1;
         this.visible = true;
         this.style = new Style();
+        this.parent = null
     }
 
     draw(){}
@@ -68,8 +69,8 @@ class Drawable extends BaseObject {
         return impulse;
     }
 
-    addTo (...containers) {
-        containers.forEach(container => container.addChild(this));
+    addTo (container) {
+        container.addChild(this);
     }
 
     setStyle(styles) {
@@ -100,6 +101,14 @@ class Drawable extends BaseObject {
                 this.parent.x, this.parent.y
             )
         }
+    }
+
+    get absX() {
+        return this.x + (this.parent?this.parent.absX:0)
+    }
+
+    get absY() {
+        return this.y + (this.parent?this.parent.absY:0)
     }
 }
 
@@ -140,7 +149,9 @@ class Container extends Rect {
 
     addChild (child) {
         if(this.children.indexOf(child) >= 0) return;
+
         this.children.push(child);
+        child.parent = this;
     }
 
     removeChild (child) {

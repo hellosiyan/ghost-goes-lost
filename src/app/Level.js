@@ -32,7 +32,6 @@ export default class Level extends BaseObject {
             });
 
         this.store.placePeople(this.player, this.mom)
-        this.store.drawable.parent = this.container
 
         this.container.set({
             x: Math.round(game.canvas.width/2 - this.container.width/2),
@@ -59,23 +58,21 @@ export default class Level extends BaseObject {
         }
 
         if (this.player.intersects(this.mom)) {
+            game.canvas.draw();
             this.onLevelEnd();
             return;
         }
 
-        let absX = Math.round(this.container.x + this.player.x)
-        let absY = Math.round(this.container.y + this.player.y)
-
-        if (absX < game.cameraBoundry.left) {
-            this.container.x += game.cameraBoundry.left - absX;
-        } else if (absX > game.cameraBoundry.right) {
-            this.container.x -= absX - game.cameraBoundry.right;
+        if (this.player.absX < game.cameraBoundry.left) {
+            this.container.x += game.cameraBoundry.left - this.player.absX;
+        } else if (this.player.absX > game.cameraBoundry.right) {
+            this.container.x -= this.player.absX - game.cameraBoundry.right;
         }
 
-        if (absY < game.cameraBoundry.top) {
-            this.container.y += game.cameraBoundry.top - absY;
-        } else if (absY > game.cameraBoundry.bottom) {
-            this.container.y -= absY - game.cameraBoundry.bottom;
+        if (this.player.absY < game.cameraBoundry.top) {
+            this.container.y += game.cameraBoundry.top - this.player.absY;
+        } else if (this.player.absY > game.cameraBoundry.bottom) {
+            this.container.y -= this.player.absY - game.cameraBoundry.bottom;
         }
 
         game.canvas.draw();
