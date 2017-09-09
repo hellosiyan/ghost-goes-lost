@@ -1,4 +1,4 @@
-export default class IO {
+class IO {
     constructor () {
         this.up = false
         this.down = false
@@ -13,6 +13,15 @@ export default class IO {
         }
 
         this.bindEvents()
+
+        this.listeners = [];
+    }
+
+    on(keys, callback) {
+        this.listeners.push({
+            keys,
+            callback
+        })
     }
 
     updateKeyState (keyCode, state) {
@@ -22,6 +31,18 @@ export default class IO {
                 return
             }
         }
+
+        if ( state && this.listeners.length ) {
+            this.listeners = this.listeners.filter((listener) => {
+                // console.log(listener, listener.keys.includes(keyCode))
+                if ( listener.keys.includes(keyCode) ) {
+                    setTimeout(listener.callback, 1)
+                    return false
+                }
+
+                return true;
+            })
+        }
     }
 
     bindEvents() {
@@ -30,3 +51,9 @@ export default class IO {
         onblur = (e) => this.up = this.down = this.left = this.right = false
     }
 }
+
+IO.SPACE = 32
+IO.ESC = 27
+IO.ENTER = 13
+
+export default IO

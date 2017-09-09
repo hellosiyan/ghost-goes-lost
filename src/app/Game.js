@@ -5,6 +5,7 @@ import IO from './IO'
 import Canvas from './Canvas'
 import {Container} from './Drawables'
 import Level from './Level'
+import TextOverlay from './TextOverlay'
 
 class Game {
     constructor() {
@@ -24,12 +25,38 @@ class Game {
         this.initIO()
     }
 
-    playLevel(levelNumber) {
-        this.levelNumber = levelNumber
-        this.level = new Level(this.levelNumber)
+    playIntro() {
+        TextOverlay.display('<h2>Lost Between Shelves</h2><p> Siyan Panayotov &middot; js13kGames 2017</p>')
+            .addNext(() => {
+                TextOverlay.display('<p>Move with WASD, ZQSD, or arrows</p>')
+                    .addNext(() => {
+                        this.playLevel(1)
+                    })
+            })
+    }
 
-        this.canvas.setScene(this.level.scene);
-        this.loop.start(dt => this.level.loopHandler(dt))
+    nextLevel() {
+        this.playLevel(this.levelNumber+1)
+    }
+
+    playLevel(levelNumber) {
+        this.levelNumber = levelNumber;
+        this.playStory(() => {
+            this.level = new Level(this.levelNumber)
+
+            this.level.onLevelEnd = () => {
+                game.loop.stop()
+                TextOverlay.display('<h2>Mom!! &lt;3</h2>').addNext(() => this.nextLevel())
+            }
+
+            this.canvas.setScene(this.level.scene);
+            this.loop.start(dt => this.level.loopHandler(dt))
+        })
+    }
+
+    playStory(onDone){
+        TextOverlay.display('<h2>Story #'+this.levelNumber+'</h2><p>Lorm ipsum dolor sit amet.</p>')
+            .addNext(onDone)
     }
 
     initCanvas() {

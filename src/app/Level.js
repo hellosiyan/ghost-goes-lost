@@ -59,9 +59,8 @@ export default class Level extends BaseObject {
         }
 
         if (this.player.intersects(this.mom)) {
-            game.loop.stop()
-            alert('Yey :>');
-            return
+            this.onLevelEnd();
+            return;
         }
 
         let absX = Math.round(this.container.x + this.player.x)
