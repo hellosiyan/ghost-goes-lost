@@ -87,8 +87,11 @@ class Game {
     }
 
     initPrngs() {
-        this.prngs.pcg = new NumberSequence(Math.round(Math.random()*10000))
-        // this.prngs.pcg = new NumberSequence(4)
+        // let seed = Math.round(Math.random()*10000);
+        let seed = 3829;
+        this.prngs.pcg = new NumberSequence(seed)
+
+        console.log('PCG seed: ', seed)
     }
 }
 

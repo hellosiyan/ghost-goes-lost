@@ -63,16 +63,19 @@ export default class Level extends BaseObject {
             return;
         }
 
-        if (this.player.absX < game.cameraBoundry.left) {
-            this.container.x += game.cameraBoundry.left - this.player.absX;
-        } else if (this.player.absX > game.cameraBoundry.right) {
-            this.container.x -= this.player.absX - game.cameraBoundry.right;
+        let absX = Math.round(this.player.absX)
+        let absY = Math.round(this.player.absY)
+
+        if (absX < game.cameraBoundry.left) {
+            this.container.x += game.cameraBoundry.left - absX;
+        } else if (absX > game.cameraBoundry.right) {
+            this.container.x -= absX - game.cameraBoundry.right;
         }
 
-        if (this.player.absY < game.cameraBoundry.top) {
-            this.container.y += game.cameraBoundry.top - this.player.absY;
-        } else if (this.player.absY > game.cameraBoundry.bottom) {
-            this.container.y -= this.player.absY - game.cameraBoundry.bottom;
+        if (absY < game.cameraBoundry.top) {
+            this.container.y += game.cameraBoundry.top - absY;
+        } else if (absY > game.cameraBoundry.bottom) {
+            this.container.y -= absY - game.cameraBoundry.bottom;
         }
 
         game.canvas.draw();

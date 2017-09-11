@@ -1,4 +1,5 @@
 import Obstacle from './Obstacle'
+import Shelf from './Shelf'
 import BaseObject from './BaseObject'
 import {Container} from './Drawables'
 import Tiles from './Tiles'
@@ -10,7 +11,6 @@ export default class Store {
         this.width = 5 + this.difficulty * 2
         this.height = 5 + this.difficulty * 2
 
-        this.aisles = []
         this.tiles = new Tiles()
         this.drawable = new Container().set({
             width: this.width * game.config.size.grid,
@@ -46,11 +46,27 @@ export default class Store {
         this.tiles.each((x, y, tile) => {
             if (!tile || tile == 99) return;
 
-            let drawable = new Obstacle().set({
+            let extensions = {
+                right: 1,
+                bottom: 1
+            }
+
+            while(this.tiles.get(x+extensions.right, y)) {
+                extensions.right++;
+            }
+
+            while(this.tiles.get(x, y+extensions.bottom)) {
+                extensions.bottom++;
+            }
+
+            this.tiles.fill(x, y, x+extensions.right, y+extensions.bottom, 99)
+            this.tiles.set(x, y, tile)
+
+            let drawable = new Shelf().set({
                 x: x * game.config.size.grid,
                 y: y * game.config.size.grid,
-                width: 1 * game.config.size.grid,
-                height: 1 * game.config.size.grid
+                width: (1+extensions.right-1) * game.config.size.grid,
+                height: (1+extensions.bottom-1) * game.config.size.grid
             }).setStyle({
                 color: this.sections[tile].color
             })
@@ -118,16 +134,16 @@ export default class Store {
             color: game.prngs.pcg.color()
         })
 
-        let hasNewSections = true
+        let isSectionDivisible = true
 
-        while (hasNewSections) {
-            hasNewSections = false
+        while (isSectionDivisible) {
+            isSectionDivisible = false
             for (var i = 1; i < this.sections.length; i++) {
                 let newSection = this.sections[i].divide()
 
                 if (!newSection) continue;
 
-                hasNewSections = true
+                isSectionDivisible = true
                 this.sections.push(newSection)
             }
         }
@@ -157,24 +173,6 @@ class Section extends BaseObject {
 
     get yMax () {
         return this.y + this.h
-    }
-
-    getAisles () {
-        if ( this.hasOwnProperty('aisles') ) {
-            return this.aisles;
-        }
-
-        this.aisles = []
-
-        let tiles = this.getTiles()
-
-        tiles.each((x, y, tile) => {
-            if (tile) {
-                this.aisles.push(this.createAisle(this.x + x, this.y + y))
-            }
-        })
-
-        return this.aisles
     }
 
     getTiles () {
@@ -207,19 +205,6 @@ class Section extends BaseObject {
         }
 
         return this.tiles
-    }
-
-    createAisle(x, y) {
-        let aisle = new Obstacle().set({
-            width: game.config.size.grid * 1,
-            height: game.config.size.grid * 1,
-            x: game.config.size.grid * x,
-            y: game.config.size.grid * y
-        });
-        aisle.style.color = this.color
-        aisle.style.opacity = 0.9
-
-        return aisle
     }
 
     divide () {

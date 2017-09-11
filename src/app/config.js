@@ -5,5 +5,9 @@ export const config = {
     },
     speed: {
         move: 180
+    },
+    shelf: {
+        faceSize: 50,
+        facePadding: 3
     }
 }

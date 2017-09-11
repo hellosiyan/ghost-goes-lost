@@ -1,3 +1,5 @@
+import Color from './Color'
+
 const prngs = {};
 
 export default class NumberSequence {
@@ -29,7 +31,7 @@ export default class NumberSequence {
     }
 
     color() {
-        return 'rgb(' + Math.floor(this.next()*256) + ',' + Math.floor(this.next()*256) + ',' + Math.floor(this.next()*256) + ')';
+        return Color.fromRGB(Math.floor(this.next()*256), Math.floor(this.next()*256), Math.floor(this.next()*256))
     }
 
     static set(key, seed) {
