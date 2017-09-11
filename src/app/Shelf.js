@@ -11,7 +11,10 @@ export default class Shelf extends Obstacle {
         let faceSize = game.config.shelf.faceSize
         let color = this.style.color.copy().setL(20)
 
+        this.drawShadow(ctx, {x:14, y: faceSize/2})
+
         ctx.fillStyle = color.toString();
+        ctx.globalAlpha = 1;
         ctx.fillRect(this.x, this.y, this.width, this.height);
 
         this.drawSides(ctx, faceSize, color.copy())
@@ -19,8 +22,19 @@ export default class Shelf extends Obstacle {
         ctx.fillStyle = color.darken(0.2).toString();
         ctx.fillRect(this.x, this.y, this.width, this.height - faceSize);
 
-
         return this;
+    }
+
+    drawShadow(ctx, s) {
+        ctx.fillStyle = '#000'
+        ctx.globalAlpha = 0.3
+        ctx.beginPath()
+        ctx.moveTo(this.x,this.y)
+        ctx.lineTo(this.x+s.x,this.y+s.y)
+        ctx.lineTo(this.x+s.x+this.width,this.y+s.y)
+        ctx.lineTo(this.x+s.x+this.width,this.y+this.height-s.y)
+        ctx.lineTo(this.x+this.width,this.y+this.height)
+        ctx.fill()
     }
 
     drawSides(ctx, maxSize, color) {
