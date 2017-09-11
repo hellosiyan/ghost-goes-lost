@@ -50,7 +50,7 @@ export default class Level extends BaseObject {
 
         let aisles = this.store.drawable.children
         for (var i = 0; i < aisles.length; i++) {
-            if (this.player.intersects(aisles[i])) {
+            if (aisles[i].collidable && this.player.intersects(aisles[i])) {
                 let cri = this.player.collisionResponseImpulse(aisles[i]);
                 this.player.x += cri.x
                 this.player.y += cri.y

@@ -20,13 +20,23 @@ export default class Color extends BaseObject {
         return this
     }
 
-    setL(l){
-        this.l = Math.min(100, Math.max(0, l))
+    darken(percent) {
+        this.l = Math.max(0, this.l - this.l * percent)
         return this
     }
 
-    darken(percent) {
-        this.l = Math.max(0, this.l - this.l * percent)
+    setH(h){
+        this.h = Math.min(255, Math.max(0, h))
+        return this
+    }
+
+    setS(s){
+        this.s = Math.min(100, Math.max(0, s))
+        return this
+    }
+
+    setL(l){
+        this.l = Math.min(100, Math.max(0, l))
         return this
     }
 

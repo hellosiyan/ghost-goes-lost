@@ -1,8 +1,9 @@
 import Obstacle from './Obstacle'
 import Shelf from './Shelf'
 import BaseObject from './BaseObject'
-import {Container} from './Drawables'
+import {Drawable, Container} from './Drawables'
 import Tiles from './Tiles'
+import Color from './Color'
 import game from './Game'
 
 export default class Store {
@@ -41,6 +42,7 @@ export default class Store {
     }
 
     createDrawables() {
+        this.createFloorDrawable()
         this.createBorderDrawables()
 
         this.tiles.each((x, y, tile) => {
@@ -75,6 +77,42 @@ export default class Store {
         })
 
         this.drawable.cache()
+    }
+
+    createFloorDrawable() {
+        let color = Color.hsla(Math.floor(game.prngs.pcg.next()*256),25,50,1)
+        let w = Math.round(game.config.size.grid / 4)
+        let h = Math.round(game.config.size.grid / 4)
+        let pad = 1
+        let offscreenCanvas = document.createElement('canvas');
+        let octx = offscreenCanvas.getContext('2d');
+
+        offscreenCanvas.width = w;
+        offscreenCanvas.height = h;
+
+        octx.fillStyle = color.setL(95).toString()
+        octx.fillRect(0,0,w,h);
+        octx.fillStyle = color.setL(75).toString()
+        octx.fillRect(pad,pad,w,h);
+        octx.fillStyle = color.setL(85).toString()
+        octx.fillRect(pad*2,pad*2,w-pad*2,h-pad*2);
+
+        let drawable = (new Drawable).set({
+            x: 0,
+            y: 0,
+            width: this.width * game.config.size.grid,
+            height: this.height * game.config.size.grid
+        });
+
+        drawable.draw = (ctx) => {
+            ctx.fillStyle = ctx.createPattern(offscreenCanvas, 'repeat');
+            ctx.globalAlpha = drawable.style.opacity;
+            ctx.fillRect(drawable.x, drawable.y, drawable.width, drawable.height);
+        }
+
+        this.drawable.addChild(drawable)
+
+        return drawable
     }
 
     createBorderDrawables() {
