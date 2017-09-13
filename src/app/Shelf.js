@@ -9,7 +9,8 @@ export default class Shelf extends Obstacle {
 
     draw (ctx) {
         let faceSize = game.config.shelf.faceSize
-        let color = this.style.color.copy().setL(20)
+        // let color = this.style.color.copy().setL(20)
+        let color = Color.fromHex(game.config.palette.base2)
 
         this.drawShadow(ctx, {x:14, y: faceSize/2})
 
@@ -27,7 +28,7 @@ export default class Shelf extends Obstacle {
 
     drawShadow(ctx, s) {
         ctx.fillStyle = '#000'
-        ctx.globalAlpha = 0.3
+        ctx.globalAlpha = 0.2
         ctx.beginPath()
         ctx.moveTo(this.x,this.y)
         ctx.lineTo(this.x+s.x,this.y+s.y)
@@ -46,11 +47,18 @@ export default class Shelf extends Obstacle {
             ctx.fillStyle = color.toString();
             ctx.fillRect(x, y, width, height);
 
-            ctx.fillStyle = color.setL(92).toString();
+            ctx.fillStyle = color.copy().lighten(0.3).shiftH(20).toString();
             ctx.fillRect(x+pad, y + pad, width-pad*2, height-pad*2);
 
-            ctx.fillStyle = color.setL(100).toString();
+            ctx.fillStyle = color.copy().lighten(0.5).shiftH(40).toString();
             ctx.fillRect(x+pad+pad, y + pad+pad, width-pad*2*2, height-pad*2*2);
+
+
+            ctx.imageSmoothingEnabled = false;
+            ctx.globalCompositeOperation = 'luminosity'
+            let item = game.prngs.pcg.pick(Object.keys(game.sprites.items.areas))
+            game.sprites.items.drawToHeight(item, ctx, x+pad+pad, y + height - pad-20-1, 20)
+            ctx.globalCompositeOperation = 'source-over'
         }
 
         let totalRows = game.prngs.pcg.pick([2,3]);

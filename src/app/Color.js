@@ -30,6 +30,17 @@ export default class Color extends BaseObject {
         return this
     }
 
+    shiftH(value) {
+        this.h += value;
+        if (this.h < 0) {
+            this.h += 360
+        } else if (this.h > 360) {
+            this.h -= 360
+        }
+
+        return this;
+    }
+
     setS(s){
         this.s = Math.min(100, Math.max(0, s))
         return this
@@ -65,8 +76,8 @@ export default class Color extends BaseObject {
         let bits = hex.match(regexp)
 
         let r = parseInt(bits[ 1 ], 16)
-        let b = parseInt(bits[ 2 ], 16)
-        let g = parseInt(bits[ 3 ], 16)
+        let g = parseInt(bits[ 2 ], 16)
+        let b = parseInt(bits[ 3 ], 16)
 
         return Color.fromRGB(r, g, b)
     }
@@ -107,9 +118,12 @@ export default class Color extends BaseObject {
 
     toRGB() {
         let r = 0, g = 0, b = 0;
+        let h = this.h / 360
+        let l = this.l / 100
+        let s = this.s / 100
 
         if (s == 0) {
-            r = g = b = this.l; // achromatic
+            r = g = b = l; // achromatic
         } else {
             function hue2rgb(p, q, t) {
                 if (t < 0) t += 1;
@@ -120,12 +134,12 @@ export default class Color extends BaseObject {
                 return p;
             }
 
-            var q = this.l < 0.5 ? this.l * (1 + this.s) : this.l + this.s - this.l * this.s;
-            var p = 2 * this.l - q;
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
 
-            r = hue2rgb(p, q, this.h + 1/3);
-            g = hue2rgb(p, q, this.h);
-            b = hue2rgb(p, q, this.h - 1/3);
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
         }
 
         return [ r * 255, g * 255, b * 255 ];

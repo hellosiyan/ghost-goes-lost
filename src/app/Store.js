@@ -80,7 +80,8 @@ export default class Store {
     }
 
     createFloorDrawable() {
-        let color = Color.hsla(Math.floor(game.prngs.pcg.next()*256),25,50,1)
+        let color = Color.fromHex(game.config.palette.base1).darken(0.2)
+
         let w = Math.round(game.config.size.grid / 4)
         let h = Math.round(game.config.size.grid / 4)
         let pad = 1
@@ -90,11 +91,11 @@ export default class Store {
         offscreenCanvas.width = w;
         offscreenCanvas.height = h;
 
-        octx.fillStyle = color.setL(95).toString()
+        octx.fillStyle = color.copy().lighten(0.1).toString()
         octx.fillRect(0,0,w,h);
-        octx.fillStyle = color.setL(75).toString()
+        octx.fillStyle = color.copy().darken(0.25).toString()
         octx.fillRect(pad,pad,w,h);
-        octx.fillStyle = color.setL(85).toString()
+        octx.fillStyle = color.copy().toString()
         octx.fillRect(pad*2,pad*2,w-pad*2,h-pad*2);
 
         let drawable = (new Drawable).set({

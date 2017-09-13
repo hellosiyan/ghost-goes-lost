@@ -3,4 +3,5 @@ import Level from './Level'
 
 game.init()
 
-game.playIntro()
+// game.playIntro()
+game.playLevel(1)
