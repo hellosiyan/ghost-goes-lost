@@ -14,12 +14,11 @@ export default class Mom extends Rect {
 
         this.x = game.config.size.grid
         this.y = game.config.size.grid
-
-        // this.style.color = '#eac086';
-        this.style.color = '#00f';
     }
 
     draw(ctx) {
-        game.sprites.ghost.draw('mom', ctx, this.x, this.y-Math.round(this.drawHeight-this.height),this.width,this.drawHeight)
+        let levitateY = Math.round(Math.abs((game.loop.count+50)%100-50)/100*this.drawHeight*0.3)
+
+        game.sprites.ghost.draw('mom', ctx, this.x, this.y-Math.round(this.drawHeight-this.height) - levitateY,this.width,this.drawHeight)
     }
 }

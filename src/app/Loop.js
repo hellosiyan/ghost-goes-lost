@@ -5,6 +5,7 @@ export default class Loop {
     constructor() {
         this.dt = 0;
         this.play = false;
+        this.count = 0;
         this.showStats = false;
         this.lastTime = this.timestamp();
         this.worker = () => {};
@@ -28,6 +29,7 @@ export default class Loop {
     }
 
     tick(dt) {
+        this.count = (this.count+1)%600;
         this.worker(dt);
         if ( this.play ) this.raf();
     }
