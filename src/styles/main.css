@@ -4,6 +4,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 
 body {
@@ -33,9 +34,33 @@ canvas {
     max-width: 80%;
     height: auto;
     padding: 30px;
-    background-color: #333;
-    color: white;
+    background-color: #F6B18D;
+    color: #323251;
 }
 .t-o.hidden {
     display: none;
+}
+.t-o h2 {
+    font-size: 34px;
+    margin-top: 0;
+}
+.t-o p {
+    line-height: 1.4em;
+}
+.t-o .right {
+    text-align: right;
+}
+.t-o .center {
+    text-align: center;
+}
+.t-o button {
+    background-color: #DC657B;
+    border: 0 none;
+    width: 44px;
+    height: 22px;
+    padding: 0;
+    line-height: 22px;
+}
+.t-o :last-child {
+    margin-bottom: 0;
 }

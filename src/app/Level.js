@@ -9,7 +9,7 @@ export default class Level extends BaseObject {
     constructor(difficulty) {
         super()
 
-        this.difficulty = difficulty
+        this.difficulty = difficulty*3
 
         this.scene = new Container().set({
             width: game.canvas.width,
@@ -27,8 +27,6 @@ export default class Level extends BaseObject {
             })
             .setStyle({
                 color: '#ccc',
-                lineColor: '#f00',
-                lineWidth: 2
             });
 
         this.store.placePeople(this.player, this.mom)

@@ -117,13 +117,14 @@ export default class Store {
     }
 
     createBorderDrawables() {
+        let color = Color.fromHex(game.config.palette.base2).darken(0.5).toString()
         // top
         this.drawable.addChild(new Obstacle().set({
             x: 0,
             y: 0,
             width: this.width * game.config.size.grid,
             height: 1 * game.config.size.grid
-        }).setStyle({color: '#000'}))
+        }).setStyle({color: color}))
 
         // bottom
         this.drawable.addChild(new Obstacle().set({
@@ -131,7 +132,7 @@ export default class Store {
             y: (this.height-1) * game.config.size.grid,
             width: this.width * game.config.size.grid,
             height: 1 * game.config.size.grid
-        }).setStyle({color: '#000'}))
+        }).setStyle({color: color}))
 
         // left
         this.drawable.addChild(new Obstacle().set({
@@ -139,7 +140,7 @@ export default class Store {
             y: 1 * game.config.size.grid,
             width: 1 * game.config.size.grid,
             height: (this.height-2) * game.config.size.grid
-        }).setStyle({color: '#000'}))
+        }).setStyle({color: color}))
 
         // right
         this.drawable.addChild(new Obstacle().set({
@@ -147,7 +148,7 @@ export default class Store {
             y: 1 * game.config.size.grid,
             width: 1 * game.config.size.grid,
             height: (this.height-2) * game.config.size.grid
-        }).setStyle({color: '#000'}))
+        }).setStyle({color: color}))
     }
 
     constructTiles () {

@@ -18,7 +18,7 @@ class IO {
     }
 
     on(keys, callback) {
-        this.listeners.push({
+        this.listeners.unshift({
             keys,
             callback
         })
@@ -33,19 +33,22 @@ class IO {
         }
 
         if ( state && this.listeners.length ) {
-            let executeQueue = []
+            let firstCallback = false
 
             this.listeners = this.listeners.filter((listener) => {
                 if ( listener.keys.includes(keyCode) ) {
-                    executeQueue.push(listener.callback)
+                    if (!firstCallback) {
+                        firstCallback = listener.callback
+                    }
                     return false
                 }
 
                 return true;
             })
 
-            executeQueue.forEach((callback) => callback())
-
+            if (firstCallback) {
+                firstCallback()
+            }
         }
     }
 

@@ -7,6 +7,8 @@ import {Container} from './Drawables'
 import Level from './Level'
 import TextOverlay from './TextOverlay'
 import Sprite from './Sprite'
+import Color from './Color'
+import story from './Story'
 
 class Game {
     constructor() {
@@ -18,6 +20,7 @@ class Game {
 
         this.levelNumber = 1
         this.level = null
+        this.howtoShown = false
     }
 
     init() {
@@ -29,27 +32,57 @@ class Game {
     }
 
     playIntro() {
-        TextOverlay.display('<h2>Lost Between Shelves</h2><p> Siyan Panayotov &middot; js13kGames 2017</p>')
-            .addNext(() => {
-                TextOverlay.display('<p>Move with WASD, ZQSD, or arrows</p>')
-                    .addNext(() => {
-                        this.playLevel(1)
+        TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2><p class="center"> Siyan Panayotov &middot; js13kGames 2017</p>').addNext(() => {
+                TextOverlay.display('<p>Charlie is a 7 year old ghost.</p>').addNext(() => {
+                    TextOverlay.display('<p>He likes haunting vacated supermarkets<br>with his shopaholic mother.</p>').addNext(() => {
+                        TextOverlay.display('<p>Too slow to glide around after her<br>he is now lost.</p>').addNext(() => {
+                            TextOverlay.display('<p>Help Charlie find his mom!</p>').addNext(() => {
+                                this.playLevel(this.levelNumber)
+                            })
+                        })
                     })
+                })
             })
     }
 
+    showHowTo(onDone) {
+        if (this.howtoShown) {
+            setTimeout(() => onDone(), 1)
+            return this;
+        }
+
+        this.howtoShown = true
+        TextOverlay.display('<p>Glide with <strong>wasd</strong>, <strong>zqsd</strong>, or <strong>arrow</strong> keys</p>')
+            .addNext(onDone)
+
+        return this
+    }
+
     nextLevel() {
-        this.playLevel(this.levelNumber+1)
+        if (this.levelNumber == 5) {
+            TextOverlay.display('<h3>Charlie thanks you for your help</h3>').addNext(() => {
+                TextOverlay.display('<h3>Game\'s over</h3><p>But you can still help lost Charlie in the afterlife!</p>').addNext(() => {
+                    TextOverlay.display('<p><strong>Play for eternity</strong></p>').addNext(() => {
+                        this.playLevel(this.levelNumber+1)
+                    })
+                })
+            })
+        } else {
+            this.playLevel(this.levelNumber+1)
+        }
     }
 
     playLevel(levelNumber) {
         this.levelNumber = levelNumber;
+
         this.playStory(() => {
+            let start = (new Date()).getTime();
             this.level = new Level(this.levelNumber)
 
             this.level.onLevelEnd = () => {
                 game.loop.stop()
-                TextOverlay.display('<h2>Mom!! &lt;3</h2>').addNext(() => this.nextLevel())
+                let end = (new Date()).getTime();
+                TextOverlay.display('<p>Charlie was lost for <strong>'+Math.ceil((end-start)/1000)+' seconds</strong>, but<br> <strong>you saved him!</strong></p><p>For now.</p><p>A few years would pass<br>before he finds himself alone again.</p>').addNext(() => this.nextLevel())
             }
 
             this.canvas.setScene(this.level.scene);
@@ -58,8 +91,12 @@ class Game {
     }
 
     playStory(onDone){
-        TextOverlay.display('<h2>Story #'+this.levelNumber+'</h2><p>Lorm ipsum dolor sit amet.</p>')
-            .addNext(onDone)
+        let storyObj = story(this.levelNumber);
+
+        TextOverlay.display('<h3>'+storyObj.title+'</h3><p>'+storyObj.text+'</p>')
+            .addNext(() => {
+                this.showHowTo(onDone)
+            })
     }
 
     initCanvas() {
@@ -68,6 +105,10 @@ class Game {
             width: this.canvas.width,
             height: this.canvas.height
         });
+
+        let bgColor = Color.fromHex(this.config.palette.base1).darken(0.7).toString();
+        this.canvas.node.style.backgroundColor = bgColor;
+        document.body.style.backgroundColor = bgColor;
 
         this.canvas.setScene(this.scene);
         this.canvas.appendTo(document.body);
@@ -90,9 +131,9 @@ class Game {
     }
 
     initPrngs() {
-        // let seed = Math.round(Math.random()*10000);
-        let seed = 3829;
+        let seed = 822505;//Math.round(Math.random()*10000);
         this.prngs.pcg = new NumberSequence(seed)
+        this.prngs.story = new NumberSequence(3829)
 
         console.log('PCG seed: ', seed)
     }
