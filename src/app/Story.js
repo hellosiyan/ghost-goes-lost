@@ -5,7 +5,7 @@ export default function story(level) {
 
     let weekDays = ['', '', 'Monday', 'Tuesday', 'Wednesday', '', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     let dayType = ['', 'One summer', 'One fall', '', 'One spring', '', '', 'A rainy', 'A stormy', '', 'That boring', '', 'An average']
-    let dayTime = ['afternoon', 'night', 'morning', '', '']
+    let dayTime = ['afternoon', 'night', 'morning']
     let startYear = 1985
     let yearIntervals = [1,2,3]
     let attr = ['One', '', 'That', '']
@@ -23,7 +23,7 @@ export default function story(level) {
     let day = (pick(dayType) + ' ' + pick(weekDays) + ' ' + pick(dayTime)).trim()
     let year = startYear + 3*level + pick(yearIntervals)
 
-    let text = 'Charlie\'s mom went looking for<br>' + items[level-1];
+    let text = 'Charlie\'s mom went looking for<br>' + items[level-1] + '.';
     if ( level > items.length  ) {
         text = '';
     }

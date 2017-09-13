@@ -148,7 +148,7 @@ class Game {
                 }
             );
         this.sprites.items = (new Sprite).load(
-            'items.png',
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAWCAMAAAB9sNV1AAAA0lBMVEUAAADm20U5NhHLiEf////VMBcYMwaYTSREzZgwZgwzImYhZktzbSJqGAtgFQpNMpnVn2tFhOaOcOZnRM1HR0fPxT5NtTyrJhEiURvNzc1mZmY9PT3dsomAgIBzc3MiQnNHOHMymnKibDgmWh55PR1xWbiZmZlILo9ZWVmIHg4mUQm6urqXzbhcSJVWQ4uXTCRcWBtqnOvm5uaPj49NPX04JXBFozYzMzM3gitjOCFnYh/MzMyysrJ6nWNQUFDmXEVZhDy6sTiUSyNlYB4xHBBWEwlz9yd9AAAAAXRSTlMAQObYZgAAAXBJREFUKM99z+tWgkAUhuEPBpgKByEBlYOFoWaa2vl8rvu/pfaeCfrj8l3Lf48fewBkWQacXx9Tq9UKkFKiLY5jJsPhMMP15FB3DlkUY0lpQeVEnskssuPJZKLNpxDhuCjEWK7XyPM4J+NXy+Wy8nFgwlqIccG/UAiJzRdAZq+qqj1/1jN1ZSiaQonHj402nH/T5Xq9mRShjkhY4zGxNq056Bo0gxRNNTC4TQdshtqYbmaA1NV1DTJpegJCTGA3waSCANRJmqYDRr4P2J3E4hJGSqm+25h7Nt63Rybp/GVDua7bd5Uxt8Y8sLE6VjNEaM4zGg2Y/BuHsiwyCNQPqFFZjqDJ/v6Z1+6wUWruzpXCiP5zOTKEkdnRhr7E97iqnE6nV6U2L4Q8O2l3AgKMgtKheOcouoii6Kh5fJLYgSb9Ppm3qXPKxnEihwzsJqhAZ+4h0+5s6fTqabF41fe88z1bTZ7f3cVs+Fn0+J151G7yC0hNJKirD/bzAAAAAElFTkSuQmCC',
             {
                 can: {x: 0, y: 0, w: 7, h: 10},
                 box1: {x: 7, y: 0, w: 9, h: 8},
