@@ -46,6 +46,19 @@ export default class Sprite extends BaseObject {
         this.draw(area, ctx, x, y, dWidth, dHeight)
     }
 
+    drawToFit(area, ctx, x, y, dWidth, dHeight) {
+        let a = this.areas[area];
+        let w = dWidth
+        let h = w / a.width * a.height
+
+        if ( h > dHeight ) {
+            h = dHeight
+            w = h / a.height * a.width
+        }
+
+        this.draw(area, ctx, x, y, w, h)
+    }
+
     draw(area, ctx, x, y, dWidth, dHeight) {
         let a = this.areas[area];
 
