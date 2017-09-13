@@ -127,7 +127,7 @@ class Game {
 
     initLoop() {
         this.loop = new Loop()
-        this.loop.stats(true)
+        // this.loop.stats(false)
     }
 
     initPrngs() {

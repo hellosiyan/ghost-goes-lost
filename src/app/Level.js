@@ -9,7 +9,7 @@ export default class Level extends BaseObject {
     constructor(difficulty) {
         super()
 
-        this.difficulty = difficulty*3
+        this.difficulty = difficulty
 
         this.scene = new Container().set({
             width: game.canvas.width,
