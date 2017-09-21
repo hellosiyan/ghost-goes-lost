@@ -32,44 +32,13 @@ class Game {
     }
 
     playIntro() {
-        TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2><p class="center"> Siyan Panayotov &middot; js13kGames 2017</p>').addNext(() => {
-                TextOverlay.display('<p>Charlie is a 7 year old ghost.</p>').addNext(() => {
-                    TextOverlay.display('<p>He likes haunting vacated supermarkets<br>with his shopaholic mother.</p>').addNext(() => {
-                        TextOverlay.display('<p>Too slow to glide around after her<br>he is now lost.</p>').addNext(() => {
-                            TextOverlay.display('<p>Help Charlie find his mom!</p>').addNext(() => {
-                                this.playLevel(this.levelNumber)
-                            })
-                        })
-                    })
-                })
+        TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2>').addNext(() => {
+                this.playLevel(this.levelNumber)
             })
-    }
-
-    showHowTo(onDone) {
-        if (this.howtoShown) {
-            setTimeout(() => onDone(), 1)
-            return this;
-        }
-
-        this.howtoShown = true
-        TextOverlay.display('<p>Glide with <strong>wasd</strong>, <strong>zqsd</strong>, or <strong>arrow</strong> keys</p>')
-            .addNext(onDone)
-
-        return this
     }
 
     nextLevel() {
-        if (this.levelNumber == 5) {
-            TextOverlay.display('<h3>Charlie thanks you for your help</h3>').addNext(() => {
-                TextOverlay.display('<h3>Game\'s over</h3><p>But you can still help lost Charlie in the afterlife!</p>').addNext(() => {
-                    TextOverlay.display('<p><strong>Play for eternity</strong></p>').addNext(() => {
-                        this.playLevel(this.levelNumber+1)
-                    })
-                })
-            })
-        } else {
-            this.playLevel(this.levelNumber+1)
-        }
+        this.playLevel(this.levelNumber+1)
     }
 
     playLevel(levelNumber) {
@@ -82,7 +51,7 @@ class Game {
             this.level.onLevelEnd = () => {
                 game.loop.stop()
                 let end = (new Date()).getTime();
-                TextOverlay.display('<p>Charlie was lost for <strong>'+Math.ceil((end-start)/1000)+' seconds</strong>, but<br> <strong>you saved him!</strong></p><p>For now.</p><p>A few years would pass<br>before he finds himself alone again.</p>').addNext(() => this.nextLevel())
+                TextOverlay.display('<p>Charlie was lost for <strong>'+Math.ceil((end-start)/1000)+' seconds</strong></p>').addNext(() => this.nextLevel())
             }
 
             this.canvas.setScene(this.level.scene);
@@ -94,9 +63,7 @@ class Game {
         let storyObj = story(this.levelNumber);
 
         TextOverlay.display('<h3>'+storyObj.title+'</h3><p>'+storyObj.text+'</p>')
-            .addNext(() => {
-                this.showHowTo(onDone)
-            })
+            .addNext(onDone)
     }
 
     initCanvas() {
@@ -127,13 +94,12 @@ class Game {
 
     initLoop() {
         this.loop = new Loop()
-        // this.loop.stats(false)
+        this.loop.stats(true)
     }
 
     initPrngs() {
         let seed = 822505;//Math.round(Math.random()*10000);
         this.prngs.pcg = new NumberSequence(seed)
-        this.prngs.story = new NumberSequence(3829)
 
         console.log('PCG seed: ', seed)
     }

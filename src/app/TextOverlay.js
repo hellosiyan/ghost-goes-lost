@@ -42,7 +42,7 @@ export default class TextOverlay {
     hide() {
         this.node.classList.add('hidden');
         setTimeout(() => {
-            // this.node.parentNode.removeChild(this.node);
+            this.node.parentNode.removeChild(this.node);
         }, 500)
     }
 
