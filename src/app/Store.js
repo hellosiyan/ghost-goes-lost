@@ -9,9 +9,11 @@ import game from './Game'
 
 export default class Store {
     constructor(difficulty) {
+        let minimumSize = 6
+        let difficultyToSizeRatio = 4
+
         this.difficulty = difficulty
-        this.width = 6 + this.difficulty * 4
-        this.height = 6 + this.difficulty * 4
+        this.width = this.height = minimumSize + this.difficulty * difficultyToSizeRatio
 
         this.tiles = new Tiles()
         this.drawable = new Container().set({

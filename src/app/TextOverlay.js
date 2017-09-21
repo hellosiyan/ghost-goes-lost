@@ -6,7 +6,7 @@ let nextHowToShown = false
 export default class TextOverlay {
     constructor() {
         this.node = document.createElement('div');
-        this.node.classList.add('t-o');
+        this.node.classList.add('text-overlay');
         this.node.innerHTML = '{{placeholder}}'
 
         this.onNextCallback = () => {};

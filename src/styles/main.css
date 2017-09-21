@@ -25,7 +25,7 @@ canvas {
 	grid-area: main;
 }
 
-.t-o {
+.text-overlay {
     grid-area: main;
     align-self: center;
     justify-self: center;
@@ -37,23 +37,23 @@ canvas {
     background-color: #F6B18D;
     color: #323251;
 }
-.t-o.hidden {
+.text-overlay.hidden {
     display: none;
 }
-.t-o h2 {
+.text-overlay h2 {
     font-size: 34px;
     margin-top: 0;
 }
-.t-o p {
+.text-overlay p {
     line-height: 1.4em;
 }
-.t-o .right {
+.text-overlay .right {
     text-align: right;
 }
-.t-o .center {
+.text-overlay .center {
     text-align: center;
 }
-.t-o button {
+.text-overlay button {
     background-color: #DC657B;
     border: 0 none;
     width: 44px;
@@ -61,6 +61,6 @@ canvas {
     padding: 0;
     line-height: 22px;
 }
-.t-o :last-child {
+.text-overlay :last-child {
     margin-bottom: 0;
 }

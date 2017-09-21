@@ -17,20 +17,20 @@ export default class Sprite extends BaseObject {
     }
 
     process(areaDefs) {
-        Object.keys(areaDefs).forEach(name => {
-            let a = areaDefs[name]
-            let c = document.createElement('canvas');
-            let ctx = c.getContext('2d');
+        Object.keys(areaDefs).forEach(areaName => {
+            let area = areaDefs[areaName]
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext('2d');
 
-            c.width = a.w;
-            c.height = a.h;
+            canvas.width = area.w;
+            canvas.height = area.h;
 
-            ctx.drawImage(this.img, a.x,a.y,a.w,a.h,0,0,a.w,a.h)
+            ctx.drawImage(this.img, area.x,area.y,area.w,area.h,0,0,area.w,area.h)
 
-            this.areas[name] = {
-                width: a.w,
-                height: a.h,
-                canvas: c
+            this.areas[areaName] = {
+                width: area.w,
+                height: area.h,
+                canvas: canvas
             }
         })
     }
@@ -39,43 +39,43 @@ export default class Sprite extends BaseObject {
         return this.areas[areaName];
     }
 
-    drawToHeight(area, ctx, x, y, dHeight) {
-        let a = this.areas[area];
-        let dWidth = dHeight / a.height * a.width
+    drawToHeight(areaName, ctx, x, y, destHeight) {
+        let area = this.areas[areaName];
+        let destWidth = destHeight / area.height * area.width
 
-        this.draw(area, ctx, x, y, dWidth, dHeight)
+        this.draw(areaName, ctx, x, y, destWidth, destHeight)
     }
 
-    drawToFit(area, ctx, x, y, dWidth, dHeight) {
-        let a = this.areas[area];
-        let w = dWidth
-        let h = w / a.width * a.height
+    drawToFit(areaName, ctx, x, y, destWidth, destHeight) {
+        let area = this.areas[areaName];
+        let width = destWidth
+        let height = width / area.width * area.height
 
-        if ( h > dHeight ) {
-            h = dHeight
-            w = h / a.height * a.width
+        if ( height > destHeight ) {
+            height = destHeight
+            width = height / area.height * area.width
         }
 
-        this.draw(area, ctx, x, y, w, h)
+        this.draw(areaName, ctx, x, y, width, height)
     }
 
-    draw(area, ctx, x, y, dWidth, dHeight) {
-        let a = this.areas[area];
+    draw(areaName, ctx, x, y, destWidth, destHeight) {
+        let area = this.areas[areaName];
 
-        if ( ! a ) {
+        if ( ! area ) {
             return
         }
 
         ctx.drawImage(
-            a.canvas,
+            area.canvas,
             0,
             0,
-            a.width,
-            a.height,
+            area.width,
+            area.height,
             x,
             y,
-            dWidth,
-            dHeight
+            destWidth,
+            destHeight
         )
     }
 }
