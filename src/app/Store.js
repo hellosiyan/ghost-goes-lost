@@ -1,4 +1,4 @@
-import BaseObject from './lib/BaseObject'
+import SettableObject from './lib/SettableObject'
 import Drawable from './lib/Drawable'
 import Container from './lib/Container'
 import Color from './lib/Color'

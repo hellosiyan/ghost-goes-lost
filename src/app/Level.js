@@ -1,11 +1,11 @@
-import BaseObject from './lib/BaseObject'
+import SettableObject from './lib/SettableObject'
 import Container from './lib/Container'
 import Player from './Player'
 import Mom from './Mom'
 import Store from './Store'
 import game from './Game'
 
-export default class Level extends BaseObject {
+export default class Level extends SettableObject {
     constructor(difficulty) {
         super()
 

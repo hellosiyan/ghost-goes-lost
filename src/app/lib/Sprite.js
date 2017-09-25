@@ -1,6 +1,6 @@
-import BaseObject from './BaseObject'
+import SettableObject from './SettableObject'
 
-export default class Sprite extends BaseObject {
+export default class Sprite extends SettableObject {
     constructor() {
         super()
 

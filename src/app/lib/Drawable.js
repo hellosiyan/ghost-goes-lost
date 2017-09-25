@@ -1,7 +1,7 @@
-import BaseObject from './BaseObject'
+import SettableObject from './SettableObject'
 import Style from './Style'
 
-export default class Drawable extends BaseObject {
+export default class Drawable extends SettableObject {
     constructor() {
         super()
 

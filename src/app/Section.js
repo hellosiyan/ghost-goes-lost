@@ -1,8 +1,8 @@
-import BaseObject from './lib/BaseObject'
+import SettableObject from './lib/SettableObject'
 import Tiles from './lib/Tiles'
 import game from './Game'
 
-export default class Section extends BaseObject {
+export default class Section extends SettableObject {
     constructor() {
         super()
 

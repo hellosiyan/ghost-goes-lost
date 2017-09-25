@@ -1,6 +1,6 @@
-import BaseObject from './BaseObject'
+import SettableObject from './SettableObject'
 
-export default class Style extends BaseObject {
+export default class Style extends SettableObject {
     constructor () {
         super()
 
