@@ -15,6 +15,11 @@ export default class Color extends SettableObject {
         return 'hsla('+this.h+','+this.s+'%,'+this.l+'%,'+this.a+')';
     }
 
+    toRGB() {
+        let rgb = this.getRGB();
+        return 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+    }
+
     lighten(percent) {
         this.l = Math.min(100, this.l + this.l * percent)
         return this
@@ -25,12 +30,12 @@ export default class Color extends SettableObject {
         return this
     }
 
-    setH(h){
-        this.h = Math.min(255, Math.max(0, h))
+    setHue(value){
+        this.h = Math.min(255, Math.max(0, value))
         return this
     }
 
-    shiftH(value) {
+    shiftHue(value) {
         this.h += value;
         if (this.h < 0) {
             this.h += 360
@@ -41,65 +46,35 @@ export default class Color extends SettableObject {
         return this;
     }
 
-    setS(s){
-        this.s = Math.min(100, Math.max(0, s))
+    setSaturation(value){
+        this.s = Math.min(100, Math.max(0, value))
         return this
     }
 
-    setL(l){
-        this.l = Math.min(100, Math.max(0, l))
+    setLightness(value){
+        this.l = Math.min(100, Math.max(0, value))
         return this
     }
 
     copy() {
-        let copy = new Color()
-        copy.set({
+        return new Color().set({
             h: this.h,
             s: this.s,
             l: this.l,
             a: this.a
         })
-
-        return copy;
-    }
-
-    static hsla(h, s, l, a) {
-        let color = new Color();
-
-        color.set({h, s, l, a})
-
-        return color;
-    }
-
-    static fromHex(hex) {
-        let regexp = /^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/;
-        let bits = hex.match(regexp)
-
-        let r = parseInt(bits[ 1 ], 16)
-        let g = parseInt(bits[ 2 ], 16)
-        let b = parseInt(bits[ 3 ], 16)
-
-        return Color.fromRGB(r, g, b)
-    }
-
-    static fromRGB(r, g, b) {
-        let color = new Color();
-
-        color.setRGB(r,g,b)
-
-        return color;
     }
 
     setRGB(r, g, b) {
         r /= 255, g /= 255, b /= 255;
 
-        var max = Math.max(r, g, b), min = Math.min(r, g, b);
-        var h, s, l = (max + min) / 2;
+        let max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
 
         if (max == min) {
             h = s = 0; // achromatic
         } else {
-            var d = max - min;
+            let d = max - min;
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
             switch (max) {
@@ -114,9 +89,11 @@ export default class Color extends SettableObject {
         this.h = parseInt((h*360).toFixed(0), 10);
         this.s = parseInt((s*100).toFixed(6), 10);
         this.l = parseInt((l*100).toFixed(6), 10);
+
+        return this;
     }
 
-    toRGB() {
+    getRGB() {
         let r = 0, g = 0, b = 0;
         let h = this.h / 360
         let l = this.l / 100
@@ -134,8 +111,8 @@ export default class Color extends SettableObject {
                 return p;
             }
 
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
+            let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            let p = 2 * l - q;
 
             r = hue2rgb(p, q, h + 1/3);
             g = hue2rgb(p, q, h);
@@ -143,5 +120,24 @@ export default class Color extends SettableObject {
         }
 
         return [ r * 255, g * 255, b * 255 ];
+    }
+
+    static fromHSLA(h, s, l, a) {
+        return new Color().set({h, s, l, a})
+    }
+
+    static fromRGB(r, g, b) {
+        return new Color().setRGB(r, g, b);
+    }
+
+    static fromHex(hex) {
+        let regexp = /^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/;
+        let bits = hex.match(regexp)
+
+        let r = parseInt(bits[1], 16)
+        let g = parseInt(bits[2], 16)
+        let b = parseInt(bits[3], 16)
+
+        return Color.fromRGB(r, g, b)
     }
 }

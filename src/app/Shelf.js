@@ -46,10 +46,10 @@ export default class Shelf extends Obstacle {
             ctx.fillStyle = color.toString();
             ctx.fillRect(x, y, width, height);
 
-            ctx.fillStyle = color.copy().lighten(0.3).shiftH(20).toString();
+            ctx.fillStyle = color.copy().lighten(0.3).shiftHue(20).toString();
             ctx.fillRect(x+pad, y + pad, width-pad*2, height-pad*2);
 
-            ctx.fillStyle = color.copy().lighten(0.5).shiftH(40).toString();
+            ctx.fillStyle = color.copy().lighten(0.5).shiftHue(40).toString();
             ctx.fillRect(x+pad+pad, y + pad+pad, width-pad*2*2, height-pad*2*2);
 
             let item = game.prngs.pcg.pick(Object.keys(game.sprites.items.areas))
