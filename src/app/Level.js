@@ -1,5 +1,5 @@
-import BaseObject from './BaseObject'
-import {Container} from './Drawables'
+import BaseObject from './lib/BaseObject'
+import Container from './lib/Container'
 import Player from './Player'
 import Mom from './Mom'
 import Store from './Store'

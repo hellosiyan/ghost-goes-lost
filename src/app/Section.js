@@ -1,5 +1,5 @@
-import BaseObject from './BaseObject'
-import Tiles from './Tiles'
+import BaseObject from './lib/BaseObject'
+import Tiles from './lib/Tiles'
 import game from './Game'
 
 export default class Section extends BaseObject {

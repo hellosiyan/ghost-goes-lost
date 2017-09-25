@@ -1,13 +1,15 @@
 import {config} from './config'
-import NumberSequence from './NumberSequence'
-import Loop from './Loop'
-import IO from './IO'
-import Canvas from './Canvas'
-import {Container} from './Drawables'
+
+import NumberSequence from './lib/NumberSequence'
+import Loop from './lib/Loop'
+import IO from './lib/IO'
+import Canvas from './lib/Canvas'
+import Container from './lib/Container'
+import Sprite from './lib/Sprite'
+import Color from './lib/Color'
+
 import Level from './Level'
 import TextOverlay from './TextOverlay'
-import Sprite from './Sprite'
-import Color from './Color'
 import story from './Story'
 
 class Game {

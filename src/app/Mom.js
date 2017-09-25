@@ -1,4 +1,4 @@
-import {Rect} from './Drawables'
+import Rect from './lib/Rect'
 import game from './Game'
 
 export default class Mom extends Rect {

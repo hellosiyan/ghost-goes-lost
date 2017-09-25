@@ -1,21 +1,7 @@
 import BaseObject from './BaseObject'
+import Style from './Style'
 
-export {Style, Drawable, Circle, Rect, Container};
-
-class Style extends BaseObject {
-    constructor () {
-        super()
-
-        this.color = '#999';
-        this.radius = 3;
-        this.opacity = 1;
-
-        this.lineColor = '#999';
-        this.lineWidth = 0;
-    }
-}
-
-class Drawable extends BaseObject {
+export default class Drawable extends BaseObject {
     constructor() {
         super()
 
@@ -109,76 +95,5 @@ class Drawable extends BaseObject {
 
     get absY() {
         return this.y + (this.parent?this.parent.absY:0)
-    }
-}
-
-class Circle extends Drawable {
-    draw (ctx) {
-        ctx.fillStyle = this.style.color;
-        ctx.globalAlpha = this.style.opacity;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.style.radius, 0, Math.PI*2, true);
-        ctx.closePath();
-        ctx.fill();
-        return this;
-    }
-}
-
-class Rect extends Drawable{
-    draw (ctx) {
-        ctx.fillStyle = this.style.color;
-        ctx.globalAlpha = this.style.opacity;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-
-        if ( this.style.lineWidth ) {
-            ctx.lineWidth = this.style.lineWidth
-            ctx.strokeStyle = this.style.lineColor
-            ctx.strokeRect(this.x, this.y, this.width, this.height)
-        }
-
-        return this;
-    }
-}
-
-class Container extends Rect {
-    constructor() {
-        super()
-
-        this.children = [];
-    }
-
-    addChild (child) {
-        if(this.children.indexOf(child) >= 0) return;
-
-        this.children.push(child);
-        child.parent = this;
-    }
-
-    removeChild (child) {
-        var ind = this.children.indexOf(child);
-        if (ind < 0) return false;
-        this.children.splice(ind, 1);
-        return true;
-    }
-
-    draw (ctx) {
-        if (this.visible) {
-            super.draw(ctx);
-        }
-
-        this.drawChildren(ctx);
-    }
-
-    drawChildren(ctx) {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-
-        for (let i = 0; i < this.children.length; i++) {
-            ctx.save();
-            this.children[i].draw(ctx)
-            ctx.restore();
-        }
-
-        ctx.restore();
     }
 }

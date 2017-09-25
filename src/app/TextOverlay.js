@@ -1,5 +1,5 @@
+import IO from './lib/IO'
 import game from './Game'
-import IO from './IO'
 
 let nextHowToShown = false
 

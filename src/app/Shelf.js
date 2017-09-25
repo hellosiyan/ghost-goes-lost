@@ -1,5 +1,5 @@
 import Obstacle from './Obstacle'
-import Color from './Color'
+import Color from './lib/Color'
 import game from './Game'
 
 export default class Shelf extends Obstacle {
