@@ -5,6 +5,8 @@ class IO {
         this.left = false
         this.right = false
 
+        this.listeners = [];
+
         this.bindings = {
             up: [38,90,87],
             down: [40,83],
@@ -13,8 +15,6 @@ class IO {
         }
 
         this.bindEvents()
-
-        this.listeners = [];
     }
 
     on(keys, callback) {
@@ -24,7 +24,21 @@ class IO {
         })
     }
 
-    updateKeyState (keyCode, state) {
+    off(keys, callback = null) {
+        this.listeners = this.listeners.filter((listener) => {
+            if (listener.keys.sort().toString() != keys.sort().toString()) {
+                return true;
+            }
+
+            if ( callback && listener.callback != callback ) {
+                return true
+            }
+
+            return false;
+        })
+    }
+
+    setKeyState (keyCode, state) {
         for(let prop in this.bindings) {
             if(this.bindings[prop].includes(keyCode)) {
                 this[prop] = state
@@ -32,29 +46,34 @@ class IO {
             }
         }
 
-        if ( state && this.listeners.length ) {
-            let firstCallback = false
-
-            this.listeners = this.listeners.filter((listener) => {
-                if ( listener.keys.includes(keyCode) ) {
-                    if (!firstCallback) {
-                        firstCallback = listener.callback
-                    }
-                    return false
-                }
-
-                return true;
-            })
-
-            if (firstCallback) {
-                firstCallback()
-            }
+        if ( state ) {
+            this.triggerListeners(keyCode)
         }
     }
 
+    triggerListeners(keyCode) {
+        if (! this.listeners.length) {
+            return;
+        }
+
+        let matchedCallbacks = []
+
+        this.listeners = this.listeners.filter((listener) => {
+            if ( ! listener.keys.includes(keyCode) ) {
+                return true;
+            }
+
+            matchedCallbacks.push(listener.callback)
+
+            return false
+        })
+
+        matchedCallbacks.forEach(callback => callback.call())
+    }
+
     bindEvents() {
-        onkeydown = (e) => this.updateKeyState(e.keyCode, true)
-        onkeyup = (e) => this.updateKeyState(e.keyCode, false)
+        onkeydown = (e) => this.setKeyState(e.keyCode, true)
+        onkeyup = (e) => this.setKeyState(e.keyCode, false)
         onblur = (e) => this.up = this.down = this.left = this.right = false
     }
 }

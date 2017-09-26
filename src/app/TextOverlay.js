@@ -9,6 +9,7 @@ export default class TextOverlay {
         this.node.classList.add('text-overlay');
         this.node.innerHTML = '{{placeholder}}'
 
+        this.nextKeys = [IO.SPACE, IO.ESC, IO.ENTER]
         this.onNextCallback = () => {};
     }
 
@@ -27,12 +28,15 @@ export default class TextOverlay {
         this.onNextCallback = callback;
 
         let onNext = () => {
-            this.hide();
+            game.io.off(this.nextKeys, onNext)
+
+            this.hide()
+
             callback(this)
         }
 
         this.node.querySelector('button').addEventListener('click', () => onNext());
-        game.io.on([IO.SPACE, IO.ESC, IO.ENTER], () => onNext());
+        game.io.on(this.nextKeys, onNext);
     }
 
     show() {
