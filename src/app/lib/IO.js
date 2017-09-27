@@ -72,9 +72,9 @@ class IO {
     }
 
     bindEvents() {
-        onkeydown = (e) => this.setKeyState(e.keyCode, true)
-        onkeyup = (e) => this.setKeyState(e.keyCode, false)
-        onblur = (e) => this.up = this.down = this.left = this.right = false
+        window.addEventListener('keydown', e => this.setKeyState(e.keyCode, true))
+        window.addEventListener('keyup', e => this.setKeyState(e.keyCode, false))
+        window.addEventListener('blur', e => this.up = this.down = this.left = this.right = false)
     }
 }
 
