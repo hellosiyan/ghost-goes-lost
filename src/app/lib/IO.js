@@ -42,7 +42,7 @@ class IO {
         for(let prop in this.bindings) {
             if(this.bindings[prop].includes(keyCode)) {
                 this[prop] = state
-                return
+                break
             }
         }
 
