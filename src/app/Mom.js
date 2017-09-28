@@ -14,11 +14,15 @@ export default class Mom extends Rect {
 
         this.x = game.config.size.grid
         this.y = game.config.size.grid
+
+        this.levitationTimeInterval = 1;
     }
 
     draw(ctx) {
-        let levitateY = Math.round(Math.abs((game.loop.count+50)%100-50)/100*this.drawHeight*0.3)
+        this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt)%2;
+        let levitationHeightRatio = Math.abs(this.levitationTimeInterval-1)/1;
+        let levitationY = Math.round(levitationHeightRatio*this.drawHeight*0.2)
 
-        game.sprites.ghost.draw('mom', ctx, this.x, this.y-Math.round(this.drawHeight-this.height) - levitateY,this.width,this.drawHeight)
+        game.sprites.ghost.draw('mom', ctx, this.x, this.y-Math.round(this.drawHeight-this.height) - levitationY,this.width,this.drawHeight)
     }
 }

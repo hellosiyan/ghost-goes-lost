@@ -14,8 +14,11 @@ export default class Player extends Rect {
         let drawHeight = this.width/20*26
         this.drawHeight = Math.ceil(drawHeight)
         this.height = Math.ceil(drawHeight*0.1)
+
         this.x = game.config.size.grid
         this.y = game.config.size.grid
+
+        this.levitationTimeInterval = 0;
     }
 
     draw(ctx) {
@@ -26,13 +29,16 @@ export default class Player extends Rect {
 
         let r = this.width/19
         let sprite = this.direction.y == 'u' ? 'back': 'front';
-        let levitateY = Math.round(Math.abs(game.loop.count%100-50)/100*this.drawHeight*0.3)
+
+        this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt)%2;
+        let levitationHeightRatio = Math.abs(this.levitationTimeInterval-1)/1;
+        let levitationY = Math.round(levitationHeightRatio*this.drawHeight*0.2)
 
         if (this.direction.x == 'r') {
             ctx.scale(-1,1)
-            game.sprites.ghost.draw(sprite, ctx,-1*this.x-this.width, this.y-Math.round(this.drawHeight-this.height)-levitateY,this.width,this.drawHeight)
+            game.sprites.ghost.draw(sprite, ctx,-1*this.x-this.width, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
         } else {
-            game.sprites.ghost.draw(sprite, ctx, this.x, this.y-Math.round(this.drawHeight-this.height)-levitateY,this.width,this.drawHeight)
+            game.sprites.ghost.draw(sprite, ctx, this.x, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
         }
     }
 
