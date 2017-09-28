@@ -87,7 +87,7 @@ export default class Tiles {
         let result = []
         let distance = 0
 
-        for (var i = 0; i < coordinates.length; i++) {
+        for (let i = 0; i < coordinates.length; i++) {
             distance = Math.abs(coordinates[i].x - center.x) + Math.abs(coordinates[i].y - center.y)
             if (distance > radius) {
                 result.push(coordinates[i])

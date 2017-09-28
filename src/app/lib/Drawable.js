@@ -65,11 +65,11 @@ export default class Drawable extends SettableObject {
     }
 
     getImageData() {
-        var offscreenCanvas = document.createElement('canvas');
+        let offscreenCanvas = document.createElement('canvas');
         offscreenCanvas.width = this.width;
         offscreenCanvas.height = this.height;
 
-        var ctx = offscreenCanvas.getContext('2d');
+        let ctx = offscreenCanvas.getContext('2d');
 
         this.draw(ctx)
 

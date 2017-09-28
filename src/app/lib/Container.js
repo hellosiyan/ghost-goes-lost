@@ -8,16 +8,18 @@ export default class Container extends Rect {
     }
 
     addChild (child) {
-        if(this.children.indexOf(child) >= 0) return;
+        if(this.children.includes(child)) return;
 
-        this.children.push(child);
         child.parent = this;
+        this.children.push(child);
     }
 
     removeChild (child) {
-        var ind = this.children.indexOf(child);
-        if (ind < 0) return false;
-        this.children.splice(ind, 1);
+        let index = this.children.indexOf(child);
+        if (index < 0) return false;
+
+        this.children.splice(index, 1);
+
         return true;
     }
 
@@ -33,11 +35,11 @@ export default class Container extends Rect {
         ctx.save();
         ctx.translate(this.x, this.y);
 
-        for (let i = 0; i < this.children.length; i++) {
+        this.children.forEach(child => {
             ctx.save();
-            this.children[i].draw(ctx)
+            child.draw(ctx);
             ctx.restore();
-        }
+        })
 
         ctx.restore();
     }
