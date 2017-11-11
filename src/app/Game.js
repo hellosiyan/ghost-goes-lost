@@ -70,6 +70,8 @@ class Game {
 
     initCanvas() {
         this.canvas = new Canvas();
+        this.canvas.setSize(640, 480);
+
         this.scene = new Container().set({
             width: this.canvas.width,
             height: this.canvas.height

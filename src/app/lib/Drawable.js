@@ -1,5 +1,6 @@
 import SettableObject from './SettableObject'
 import Style from './Style'
+import Canvas from './Canvas'
 
 export default class Drawable extends SettableObject {
     constructor() {
@@ -64,28 +65,14 @@ export default class Drawable extends SettableObject {
         return this
     }
 
-    getImageData() {
-        let offscreenCanvas = document.createElement('canvas');
-        offscreenCanvas.width = this.width;
-        offscreenCanvas.height = this.height;
-
-        let ctx = offscreenCanvas.getContext('2d');
-
-        this.draw(ctx)
-
-        let imageData = ctx.getImageData(0,0,this.width,this.height);
-
-        return imageData;
-    }
-
     cache() {
-        let imageData = this.getImageData();
+        let offscreenCanvas = new Canvas();
+        offscreenCanvas.setSize(this.width, this.height, false);
+
+        this.draw(offscreenCanvas.ctx)
 
         this.draw = function (ctx) {
-            ctx.putImageData(
-                imageData,
-                this.parent.x, this.parent.y
-            )
+            ctx.drawImage(offscreenCanvas.node, this.x, this.y);
         }
     }
 
