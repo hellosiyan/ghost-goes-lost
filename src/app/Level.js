@@ -4,19 +4,25 @@ import Player from './Player'
 import Mom from './Mom'
 import Store from './Store'
 import game from './Game'
+import story from './Story'
 
 export default class Level extends SettableObject {
-    constructor(difficulty) {
+    constructor(number) {
         super()
 
-        this.difficulty = difficulty
+        this.number = number
+        this.resolveLevelEnded = () => {};
+        this.startedAt = 0;
+        this.totalSecondsPlayed = 0;
+
+        this.story = story(this.number);
 
         this.scene = new Container().set({
             width: game.canvas.width,
             height: game.canvas.height
         });
 
-        this.store = new Store(difficulty)
+        this.store = new Store(this.number)
         this.player = new Player()
         this.mom = new Mom()
 
@@ -43,6 +49,24 @@ export default class Level extends SettableObject {
         this.container.addTo(this.scene)
     }
 
+    play() {
+        game.canvas.setScene(this.scene);
+        game.loop.start(dt => this.loopHandler(dt))
+
+        this.startedAt = (new Date()).getTime();
+
+        return new Promise(resolve => this.resolveLevelEnded = resolve);
+    }
+
+    end() {
+        game.canvas.draw();
+        game.loop.stop();
+
+        this.totalSecondsPlayed = Math.ceil(((new Date()).getTime() - this.startedAt)/1000);
+
+        this.resolveLevelEnded();
+    }
+
     loopHandler(dt) {
         this.player.move()
 
@@ -56,9 +80,7 @@ export default class Level extends SettableObject {
         }
 
         if (this.player.intersects(this.mom)) {
-            game.canvas.draw();
-            this.onLevelEnd();
-            return;
+            return this.end();
         }
 
         let absX = Math.round(this.player.absX)

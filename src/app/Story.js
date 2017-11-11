@@ -1,8 +1,5 @@
 import game from './Game'
 
 export default function story(level) {
-    return {
-        title: 'Level ' + level,
-        text: ''
-    }
+    return '<h3>Level '+level+'</h3><p></p>';
 }

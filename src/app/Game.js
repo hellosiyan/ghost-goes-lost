@@ -10,7 +10,6 @@ import Color from './lib/Color'
 
 import Level from './Level'
 import TextOverlay from './TextOverlay'
-import story from './Story'
 
 class Game {
     constructor() {
@@ -33,8 +32,8 @@ class Game {
         this.initSprites()
     }
 
-    playIntro() {
-        TextOverlay.display('<h2 class="center">Ghost Goes Lost 1</h2>')
+    start() {
+        return TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2>')
             .then(() => this.playLevel(this.levelNumber))
     }
 
@@ -44,31 +43,12 @@ class Game {
 
     playLevel(levelNumber) {
         this.levelNumber = levelNumber;
+        this.level = new Level(this.levelNumber)
 
-        this.playStory()
-            .then(() => {
-                let startTimestamp = (new Date()).getTime();
-                this.level = new Level(this.levelNumber)
-
-                this.level.onLevelEnd = () => {
-                    game.loop.stop()
-                    let endTimestamp = (new Date()).getTime();
-                    let levelEndText = '<p>Charlie was lost for <strong>'+Math.ceil((end-start)/1000)+' seconds</strong></p>';
-
-                    TextOverlay.display(levelEndText)
-                        .then(() => this.nextLevel())
-                }
-
-                this.canvas.setScene(this.level.scene);
-                this.loop.start(dt => this.level.loopHandler(dt))
-            })
-    }
-
-    playStory(){
-        let storyObj = story(this.levelNumber);
-        let storyText = '<h3>'+storyObj.title+'</h3><p>'+storyObj.text+'</p>';
-
-        return TextOverlay.display(storyText);
+        TextOverlay.display(this.level.story)
+            .then(() => this.level.play())
+            .then(() => TextOverlay.display('<p>Charlie was lost for <strong>'+this.level.totalSecondsPlayed+' seconds</strong></p>'))
+            .then(() => this.nextLevel())
     }
 
     initCanvas() {
