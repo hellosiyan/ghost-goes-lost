@@ -30,7 +30,7 @@ class IO {
                 return true;
             }
 
-            if ( callback && listener.callback != callback ) {
+            if ( callback && listener.callback !== callback ) {
                 return true
             }
 

@@ -14,33 +14,29 @@ export default class TextOverlay {
     }
 
     setText(text) {
-        this.node.innerHTML = text
-    }
-
-    addNext(callback) {
-        this.node.innerHTML = this.node.innerHTML + '<p class="right"><button>&raquo;</button></p>'
+        this.node.innerHTML = text + '<p class="right"><button>&raquo;</button></p>'
 
         if (! nextHowToShown) {
             nextHowToShown = true;
             this.node.innerHTML = this.node.innerHTML + '<p class="right"><small>Press <strong>esc</strong>, <strong>space</strong>, or <strong>enter</strong> to continue</small></p>'
         }
-
-        this.onNextCallback = callback;
-
-        let onNext = () => {
-            game.io.off(this.nextKeys, onNext)
-
-            this.hide()
-
-            callback(this)
-        }
-
-        this.node.querySelector('button').addEventListener('click', () => onNext());
-        game.io.on(this.nextKeys, onNext);
     }
 
     show() {
         document.body.appendChild(this.node);
+
+        return new Promise(resolve => {
+            let onHide = () => {
+                game.io.off(this.nextKeys, onHide)
+                this.hide()
+                resolve();
+            }
+
+            game.io.on(this.nextKeys, onHide);
+
+            this.node.querySelector('button')
+                .addEventListener('click', onHide);
+        });
     }
 
     hide() {
@@ -53,8 +49,7 @@ export default class TextOverlay {
     static display(text) {
         let overlay = new TextOverlay()
         overlay.setText(text)
-        overlay.show()
 
-        return overlay
+        return overlay.show()
     }
 }

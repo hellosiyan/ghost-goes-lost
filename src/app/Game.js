@@ -34,9 +34,8 @@ class Game {
     }
 
     playIntro() {
-        TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2>').addNext(() => {
-                this.playLevel(this.levelNumber)
-            })
+        TextOverlay.display('<h2 class="center">Ghost Goes Lost 1</h2>')
+            .then(() => this.playLevel(this.levelNumber))
     }
 
     nextLevel() {
@@ -46,26 +45,30 @@ class Game {
     playLevel(levelNumber) {
         this.levelNumber = levelNumber;
 
-        this.playStory(() => {
-            let start = (new Date()).getTime();
-            this.level = new Level(this.levelNumber)
+        this.playStory()
+            .then(() => {
+                let startTimestamp = (new Date()).getTime();
+                this.level = new Level(this.levelNumber)
 
-            this.level.onLevelEnd = () => {
-                game.loop.stop()
-                let end = (new Date()).getTime();
-                TextOverlay.display('<p>Charlie was lost for <strong>'+Math.ceil((end-start)/1000)+' seconds</strong></p>').addNext(() => this.nextLevel())
-            }
+                this.level.onLevelEnd = () => {
+                    game.loop.stop()
+                    let endTimestamp = (new Date()).getTime();
+                    let levelEndText = '<p>Charlie was lost for <strong>'+Math.ceil((end-start)/1000)+' seconds</strong></p>';
 
-            this.canvas.setScene(this.level.scene);
-            this.loop.start(dt => this.level.loopHandler(dt))
-        })
+                    TextOverlay.display(levelEndText)
+                        .then(() => this.nextLevel())
+                }
+
+                this.canvas.setScene(this.level.scene);
+                this.loop.start(dt => this.level.loopHandler(dt))
+            })
     }
 
-    playStory(onDone){
+    playStory(){
         let storyObj = story(this.levelNumber);
+        let storyText = '<h3>'+storyObj.title+'</h3><p>'+storyObj.text+'</p>';
 
-        TextOverlay.display('<h3>'+storyObj.title+'</h3><p>'+storyObj.text+'</p>')
-            .addNext(onDone)
+        return TextOverlay.display(storyText);
     }
 
     initCanvas() {
