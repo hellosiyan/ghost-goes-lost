@@ -3,15 +3,15 @@ import Container from './lib/Container'
 import Player from './Player'
 import Mom from './Mom'
 import Store from './Store'
+import Listenable from './Listenable'
 import game from './Game'
 import story from './Story'
 
-export default class Level extends SettableObject {
+export default class Level extends Listenable(SettableObject) {
     constructor(number) {
         super()
 
         this.number = number
-        this.resolveLevelEnded = () => {};
         this.startedAt = 0;
         this.totalSecondsPlayed = 0;
 
@@ -55,7 +55,7 @@ export default class Level extends SettableObject {
 
         this.startedAt = (new Date()).getTime();
 
-        return new Promise(resolve => this.resolveLevelEnded = resolve);
+        return this;
     }
 
     end() {
@@ -64,7 +64,7 @@ export default class Level extends SettableObject {
 
         this.totalSecondsPlayed = Math.ceil(((new Date()).getTime() - this.startedAt)/1000);
 
-        this.resolveLevelEnded();
+        this.emit('end');
     }
 
     loopHandler(dt) {

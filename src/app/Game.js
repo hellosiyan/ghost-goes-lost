@@ -34,7 +34,7 @@ class Game {
 
     start() {
         return TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2>')
-            .then(() => this.playLevel(this.levelNumber))
+            .on('hide', () => this.playLevel(this.levelNumber))
     }
 
     nextLevel() {
@@ -46,9 +46,13 @@ class Game {
         this.level = new Level(this.levelNumber)
 
         TextOverlay.display(this.level.story)
-            .then(() => this.level.play())
-            .then(() => TextOverlay.display('<p>Charlie was lost for <strong>'+this.level.totalSecondsPlayed+' seconds</strong></p>'))
-            .then(() => this.nextLevel())
+            .on('hide', () => {
+                this.level.play()
+                    .on('end', () => {
+                        TextOverlay.display('<p>Charlie was lost for <strong>'+this.level.totalSecondsPlayed+' seconds</strong></p>')
+                            .on('hide', () => this.nextLevel())
+                    })
+            });
     }
 
     initCanvas() {

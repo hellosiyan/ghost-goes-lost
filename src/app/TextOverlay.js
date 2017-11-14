@@ -1,16 +1,18 @@
 import IO from './lib/IO'
+import Listenable from './Listenable'
 import game from './Game'
 
 let nextHowToShown = false
 
-export default class TextOverlay {
+export default class TextOverlay extends Listenable() {
     constructor() {
+        super()
+
         this.node = document.createElement('div');
         this.node.classList.add('text-overlay');
         this.node.innerHTML = '{{placeholder}}'
 
         this.nextKeys = [IO.SPACE, IO.ESC, IO.ENTER]
-        this.onNextCallback = () => {};
     }
 
     setText(text) {
@@ -25,22 +27,22 @@ export default class TextOverlay {
     show() {
         document.body.appendChild(this.node);
 
-        return new Promise(resolve => {
-            let onHide = () => {
-                game.io.off(this.nextKeys, onHide)
-                this.hide()
-                resolve();
-            }
+        let onHide = () => {
+            game.io.off(this.nextKeys, onHide)
+            this.hide()
+        }
 
-            game.io.on(this.nextKeys, onHide);
+        game.io.on(this.nextKeys, onHide);
 
-            this.node.querySelector('button')
-                .addEventListener('click', onHide);
-        });
+        this.node.querySelector('button')
+            .addEventListener('click', onHide);
+
+        return this;
     }
 
     hide() {
         this.node.classList.add('hidden');
+        this.emit('hide');
         setTimeout(() => {
             this.node.parentNode.removeChild(this.node);
         }, 500)
