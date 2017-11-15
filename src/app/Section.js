@@ -1,5 +1,5 @@
 import SettableObject from './lib/SettableObject'
-import Tiles from './lib/Tiles'
+import TileGrid from './lib/TileGrid'
 import game from './Game'
 
 export default class Section extends SettableObject {
@@ -25,13 +25,13 @@ export default class Section extends SettableObject {
         return this.y + this.h
     }
 
-    getTiles () {
-        if ( this.hasOwnProperty('tiles') ) {
-            return this.tiles;
+    getTileGrid () {
+        if ( this.hasOwnProperty('tileGrid') ) {
+            return this.tileGrid;
         }
 
-        this.tiles = new Tiles()
-        this.tiles.resize(this.w, this.h)
+        this.tileGrid = new TileGrid()
+        this.tileGrid.resize(this.w, this.h)
 
         let vertical = this.w > this.h
         let padding = Math.round(game.prngs.pcg.next())
@@ -49,12 +49,12 @@ export default class Section extends SettableObject {
                 let draw = vertical ? (this.xMax - x + padding) % step: (this.yMax - y + padding) % step;
 
                 if (draw) {
-                    this.tiles.set(x - this.x, y - this.y, 1)
+                    this.tileGrid.set(x - this.x, y - this.y, 1)
                 }
             }
         }
 
-        return this.tiles
+        return this.tileGrid
     }
 
     divide () {

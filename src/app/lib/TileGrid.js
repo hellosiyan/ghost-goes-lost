@@ -1,4 +1,4 @@
-export default class Tiles {
+export default class TileGrid {
     constructor () {
         this.data = []
         this.width = 0
