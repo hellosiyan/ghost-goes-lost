@@ -2,8 +2,6 @@ import IO from './lib/IO'
 import Listenable from './Listenable'
 import game from './Game'
 
-let nextHowToShown = false
-
 export default class TextOverlay extends Listenable() {
     constructor() {
         super()
@@ -18,15 +16,33 @@ export default class TextOverlay extends Listenable() {
     setText(text) {
         this.node.innerHTML = text + '<p class="right"><button>&raquo;</button></p>'
 
-        if (! nextHowToShown) {
-            nextHowToShown = true;
-            this.node.innerHTML = this.node.innerHTML + '<p class="right"><small>Press <strong>esc</strong>, <strong>space</strong>, or <strong>enter</strong> to continue</small></p>'
-        }
+        return this;
+    }
+
+    withHowTo() {
+        let howtoNode = document.createElement('p');
+        howtoNode.classList.add('right');
+        howtoNode.innerHTML = '<small>Press <strong>esc</strong>, <strong>space</strong>, or <strong>enter</strong> to continue</small>';
+
+        this.node.appendChild(howtoNode);
+
+        return this;
     }
 
     show() {
         document.body.appendChild(this.node);
 
+        this._bindHideEvents();
+
+        return this;
+    }
+
+    hide() {
+        this.node.parentNode.removeChild(this.node);
+        this.emit('hide');
+    }
+
+    _bindHideEvents() {
         let onHide = () => {
             game.io.off(this.nextKeys, onHide)
             this.hide()
@@ -36,22 +52,11 @@ export default class TextOverlay extends Listenable() {
 
         this.node.querySelector('button')
             .addEventListener('click', onHide);
-
-        return this;
-    }
-
-    hide() {
-        this.node.classList.add('hidden');
-        this.emit('hide');
-        setTimeout(() => {
-            this.node.parentNode.removeChild(this.node);
-        }, 500)
     }
 
     static display(text) {
-        let overlay = new TextOverlay()
-        overlay.setText(text)
-
-        return overlay.show()
+        return new TextOverlay()
+            .setText(text)
+            .show();
     }
 }

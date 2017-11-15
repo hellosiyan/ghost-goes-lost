@@ -34,6 +34,7 @@ class Game {
 
     start() {
         return TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2>')
+            .withHowTo()
             .on('hide', () => this.playLevel(this.levelNumber))
     }
 
