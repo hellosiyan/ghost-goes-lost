@@ -23,6 +23,6 @@ export default class Mom extends Rect {
         let levitationHeightRatio = Math.abs(this.levitationTimeInterval-1)/1;
         let levitationY = Math.round(levitationHeightRatio*this.drawHeight*0.2)
 
-        game.sprites.ghost.draw('mom', ctx, this.x, this.y-Math.round(this.drawHeight-this.height) - levitationY,this.width,this.drawHeight)
+        game.spritesheets.ghost.draw('mom', ctx, this.x, this.y-Math.round(this.drawHeight-this.height) - levitationY,this.width,this.drawHeight)
     }
 }

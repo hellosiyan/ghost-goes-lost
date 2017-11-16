@@ -28,7 +28,7 @@ export default class Player extends Rect {
         ctx.imageSmoothingEnabled = false;
 
         let r = this.width/19
-        let sprite = this.direction.y == 'u' ? 'back': 'front';
+        let spriteName = this.direction.y == 'u' ? 'back': 'front';
 
         this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt)%2;
         let levitationHeightRatio = Math.abs(this.levitationTimeInterval-1)/1;
@@ -36,9 +36,9 @@ export default class Player extends Rect {
 
         if (this.direction.x == 'r') {
             ctx.scale(-1,1)
-            game.sprites.ghost.draw(sprite, ctx,-1*this.x-this.width, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
+            game.spritesheets.ghost.draw(spriteName, ctx,-1*this.x-this.width, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
         } else {
-            game.sprites.ghost.draw(sprite, ctx, this.x, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
+            game.spritesheets.ghost.draw(spriteName, ctx, this.x, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
         }
     }
 

@@ -52,7 +52,7 @@ export default class Shelf extends Obstacle {
             ctx.fillStyle = color.copy().lighten(0.5).shiftHue(40).toString();
             ctx.fillRect(x+pad+pad, y + pad+pad, width-pad*2*2, height-pad*2*2);
 
-            let item = game.prngs.pcg.pick(Object.keys(game.sprites.items.areas))
+            let item = game.prngs.pcg.pick(Object.keys(game.spritesheets.items.sprites))
             let itemWidth = Math.min(30, Math.round((width-pad*4)*0.9))
             let itemX = Math.round(game.prngs.pcg.next()*(width-itemWidth-pad*2*2))
             let chance = Math.pow(1 - (itemWidth)/(width), 2)
@@ -60,7 +60,7 @@ export default class Shelf extends Obstacle {
             if (game.prngs.pcg.next() < chance) {
                 ctx.imageSmoothingEnabled = false;
                 ctx.globalCompositeOperation = 'luminosity'
-                game.sprites.items.drawToFit(item, ctx, x+pad+pad+itemX, y + height - pad-20-1, itemWidth, 20)
+                game.spritesheets.items.drawToFit(item, ctx, x+pad+pad+itemX, y + height - pad-20-1, itemWidth, 20)
                 ctx.globalCompositeOperation = 'source-over'
             }
         }
