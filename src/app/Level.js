@@ -1,5 +1,6 @@
 import SettableObject from './lib/SettableObject'
 import Container from './lib/Container'
+import AutoScrollView from './lib/AutoScrollView'
 import Player from './Player'
 import Mom from './Mom'
 import Store from './Store'
@@ -22,12 +23,13 @@ export default class Level extends Listenable(SettableObject) {
         this.mom = new Mom()
 
         this.drawable = new Container();
+        this.view = new AutoScrollView();
     }
 
     start() {
-        let scene = this.prepareScene();
+        this.prepareScene();
 
-        game.canvas.setScene(scene);
+        game.canvas.setScene(this.view);
         game.loop.start(dt => this.loopHandler(dt))
 
         this.startedAt = (new Date()).getTime();
@@ -53,8 +55,6 @@ export default class Level extends Listenable(SettableObject) {
             return this.stop();
         }
 
-        this.moveCamera();
-
         game.canvas.draw();
     }
 
@@ -72,12 +72,20 @@ export default class Level extends Listenable(SettableObject) {
         this.drawable.addChild(this.player)
         this.drawable.addChild(this.mom)
 
-        return new Container()
-            .set({
-                width: game.canvas.width,
-                height: game.canvas.height
-            })
-            .addChild(this.drawable);
+        this.drawable.addTo(this.view);
+
+        this.view.set({
+            width: game.canvas.width,
+            height: game.canvas.height,
+            target: this.player
+        });
+
+        Object.assign(this.view.boundries, {
+            left: Math.round(this.view.width * 0.35),
+            right: Math.round(this.view.width * 0.65),
+            top: Math.round(this.view.height * 0.35),
+            bottom: Math.round(this.view.height * 0.65),
+        });
     }
 
     detectCollisions() {
@@ -93,22 +101,5 @@ export default class Level extends Listenable(SettableObject) {
             this.player.x += cri.x
             this.player.y += cri.y
         });
-    }
-
-    moveCamera() {
-        let absX = Math.round(this.player.absX)
-        let absY = Math.round(this.player.absY)
-
-        if (absX < game.cameraBoundry.left) {
-            this.drawable.x += game.cameraBoundry.left - absX;
-        } else if (absX > game.cameraBoundry.right) {
-            this.drawable.x -= absX - game.cameraBoundry.right;
-        }
-
-        if (absY < game.cameraBoundry.top) {
-            this.drawable.y += game.cameraBoundry.top - absY;
-        } else if (absY > game.cameraBoundry.bottom) {
-            this.drawable.y -= absY - game.cameraBoundry.bottom;
-        }
     }
 }

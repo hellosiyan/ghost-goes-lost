@@ -59,13 +59,9 @@ export default class Canvas {
     draw () {
         if( this.autoClear ) this.clear();
 
-        this.scene.children.forEach(child => {
-            if (child && child.visible) {
-                this.ctx.save();
-                child.draw(this.ctx);
-                this.ctx.restore();
-            }
-        })
+        this.ctx.save();
+        this.scene.draw(this.ctx)
+        this.ctx.restore();
     }
 
     clear () {

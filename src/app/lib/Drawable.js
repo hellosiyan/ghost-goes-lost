@@ -76,11 +76,20 @@ export default class Drawable extends SettableObject {
         }
     }
 
-    get absX() {
-        return this.x + (this.parent?this.parent.absX:0)
-    }
+    positionAtAncestor(ancestor) {
+        let parent = this.parent;
+        let position = {
+            x: this.x,
+            y: this.y
+        }
 
-    get absY() {
-        return this.y + (this.parent?this.parent.absY:0)
+        while (parent !== null && ancestor !== parent) {
+            position.x += parent.x;
+            position.y += parent.y;
+
+            parent = parent.parent;
+        }
+
+        return position;
     }
 }

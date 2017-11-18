@@ -71,13 +71,6 @@ class Game {
 
         this.canvas.setScene(this.scene);
         this.canvas.appendTo(document.body);
-
-        this.cameraBoundry = {
-            left: Math.round(this.canvas.width * 0.35),
-            bottom: this.canvas.height - Math.round(this.canvas.height * 0.35),
-            right: this.canvas.width - Math.round(this.canvas.width * 0.35),
-            top: Math.round(this.canvas.height * 0.35)
-        }
     }
 
     initIO() {
