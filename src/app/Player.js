@@ -27,37 +27,41 @@ export default class Player extends Rect {
         ctx.msImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
 
-        let r = this.width/19
         let spriteName = this.direction.y == 'u' ? 'back': 'front';
 
-        this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt)%2;
-        let levitationHeightRatio = Math.abs(this.levitationTimeInterval-1)/1;
-        let levitationY = Math.round(levitationHeightRatio*this.drawHeight*0.2)
+        this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt) % 2;
+        let levitationHeightRatio = Math.abs(this.levitationTimeInterval - 1);
+        let levitationY = Math.round(levitationHeightRatio * this.drawHeight * 0.2)
+
+        let x = this.x;
+        let y = this.y - Math.round(this.drawHeight - this.height) - levitationY
 
         if (this.direction.x == 'r') {
-            ctx.scale(-1,1)
-            game.spritesheets.ghost.draw(spriteName, ctx,-1*this.x-this.width, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
-        } else {
-            game.spritesheets.ghost.draw(spriteName, ctx, this.x, this.y-Math.round(this.drawHeight-this.height)-levitationY,this.width,this.drawHeight)
+            ctx.scale(-1, 1)
+            x = -1 * this.x - this.width;
         }
+
+        game.spritesheets.ghost.draw(spriteName, ctx, x, y, this.width, this.drawHeight)
     }
 
     move() {
+        let speed = game.config.speed.move * game.loop.dt;
+
         if (game.io.left) {
-            this.x -= game.config.speed.move * game.loop.dt
+            this.x -= speed
             this.direction.x = 'l'
         } else if (game.io.right) {
-            this.x += game.config.speed.move * game.loop.dt
+            this.x += speed
             this.direction.x = 'r'
         } else {
             this.direction.x = ''
         }
 
         if (game.io.up) {
-            this.y -= game.config.speed.move * game.loop.dt
+            this.y -= speed
             this.direction.y = 'u'
         } else if (game.io.down) {
-            this.y += game.config.speed.move * game.loop.dt
+            this.y += speed
             this.direction.y = 'd'
         } else {
             this.direction.y = ''

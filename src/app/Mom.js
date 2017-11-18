@@ -19,10 +19,18 @@ export default class Mom extends Rect {
     }
 
     draw(ctx) {
-        this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt)%2;
-        let levitationHeightRatio = Math.abs(this.levitationTimeInterval-1)/1;
-        let levitationY = Math.round(levitationHeightRatio*this.drawHeight*0.2)
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = false;
 
-        game.spritesheets.ghost.draw('mom', ctx, this.x, this.y-Math.round(this.drawHeight-this.height) - levitationY,this.width,this.drawHeight)
+        this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt) % 2;
+        let levitationHeightRatio = Math.abs(this.levitationTimeInterval - 1);
+        let levitationY = Math.round(levitationHeightRatio * this.drawHeight * 0.2);
+
+        let x = this.x;
+        let y = this.y - Math.round(this.drawHeight - this.height) - levitationY;
+
+        game.spritesheets.ghost.draw('mom', ctx, x, y, this.width, this.drawHeight)
     }
 }
