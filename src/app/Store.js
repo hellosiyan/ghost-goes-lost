@@ -1,12 +1,15 @@
-import SettableObject from './lib/SettableObject'
-import Drawable from './lib/Drawable'
 import Container from './lib/Container'
 import Color from './lib/Color'
 import TileGrid from './lib/TileGrid'
-import Obstacle from './Obstacle'
 import Shelf from './Shelf'
 import Section from './Section'
 import game from './Game'
+
+import TileFloor from './elements/TileFloor'
+import Wall from './elements/Wall'
+
+const borderTile = 99;
+const emptyTile = 0;
 
 export default class Store {
     constructor(difficulty) {
@@ -23,13 +26,15 @@ export default class Store {
             visible: false
         })
 
+        this.sections = [];
+
         this.generateSections()
         this.constructTileGrid()
         this.createDrawables()
     }
 
     placePeople(player, mom) {
-        let emptyTileGrid = this.tileGrid.filter(0)
+        let emptyTileGrid = this.tileGrid.filter(emptyTile)
         let playerTile = game.prngs.pcg.pick(emptyTileGrid)
 
         let possibleTileGrid = TileGrid.outsideRadius(
@@ -46,121 +51,101 @@ export default class Store {
     }
 
     createDrawables() {
-        this.createFloorDrawable()
-        this.createBorderDrawables()
-
-        this.tileGrid.each((x, y, tile) => {
-            if (!tile || tile == 99) return;
-
-            let extensions = {
-                right: 1,
-                bottom: 1
-            }
-
-            while(this.tileGrid.get(x+extensions.right, y)) {
-                extensions.right++;
-            }
-
-            while(this.tileGrid.get(x, y+extensions.bottom)) {
-                extensions.bottom++;
-            }
-
-            this.tileGrid.fill(x, y, x+extensions.right, y+extensions.bottom, 99)
-            this.tileGrid.set(x, y, tile)
-
-            let drawable = new Shelf().set({
-                x: x * game.config.size.grid,
-                y: y * game.config.size.grid,
-                width: (1+extensions.right-1) * game.config.size.grid,
-                height: (1+extensions.bottom-1) * game.config.size.grid
-            }).setStyle({
-                color: this.sections[tile].color
-            })
-
-            this.drawable.addChild(drawable)
-        })
+        this.drawable.addChild(this.createFloor());
+        this.drawable.addChild(this.createWalls());
+        this.drawable.addChild(this.createShelves());
 
         this.drawable.cache()
     }
 
-    createFloorDrawable() {
-        let color = Color.fromHex(game.config.palette.base1).darken(0.2)
+    createFloor() {
+        let floor = new TileFloor();
 
-        let w = Math.round(game.config.size.grid / 4)
-        let h = Math.round(game.config.size.grid / 4)
-        let pad = 1
-        let offscreenCanvas = document.createElement('canvas');
-        let octx = offscreenCanvas.getContext('2d');
+        floor.style.color = Color.fromHex(game.config.palette.base1).darken(0.2);
 
-        offscreenCanvas.width = w;
-        offscreenCanvas.height = h;
-
-        octx.fillStyle = color.copy().lighten(0.1).toString()
-        octx.fillRect(0,0,w,h);
-        octx.fillStyle = color.copy().darken(0.25).toString()
-        octx.fillRect(pad,pad,w,h);
-        octx.fillStyle = color.copy().toString()
-        octx.fillRect(pad*2,pad*2,w-pad*2,h-pad*2);
-
-        let drawable = (new Drawable).set({
+        floor.set({
+            tilePadding: 1,
+            tileWidth: Math.round(game.config.size.grid / 4),
+            tileHeight: Math.round(game.config.size.grid / 4),
             x: 0,
             y: 0,
             width: this.width * game.config.size.grid,
             height: this.height * game.config.size.grid
         });
 
-        drawable.draw = (ctx) => {
-            ctx.fillStyle = ctx.createPattern(offscreenCanvas, 'repeat');
-            ctx.globalAlpha = drawable.style.opacity;
-            ctx.fillRect(drawable.x, drawable.y, drawable.width, drawable.height);
-        }
-
-        this.drawable.addChild(drawable)
-
-        return drawable
+        return floor;
     }
 
-    createBorderDrawables() {
-        let color = Color.fromHex(game.config.palette.base2).darken(0.5).toString()
+    createWalls() {
+        let color = Color.fromHex(game.config.palette.base2).darken(0.5).toString();
+        let walls = [];
+
         // top
-        this.drawable.addChild(new Obstacle().set({
+        walls.push(new Wall().set({
             x: 0,
             y: 0,
             width: this.width * game.config.size.grid,
             height: 1 * game.config.size.grid
-        }).setStyle({color: color}))
+        }));
 
         // bottom
-        this.drawable.addChild(new Obstacle().set({
+        walls.push(new Wall().set({
             x: 0,
             y: (this.height-1) * game.config.size.grid,
             width: this.width * game.config.size.grid,
             height: 1 * game.config.size.grid
-        }).setStyle({color: color}))
+        }));
 
         // left
-        this.drawable.addChild(new Obstacle().set({
+        walls.push(new Wall().set({
             x: 0,
             y: 1 * game.config.size.grid,
             width: 1 * game.config.size.grid,
             height: (this.height-2) * game.config.size.grid
-        }).setStyle({color: color}))
+        }));
 
         // right
-        this.drawable.addChild(new Obstacle().set({
+        walls.push(new Wall().set({
             x: (this.width-1) * game.config.size.grid,
             y: 1 * game.config.size.grid,
             width: 1 * game.config.size.grid,
             height: (this.height-2) * game.config.size.grid
-        }).setStyle({color: color}))
+        }));
+
+        walls.forEach(wall => wall.setStyle({color}));
+
+        return walls;
     }
 
-    constructTileGrid () {
-        this.tileGrid.resize(this.width, this.height)
-        this.tileGrid.fillRow(0, 99)
-        this.tileGrid.fillRow(this.width-1, 99)
-        this.tileGrid.fillCol(0, 99)
-        this.tileGrid.fillCol(this.height-1, 99)
+    createShelves() {
+        const shelves = [];
+        const grid = this.tileGrid.copy();
+        const skipTiles = [emptyTile, borderTile]
+
+        grid.each((x, y, tile) => {
+            if (skipTiles.includes(tile)) return;
+
+            let area = grid.continuousSelect(x, y);
+
+            grid.fill(x, y, x + area.width, y + area.height, emptyTile);
+
+            shelves.push(new Shelf()
+                .set({
+                    x: x * game.config.size.grid,
+                    y: y * game.config.size.grid,
+                    width: area.width * game.config.size.grid,
+                    height: area.height * game.config.size.grid
+                })
+            );
+        });
+
+        return shelves;
+    }
+
+    constructTileGrid() {
+        this.tileGrid
+            .resize(this.width, this.height)
+            .fillBorder(borderTile);
 
         this.sections.forEach((section, sectionKey) =>
             this.tileGrid.overlayWith(
@@ -169,27 +154,31 @@ export default class Store {
         )
     }
 
-    generateSections () {
-        this.sections = [];
+    generateSections() {
+        // 1 block for borders + 1 block for aisles around the store
+        let padding = 2;
+
         this.sections[1] = new Section().set({
-            x: 2, y: 2,
-            w: this.width - 4,
-            h: this.height - 4,
+            x: padding,
+            y: padding,
+            w: this.width - padding * 2,
+            h: this.height - padding * 2,
             color: game.prngs.pcg.color()
         })
 
         let isSectionDivisible = true
 
         while (isSectionDivisible) {
-            isSectionDivisible = false
-            for (var i = 1; i < this.sections.length; i++) {
-                let newSection = this.sections[i].divide()
+            isSectionDivisible = false;
 
-                if (!newSection) continue;
+            this.sections.forEach(section => {
+                let newSection = section.divide()
+
+                if (!newSection) return;
 
                 isSectionDivisible = true
                 this.sections.push(newSection)
-            }
+            });
         }
 
         return this.sections

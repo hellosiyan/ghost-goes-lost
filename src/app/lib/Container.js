@@ -8,6 +8,11 @@ export default class Container extends Rect {
     }
 
     addChild (child) {
+        if (Array.isArray(child)) {
+            child.forEach(element => this.addChild(element));
+            return;
+        }
+
         if(this.children.includes(child)) return;
 
         child.parent = this;
@@ -15,8 +20,7 @@ export default class Container extends Rect {
     }
 
     removeChild (child) {
-        let index = this.children.indexOf(child);
-        if (index < 0) return false;
+        if (! this.children.includes(child)) return false;
 
         this.children.splice(index, 1);
 

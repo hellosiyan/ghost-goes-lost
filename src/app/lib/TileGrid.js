@@ -9,6 +9,8 @@ export default class TileGrid {
         this.width = width
         this.height = height
         this.fill(0,0, width, height, 0)
+
+        return this;
     }
 
     set(x, y, value) {
@@ -31,12 +33,55 @@ export default class TileGrid {
         for (let x = 0; x < this.width; x++) {
             this.data[this.width * row + x] = value
         }
+
+        return this;
     }
 
     fillCol (col, value) {
         for (let y = 0; y < this.height; y++) {
             this.data[this.width * y + col] = value
         }
+
+        return this;
+    }
+
+    fillBorder(value) {
+        this.fillRow(0, value)
+            .fillRow(this.width-1, value)
+            .fillCol(0, value)
+            .fillCol(this.height-1, value);
+
+        return this;
+    }
+
+    bucketFill(x, y, value) {
+        let area = this.continuousSelect(x, y)
+
+        this.fill(x, y, x + area.width, y + area.height, value);
+
+        return this;
+    }
+
+    // TODO: Extend selection upwards and leftwards
+    continuousSelect(x, y) {
+        let targetValue = this.get(x, y);
+
+        let area = {
+            x,
+            y,
+            width: 0,
+            height: 0
+        }
+
+        while(this.get(x + area.width, y) === targetValue) {
+            area.width ++;
+        }
+
+        while(this.get(x, y + area.height) === targetValue) {
+            area.height ++;
+        }
+
+        return area;
     }
 
     toString () {
@@ -81,6 +126,16 @@ export default class TileGrid {
                 }
             }
         }
+    }
+
+    copy() {
+        let copy = new TileGrid();
+
+        copy.data = [...this.data];
+        copy.width = this.width;
+        copy.height = this.height;
+
+        return copy;
     }
 
     static outsideRadius(coordinates, center, radius) {
