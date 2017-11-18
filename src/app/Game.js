@@ -48,8 +48,8 @@ class Game {
 
         TextOverlay.display(this.level.story)
             .on('hide', () => {
-                this.level.play()
-                    .on('end', () => {
+                this.level.start()
+                    .on('stop', () => {
                         TextOverlay.display('<p>Charlie was lost for <strong>'+this.level.totalSecondsPlayed+' seconds</strong></p>')
                             .on('hide', () => this.nextLevel())
                     })

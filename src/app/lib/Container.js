@@ -17,6 +17,8 @@ export default class Container extends Rect {
 
         child.parent = this;
         this.children.push(child);
+
+        return this;
     }
 
     removeChild (child) {

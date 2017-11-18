@@ -17,40 +17,17 @@ export default class Level extends Listenable(SettableObject) {
 
         this.story = story(this.number);
 
-        this.scene = new Container().set({
-            width: game.canvas.width,
-            height: game.canvas.height
-        });
-
         this.store = new Store(this.number)
         this.player = new Player()
         this.mom = new Mom()
 
-        this.container = new Container()
-            .set({
-                width: this.store.width * game.config.size.grid,
-                height: this.store.height * game.config.size.grid
-            })
-            .setStyle({
-                color: '#ccc',
-            });
-
-        this.store.placePeople(this.player, this.mom)
-
-        this.container.set({
-            x: Math.round(game.canvas.width/2 - this.container.width/2),
-            y: Math.round(game.canvas.height/2 - this.container.height/2),
-        });
-
-        this.container.addChild(this.store.drawable)
-        this.container.addChild(this.player)
-        this.container.addChild(this.mom)
-
-        this.container.addTo(this.scene)
+        this.drawable = new Container();
     }
 
-    play() {
-        game.canvas.setScene(this.scene);
+    start() {
+        let scene = this.prepareScene();
+
+        game.canvas.setScene(scene);
         game.loop.start(dt => this.loopHandler(dt))
 
         this.startedAt = (new Date()).getTime();
@@ -58,46 +35,80 @@ export default class Level extends Listenable(SettableObject) {
         return this;
     }
 
-    end() {
+    stop() {
         game.canvas.draw();
         game.loop.stop();
 
         this.totalSecondsPlayed = Math.ceil(((new Date()).getTime() - this.startedAt)/1000);
 
-        this.emit('end');
+        this.emit('stop');
     }
 
     loopHandler(dt) {
         this.player.move()
 
-        let aisles = this.store.drawable.children
-        for (var i = 0; i < aisles.length; i++) {
-            if (aisles[i].collidable && this.player.intersects(aisles[i])) {
-                let cri = this.player.collisionResponseImpulse(aisles[i]);
-                this.player.x += cri.x
-                this.player.y += cri.y
-            }
-        }
+        this.detectCollisions();
 
         if (this.player.intersects(this.mom)) {
-            return this.end();
+            return this.stop();
         }
 
+        this.moveCamera();
+
+        game.canvas.draw();
+    }
+
+    prepareScene() {
+        this.store.placePeople(this.player, this.mom)
+
+        this.drawable.set({
+            x: Math.round(game.canvas.width/2 - this.drawable.width/2),
+            y: Math.round(game.canvas.height/2 - this.drawable.height/2),
+            width: this.store.width * game.config.size.grid,
+            height: this.store.height * game.config.size.grid
+        });
+
+        this.drawable.addChild(this.store.drawable)
+        this.drawable.addChild(this.player)
+        this.drawable.addChild(this.mom)
+
+        return new Container()
+            .set({
+                width: game.canvas.width,
+                height: game.canvas.height
+            })
+            .addChild(this.drawable);
+    }
+
+    detectCollisions() {
+        let aisles = this.store.drawable.children
+
+        aisles.forEach(aisle => {
+            if (! aisle.collidable || ! this.player.intersects(aisle)) {
+                return;
+            }
+
+            let cri = this.player.collisionResponseImpulse(aisle);
+
+            this.player.x += cri.x
+            this.player.y += cri.y
+        });
+    }
+
+    moveCamera() {
         let absX = Math.round(this.player.absX)
         let absY = Math.round(this.player.absY)
 
         if (absX < game.cameraBoundry.left) {
-            this.container.x += game.cameraBoundry.left - absX;
+            this.drawable.x += game.cameraBoundry.left - absX;
         } else if (absX > game.cameraBoundry.right) {
-            this.container.x -= absX - game.cameraBoundry.right;
+            this.drawable.x -= absX - game.cameraBoundry.right;
         }
 
         if (absY < game.cameraBoundry.top) {
-            this.container.y += game.cameraBoundry.top - absY;
+            this.drawable.y += game.cameraBoundry.top - absY;
         } else if (absY > game.cameraBoundry.bottom) {
-            this.container.y -= absY - game.cameraBoundry.bottom;
+            this.drawable.y -= absY - game.cameraBoundry.bottom;
         }
-
-        game.canvas.draw();
     }
 }
