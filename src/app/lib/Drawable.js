@@ -92,4 +92,20 @@ export default class Drawable extends SettableObject {
 
         return position;
     }
+
+    distanceTo(target) {
+        let thisCenter = this.center;
+        let targetCenter = target.center;
+
+        const distanceX = thisCenter.x - targetCenter.x;
+        const distanceY = thisCenter.y - targetCenter.y;
+        return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+    }
+
+    get center() {
+        return {
+            x: this.x + this.width/2,
+            y: this.y + this.height/2,
+        }
+    }
 }

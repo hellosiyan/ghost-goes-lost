@@ -51,7 +51,7 @@ export default class Level extends Listenable(SettableObject) {
 
         this.detectCollisions();
 
-        if (this.player.intersects(this.mom)) {
+        if (this.player.distanceTo(this.mom) < 50) {
             return this.stop();
         }
 
