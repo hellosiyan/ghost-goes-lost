@@ -21,9 +21,13 @@ export default class NumberSequence {
         return result + 0.5;
     }
 
-    pick (array) {
-        let index = Math.floor(this.next() * array.length)
-        return array[index]
+    pick(candidates) {
+        if (! Array.isArray(candidates)) {
+            return pick(Object.keys(candidates));
+        }
+
+        let index = Math.floor(this.next() * candidates.length)
+        return candidates[index]
     }
 
     bool () {

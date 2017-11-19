@@ -80,7 +80,7 @@ export default class Aisle extends Obstacle {
 
             this.drawItem(
                 ctx,
-                game.prngs.pcg.pick(Object.keys(game.spritesheets.items.sprites)),
+                game.prngs.pcg.pick(game.spritesheets.items.sprites),
                 x + facePadding + facePadding + itemX,
                 y + height - facePadding - 20 - 1,
                 itemWidth
