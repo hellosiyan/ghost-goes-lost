@@ -1,7 +1,7 @@
 import Container from './lib/Container'
 import Color from './lib/Color'
 import TileGrid from './lib/TileGrid'
-import Shelf from './Shelf'
+import Aisle from './Aisle'
 import Section from './Section'
 import game from './Game'
 
@@ -129,7 +129,7 @@ export default class Store {
 
             grid.fill(x, y, x + area.width, y + area.height, emptyTile);
 
-            shelves.push(new Shelf()
+            shelves.push(new Aisle()
                 .set({
                     x: x * game.config.size.grid,
                     y: y * game.config.size.grid,

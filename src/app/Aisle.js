@@ -2,7 +2,7 @@ import Obstacle from './Obstacle'
 import Color from './lib/Color'
 import game from './Game'
 
-export default class Shelf extends Obstacle {
+export default class Aisle extends Obstacle {
     constructor() {
         super()
     }
