@@ -30,18 +30,19 @@ export default class Drawable extends SettableObject {
     }
 
     collisionResponseImpulse (target) {
+        let targetCenter = target.center;
         let impulse = {
             x: 0,
             y: 0
         }
 
-        if ( this.y > target.y ) {
+        if ( this.y >= targetCenter.y ) {
             impulse.y = target.y + target.height - this.y
         } else {
             impulse.y = -1*(this.y + this.height - target.y)
         }
 
-        if ( this.x > target.x ) {
+        if ( this.x >= targetCenter.x ) {
             impulse.x = target.x + target.width - this.x
         } else {
             impulse.x = -1*(this.x + this.width - target.x)
