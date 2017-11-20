@@ -99,17 +99,17 @@ export default class Store {
         // left
         walls.push(new Wall().set({
             x: 0,
-            y: 1 * game.config.size.grid,
+            y: 0,
             width: 1 * game.config.size.grid,
-            height: (this.height-2) * game.config.size.grid
+            height: this.height * game.config.size.grid
         }));
 
         // right
         walls.push(new Wall().set({
             x: (this.width-1) * game.config.size.grid,
-            y: 1 * game.config.size.grid,
+            y: 0,
             width: 1 * game.config.size.grid,
-            height: (this.height-2) * game.config.size.grid
+            height: this.height * game.config.size.grid
         }));
 
         walls.forEach(wall => wall.setStyle({color}));
