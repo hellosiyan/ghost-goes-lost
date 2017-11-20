@@ -23,7 +23,7 @@ export default class NumberSequence {
 
     pick(candidates) {
         if (! Array.isArray(candidates)) {
-            return pick(Object.keys(candidates));
+            return this.pick(Object.keys(candidates));
         }
 
         let index = Math.floor(this.next() * candidates.length)
