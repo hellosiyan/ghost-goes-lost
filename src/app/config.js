@@ -4,7 +4,9 @@ export const config = {
         me: 30
     },
     speed: {
-        move: 180
+        initial: 10,
+        max: 180,
+        acceleration: 500,
     },
     shelf: {
         faceSize: 50,
