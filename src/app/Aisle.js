@@ -1,18 +1,18 @@
-import Obstacle from './Obstacle'
-import Color from './lib/Color'
-import game from './Game'
+import Obstacle from './Obstacle';
+import Color from './lib/Color';
+import game from './Game';
 
 export default class Aisle extends Obstacle {
     constructor() {
-        super()
+        super();
     }
 
     draw (ctx) {
-        let faceSize = game.config.shelf.faceSize
-        let color = Color.fromHex(game.config.palette.base2)
+        let faceSize = game.config.shelf.faceSize;
+        let color = Color.fromHex(game.config.palette.base2);
 
         // Shadow
-        this.drawShadow(ctx, {x:14, y: faceSize/2})
+        this.drawShadow(ctx, { x: 14, y: faceSize / 2 });
 
         // Front Section (Base)
         ctx.fillStyle = color.toString();
@@ -20,7 +20,7 @@ export default class Aisle extends Obstacle {
         ctx.fillRect(this.x, this.y, this.width, this.height);
 
         // Rows
-        this.drawShelves(ctx, faceSize, color.copy())
+        this.drawShelves(ctx, faceSize, color.copy());
 
         // Top
         ctx.fillStyle = color.darken(0.2).toString();
@@ -30,36 +30,36 @@ export default class Aisle extends Obstacle {
     }
 
     drawShadow(ctx, size) {
-        ctx.fillStyle = '#000'
-        ctx.globalAlpha = 0.2
-        ctx.beginPath()
-        ctx.moveTo(this.x + size.x, this.y + size.y)
-        ctx.lineTo(this.x + size.x + this.width, this.y + size.y)
-        ctx.lineTo(this.x + size.x + this.width, this.y + this.height-size.y)
-        ctx.lineTo(this.x + this.width, this.y + this.height)
-        ctx.fill()
+        ctx.fillStyle = '#000';
+        ctx.globalAlpha = 0.2;
+        ctx.beginPath();
+        ctx.moveTo(this.x + size.x, this.y + size.y);
+        ctx.lineTo(this.x + size.x + this.width, this.y + size.y);
+        ctx.lineTo(this.x + size.x + this.width, this.y + this.height - size.y);
+        ctx.lineTo(this.x + this.width, this.y + this.height);
+        ctx.fill();
     }
 
     drawShelves(ctx, maxHeight, color) {
-        const shelfWidth = Math.round(this.width / 2) - 10
+        const shelfWidth = Math.round(this.width / 2) - 10;
 
-        const totalRows = game.prngs.pcg.pick([2,3]);
-        const isHorizontal = this.width >= this.height
+        const totalRows = game.prngs.pcg.pick([2, 3]);
+        const isHorizontal = this.width >= this.height;
 
         for (var i = totalRows; i >= 1; i--) {
             const size = Math.round(maxHeight * (i / totalRows));
 
             if (isHorizontal) {
-                this.drawShelf(ctx, color, this.x, this.y + this.height - maxHeight, this.width, size)
+                this.drawShelf(ctx, color, this.x, this.y + this.height - maxHeight, this.width, size);
             } else {
-                this.drawShelf(ctx, color, this.x, this.y + this.height - maxHeight, shelfWidth, size)
-                this.drawShelf(ctx, color, this.x + this.width - shelfWidth, this.y + this.height - maxHeight, shelfWidth, size)
+                this.drawShelf(ctx, color, this.x, this.y + this.height - maxHeight, shelfWidth, size);
+                this.drawShelf(ctx, color, this.x + this.width - shelfWidth, this.y + this.height - maxHeight, shelfWidth, size);
             }
         }
     }
 
     drawShelf (ctx, color, x, y, width, height) {
-        const facePadding = game.config.shelf.facePadding
+        const facePadding = game.config.shelf.facePadding;
 
         // Bottom line
         ctx.fillStyle = color.toString();
@@ -75,8 +75,8 @@ export default class Aisle extends Obstacle {
 
         // Item
         if (game.prngs.pcg.next() < 0.5) {
-            let itemWidth = Math.min(30, Math.round((width - facePadding * 4) * 0.9))
-            let itemX = Math.round(game.prngs.pcg.next() * (width - itemWidth - facePadding * 2 * 2))
+            let itemWidth = Math.min(30, Math.round((width - facePadding * 4) * 0.9));
+            let itemX = Math.round(game.prngs.pcg.next() * (width - itemWidth - facePadding * 2 * 2));
 
             this.drawItem(
                 ctx,
@@ -89,9 +89,9 @@ export default class Aisle extends Obstacle {
     }
 
     drawItem(ctx, item, x, y, width) {
-        ctx.imageSmoothingEnabled = false
-        ctx.globalCompositeOperation = 'luminosity'
-        game.spritesheets.items.drawToFit(item, ctx, x, y, width, 20)
-        ctx.globalCompositeOperation = 'source-over'
+        ctx.imageSmoothingEnabled = false;
+        ctx.globalCompositeOperation = 'luminosity';
+        game.spritesheets.items.drawToFit(item, ctx, x, y, width, 20);
+        ctx.globalCompositeOperation = 'source-over';
     }
 }

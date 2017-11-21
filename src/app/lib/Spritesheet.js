@@ -1,10 +1,10 @@
-import SettableObject from './SettableObject'
+import SettableObject from './SettableObject';
 
 export default class Spritesheet extends SettableObject {
     constructor() {
-        super()
+        super();
 
-        this.sprites = {}
+        this.sprites = {};
     }
 
     get(spriteName) {
@@ -13,29 +13,29 @@ export default class Spritesheet extends SettableObject {
 
     drawToHeight(spriteName, ctx, x, y, destHeight) {
         let sprite = this.sprites[spriteName];
-        let destWidth = destHeight / sprite.height * sprite.width
+        let destWidth = destHeight / sprite.height * sprite.width;
 
-        this.draw(spriteName, ctx, x, y, destWidth, destHeight)
+        this.draw(spriteName, ctx, x, y, destWidth, destHeight);
     }
 
     drawToFit(spriteName, ctx, x, y, destWidth, destHeight) {
         let sprite = this.sprites[spriteName];
-        let width = destWidth
-        let height = width / sprite.width * sprite.height
+        let width = destWidth;
+        let height = width / sprite.width * sprite.height;
 
-        if ( height > destHeight ) {
-            height = destHeight
-            width = height / sprite.height * sprite.width
+        if (height > destHeight) {
+            height = destHeight;
+            width = height / sprite.height * sprite.width;
         }
 
-        this.draw(spriteName, ctx, x, y, width, height)
+        this.draw(spriteName, ctx, x, y, width, height);
     }
 
     draw(spriteName, ctx, x, y, destWidth, destHeight) {
         let sprite = this.sprites[spriteName];
 
-        if ( ! sprite ) {
-            return
+        if (! sprite) {
+            return;
         }
 
         ctx.drawImage(
@@ -48,6 +48,6 @@ export default class Spritesheet extends SettableObject {
             y,
             destWidth,
             destHeight
-        )
+        );
     }
 }

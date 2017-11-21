@@ -1,8 +1,8 @@
-import SettableObject from './SettableObject'
+import SettableObject from './SettableObject';
 
 export default class Style extends SettableObject {
     constructor () {
-        super()
+        super();
 
         this.color = '#999';
         this.radius = 3;

@@ -10,11 +10,11 @@ export default class Canvas {
     }
 
     setSize(width, height, adjustForHiDPI = true) {
-        this.node.width = this.node.style.width = this.width = width
-        this.node.height = this.node.style.height = this.height = height
+        this.node.width = this.node.style.width = this.width = width;
+        this.node.height = this.node.style.height = this.height = height;
 
         if (adjustForHiDPI) {
-            this.fixPixelRatio()
+            this.fixPixelRatio();
         }
 
         return this;
@@ -28,7 +28,7 @@ export default class Canvas {
             this.ctx.oBackingStorePixelRatio ||
             this.ctx.backingStorePixelRatio || 1;
 
-        if ( devicePixelRatio === backingStoreRatio ) {
+        if (devicePixelRatio === backingStoreRatio) {
             return;
         }
 
@@ -57,10 +57,10 @@ export default class Canvas {
     }
 
     draw () {
-        if( this.autoClear ) this.clear();
+        if (this.autoClear) this.clear();
 
         this.ctx.save();
-        this.scene.draw(this.ctx)
+        this.scene.draw(this.ctx);
         this.ctx.restore();
     }
 

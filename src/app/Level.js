@@ -1,26 +1,26 @@
-import SettableObject from './lib/SettableObject'
-import Container from './lib/Container'
-import AutoScrollView from './lib/AutoScrollView'
-import Player from './Player'
-import Mom from './Mom'
-import Store from './Store'
-import Listenable from './Listenable'
-import game from './Game'
-import story from './Story'
+import SettableObject from './lib/SettableObject';
+import Container from './lib/Container';
+import AutoScrollView from './lib/AutoScrollView';
+import Player from './Player';
+import Mom from './Mom';
+import Store from './Store';
+import Listenable from './Listenable';
+import game from './Game';
+import story from './Story';
 
 export default class Level extends Listenable(SettableObject) {
     constructor(number) {
-        super()
+        super();
 
-        this.number = number
+        this.number = number;
         this.startedAt = 0;
         this.totalSecondsPlayed = 0;
 
         this.story = story(this.number);
 
-        this.store = new Store(this.number)
-        this.player = new Player()
-        this.mom = new Mom()
+        this.store = new Store(this.number);
+        this.player = new Player();
+        this.mom = new Mom();
 
         this.drawable = new Container();
         this.view = new AutoScrollView();
@@ -30,7 +30,7 @@ export default class Level extends Listenable(SettableObject) {
         this.prepareScene();
 
         game.canvas.setScene(this.view);
-        game.loop.start(dt => this.loopHandler(dt))
+        game.loop.start(dt => this.loopHandler(dt));
 
         this.startedAt = (new Date()).getTime();
 
@@ -41,13 +41,13 @@ export default class Level extends Listenable(SettableObject) {
         game.canvas.draw();
         game.loop.stop();
 
-        this.totalSecondsPlayed = Math.ceil(((new Date()).getTime() - this.startedAt)/1000);
+        this.totalSecondsPlayed = Math.ceil(((new Date()).getTime() - this.startedAt) / 1000);
 
         this.emit('stop');
     }
 
     loopHandler(dt) {
-        this.player.move()
+        this.player.move();
 
         this.detectCollisions();
 
@@ -59,25 +59,25 @@ export default class Level extends Listenable(SettableObject) {
     }
 
     prepareScene() {
-        this.store.placePeople(this.player, this.mom)
+        this.store.placePeople(this.player, this.mom);
 
         this.drawable.set({
-            x: Math.round(game.canvas.width/2 - this.drawable.width/2),
-            y: Math.round(game.canvas.height/2 - this.drawable.height/2),
+            x: Math.round(game.canvas.width / 2 - this.drawable.width / 2),
+            y: Math.round(game.canvas.height / 2 - this.drawable.height / 2),
             width: this.store.width * game.config.size.grid,
-            height: this.store.height * game.config.size.grid
+            height: this.store.height * game.config.size.grid,
         });
 
-        this.drawable.addChild(this.store.drawable)
-        this.drawable.addChild(this.player)
-        this.drawable.addChild(this.mom)
+        this.drawable.addChild(this.store.drawable);
+        this.drawable.addChild(this.player);
+        this.drawable.addChild(this.mom);
 
         this.drawable.addTo(this.view);
 
         this.view.set({
             width: game.canvas.width,
             height: game.canvas.height,
-            target: this.player
+            target: this.player,
         });
 
         Object.assign(this.view.boundries, {
@@ -89,7 +89,7 @@ export default class Level extends Listenable(SettableObject) {
     }
 
     detectCollisions() {
-        let aisles = this.store.drawable.children
+        let aisles = this.store.drawable.children;
 
         aisles.forEach(aisle => {
             if (! aisle.collidable || ! this.player.intersects(aisle)) {
@@ -98,8 +98,8 @@ export default class Level extends Listenable(SettableObject) {
 
             let cri = this.player.collisionResponseImpulse(aisle);
 
-            this.player.x += cri.x
-            this.player.y += cri.y
+            this.player.x += cri.x;
+            this.player.y += cri.y;
         });
     }
 }

@@ -1,4 +1,4 @@
-import Color from './Color'
+import Color from './Color';
 
 const prngs = {};
 
@@ -26,27 +26,27 @@ export default class NumberSequence {
             return this.pick(Object.keys(candidates));
         }
 
-        let index = Math.floor(this.next() * candidates.length)
-        return candidates[index]
+        let index = Math.floor(this.next() * candidates.length);
+        return candidates[index];
     }
 
     bool () {
-        return this.next() > 0.5
+        return this.next() > 0.5;
     }
 
     color() {
-        return Color.fromRGB(Math.floor(this.next()*256), Math.floor(this.next()*256), Math.floor(this.next()*256))
+        return Color.fromRGB(Math.floor(this.next() * 256), Math.floor(this.next() * 256), Math.floor(this.next() * 256));
     }
 
     static set(key, seed) {
-        if ( prngs.hasOwnProperty(key) ) {
-            delete prngs[key]
+        if (prngs.hasOwnProperty(key)) {
+            delete prngs[key];
         }
 
-        prngs[key] = new NumberSequence(seed)
+        prngs[key] = new NumberSequence(seed);
     }
 
     static get(key) {
-        return prngs[key]
+        return prngs[key];
     }
 }

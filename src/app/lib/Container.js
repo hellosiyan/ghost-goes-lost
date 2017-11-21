@@ -1,8 +1,8 @@
-import Rect from './Rect'
+import Rect from './Rect';
 
 export default class Container extends Rect {
     constructor() {
-        super()
+        super();
 
         this.children = [];
     }
@@ -13,7 +13,7 @@ export default class Container extends Rect {
             return;
         }
 
-        if(this.children.includes(child)) return;
+        if (this.children.includes(child)) return;
 
         child.parent = this;
         this.children.push(child);
@@ -45,7 +45,7 @@ export default class Container extends Rect {
             ctx.save();
             child.draw(ctx);
             ctx.restore();
-        })
+        });
 
         ctx.restore();
     }

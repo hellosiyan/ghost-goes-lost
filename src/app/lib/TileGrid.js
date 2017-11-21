@@ -1,37 +1,37 @@
 export default class TileGrid {
     constructor () {
-        this.data = []
-        this.width = 0
-        this.height = 0
+        this.data = [];
+        this.width = 0;
+        this.height = 0;
     }
 
     resize(width, height) {
-        this.width = width
-        this.height = height
-        this.fill(0,0, width, height, 0)
+        this.width = width;
+        this.height = height;
+        this.fill(0, 0, width, height, 0);
 
         return this;
     }
 
     set(x, y, value) {
-        this.data[this.width * y + x] = value
+        this.data[this.width * y + x] = value;
     }
 
     get(x, y) {
-        return this.data[this.width * y + x]
+        return this.data[this.width * y + x];
     }
 
     fill (xMin, yMin, xMax, yMax, value) {
         for (let x = xMin; x < xMax; x++) {
             for (let y = yMin; y < yMax; y++) {
-                this.data[this.width * y + x] = value
+                this.data[this.width * y + x] = value;
             }
         }
     }
 
     fillRow (row, value) {
         for (let x = 0; x < this.width; x++) {
-            this.data[this.width * row + x] = value
+            this.data[this.width * row + x] = value;
         }
 
         return this;
@@ -39,7 +39,7 @@ export default class TileGrid {
 
     fillCol (col, value) {
         for (let y = 0; y < this.height; y++) {
-            this.data[this.width * y + col] = value
+            this.data[this.width * y + col] = value;
         }
 
         return this;
@@ -47,15 +47,15 @@ export default class TileGrid {
 
     fillBorder(value) {
         this.fillRow(0, value)
-            .fillRow(this.width-1, value)
+            .fillRow(this.width - 1, value)
             .fillCol(0, value)
-            .fillCol(this.height-1, value);
+            .fillCol(this.height - 1, value);
 
         return this;
     }
 
     bucketFill(x, y, value) {
-        let area = this.continuousSelect(x, y)
+        let area = this.continuousSelect(x, y);
 
         this.fill(x, y, x + area.width, y + area.height, value);
 
@@ -70,15 +70,15 @@ export default class TileGrid {
             x,
             y,
             width: 0,
-            height: 0
+            height: 0,
+        };
+
+        while (this.get(x + area.width, y) === targetValue) {
+            area.width++;
         }
 
-        while(this.get(x + area.width, y) === targetValue) {
-            area.width ++;
-        }
-
-        while(this.get(x, y + area.height) === targetValue) {
-            area.height ++;
+        while (this.get(x, y + area.height) === targetValue) {
+            area.height++;
         }
 
         return area;
@@ -89,12 +89,13 @@ export default class TileGrid {
 
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
-                string += (this.data[this.width * y + x]) + '\t'
+                string += (this.data[this.width * y + x]) + '\t';
             }
-            string += '\n'
+
+            string += '\n';
         }
 
-        return string
+        return string;
     }
 
     each(callback) {
@@ -106,23 +107,23 @@ export default class TileGrid {
     }
 
     filter(value) {
-        let filtered = []
+        let filtered = [];
 
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 if (this.data[this.width * y + x] == value)
-                    filtered.push({x, y})
+                    filtered.push({ x, y });
             }
         }
 
-        return filtered
+        return filtered;
     }
 
     overlayWith(tiles, destX, destY, value) {
         for (let x = 0; x < tiles.width; x++) {
             for (let y = 0; y < tiles.height; y++) {
                 if (tiles.get(x, y)) {
-                    this.data[this.width * (y + destY) + (x + destX)] = value
+                    this.data[this.width * (y + destY) + (x + destX)] = value;
                 }
             }
         }
@@ -139,16 +140,16 @@ export default class TileGrid {
     }
 
     static outsideRadius(coordinates, center, radius) {
-        let result = []
-        let distance = 0
+        let result = [];
+        let distance = 0;
 
         for (let i = 0; i < coordinates.length; i++) {
-            distance = Math.abs(coordinates[i].x - center.x) + Math.abs(coordinates[i].y - center.y)
+            distance = Math.abs(coordinates[i].x - center.x) + Math.abs(coordinates[i].y - center.y);
             if (distance > radius) {
-                result.push(coordinates[i])
+                result.push(coordinates[i]);
             }
         }
 
-        return result
+        return result;
     }
 }

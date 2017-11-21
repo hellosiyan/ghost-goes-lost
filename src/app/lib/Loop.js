@@ -1,4 +1,4 @@
-let stats = require('stats.js')(0)
+let stats = require('stats.js')(0);
 
 export default class Loop {
 
@@ -9,7 +9,7 @@ export default class Loop {
         this.lastTime = this.timestamp();
         this.worker = () => {};
 
-        document.body.appendChild( stats.dom );
+        document.body.appendChild(stats.dom);
     }
 
     start (worker) {
@@ -20,7 +20,7 @@ export default class Loop {
     }
 
     stats (showStats) {
-        this.showStats = showStats
+        this.showStats = showStats;
     }
 
     stop () {
@@ -29,7 +29,7 @@ export default class Loop {
 
     tick(dt) {
         this.worker(dt);
-        if ( this.play ) this.raf();
+        if (this.play) this.raf();
     }
 
     timestamp () {
@@ -49,7 +49,7 @@ export default class Loop {
                 dt /= 1000;
             }
 
-            this.dt = dt
+            this.dt = dt;
             this.lastTime = now;
 
             this.tick(dt);

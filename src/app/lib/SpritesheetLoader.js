@@ -1,12 +1,12 @@
-import SettableObject from './SettableObject'
-import Spritesheet from './Spritesheet'
+import SettableObject from './SettableObject';
+import Spritesheet from './Spritesheet';
 
 const SpritesheetLoader = {
     create(url, spriteDefinitions) {
         return new Promise(resolve => {
             this.load(url)
                 .then(image => this.drawSprites(image, spriteDefinitions))
-                .then(sprites => resolve((new Spritesheet).set({sprites})));
+                .then(sprites => resolve((new Spritesheet).set({ sprites })));
         });
     },
 
@@ -22,7 +22,7 @@ const SpritesheetLoader = {
         let sprites = {};
 
         Object.keys(spriteDefinitions).forEach(spriteName => {
-            let sprite = spriteDefinitions[spriteName]
+            let sprite = spriteDefinitions[spriteName];
             let canvas = document.createElement('canvas');
 
             canvas.width = sprite.w;
@@ -39,12 +39,12 @@ const SpritesheetLoader = {
             sprites[spriteName] = {
                 width: sprite.w,
                 height: sprite.h,
-                canvas: canvas
-            }
+                canvas: canvas,
+            };
         });
 
         return Promise.resolve(sprites);
-    }
-}
+    },
+};
 
 export default SpritesheetLoader;

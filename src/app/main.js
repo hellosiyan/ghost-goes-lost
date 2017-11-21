@@ -1,4 +1,4 @@
-import game from './Game'
+import game from './Game';
 
-game.init()
-game.start()
+game.init();
+game.start();

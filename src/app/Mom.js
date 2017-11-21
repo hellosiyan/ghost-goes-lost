@@ -1,19 +1,19 @@
-import Rect from './lib/Rect'
-import game from './Game'
+import Rect from './lib/Rect';
+import game from './Game';
 
 export default class Mom extends Rect {
     constructor() {
-        super()
+        super();
 
-        this.direction = 0
+        this.direction = 0;
 
-        this.width = game.config.size.me
-        let drawHeight = this.width/21*34
-        this.drawHeight = Math.ceil(drawHeight)
-        this.height = Math.ceil(drawHeight*0.1)
+        this.width = game.config.size.me;
+        let drawHeight = this.width / 21 * 34;
+        this.drawHeight = Math.ceil(drawHeight);
+        this.height = Math.ceil(drawHeight * 0.1);
 
-        this.x = game.config.size.grid
-        this.y = game.config.size.grid
+        this.x = game.config.size.grid;
+        this.y = game.config.size.grid;
 
         this.levitationTimeInterval = 1;
     }
@@ -31,6 +31,6 @@ export default class Mom extends Rect {
         let x = this.x;
         let y = this.y - Math.round(this.drawHeight - this.height) - levitationY;
 
-        game.spritesheets.ghost.draw('mom', ctx, x, y, this.width, this.drawHeight)
+        game.spritesheets.ghost.draw('mom', ctx, x, y, this.width, this.drawHeight);
     }
 }

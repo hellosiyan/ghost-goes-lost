@@ -1,8 +1,8 @@
-import Container from './lib/Container'
+import Container from './lib/Container';
 
 export default class Obstacle extends Container {
     constructor() {
-        super()
+        super();
 
         this.collidable = true;
     }

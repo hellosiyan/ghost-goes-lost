@@ -1,27 +1,27 @@
 class IO {
     constructor () {
-        this.up = false
-        this.down = false
-        this.left = false
-        this.right = false
+        this.up = false;
+        this.down = false;
+        this.left = false;
+        this.right = false;
 
         this.listeners = [];
 
         this.bindings = {
-            up: [38,90,87],
-            down: [40,83],
-            left: [37,65,81],
-            right: [39,68]
-        }
+            up: [38, 90, 87],
+            down: [40, 83],
+            left: [37, 65, 81],
+            right: [39, 68],
+        };
 
-        this.bindEvents()
+        this.bindEvents();
     }
 
     on(keys, callback) {
         this.listeners.unshift({
             keys,
-            callback
-        })
+            callback,
+        });
     }
 
     off(keys, callback = null) {
@@ -30,24 +30,24 @@ class IO {
                 return true;
             }
 
-            if ( callback && listener.callback !== callback ) {
-                return true
+            if (callback && listener.callback !== callback) {
+                return true;
             }
 
             return false;
-        })
+        });
     }
 
     setKeyState (keyCode, state) {
-        for(let prop in this.bindings) {
-            if(this.bindings[prop].includes(keyCode)) {
-                this[prop] = state
-                break
+        for (let prop in this.bindings) {
+            if (this.bindings[prop].includes(keyCode)) {
+                this[prop] = state;
+                break;
             }
         }
 
-        if ( state ) {
-            this.triggerListeners(keyCode)
+        if (state) {
+            this.triggerListeners(keyCode);
         }
     }
 
@@ -56,30 +56,30 @@ class IO {
             return;
         }
 
-        let matchedCallbacks = []
+        let matchedCallbacks = [];
 
         this.listeners = this.listeners.filter((listener) => {
-            if ( ! listener.keys.includes(keyCode) ) {
+            if (! listener.keys.includes(keyCode)) {
                 return true;
             }
 
-            matchedCallbacks.push(listener.callback)
+            matchedCallbacks.push(listener.callback);
 
-            return false
-        })
+            return false;
+        });
 
-        matchedCallbacks.forEach(callback => callback.call())
+        matchedCallbacks.forEach(callback => callback.call());
     }
 
     bindEvents() {
-        window.addEventListener('keydown', e => this.setKeyState(e.keyCode, true))
-        window.addEventListener('keyup', e => this.setKeyState(e.keyCode, false))
-        window.addEventListener('blur', e => this.up = this.down = this.left = this.right = false)
+        window.addEventListener('keydown', e => this.setKeyState(e.keyCode, true));
+        window.addEventListener('keyup', e => this.setKeyState(e.keyCode, false));
+        window.addEventListener('blur', e => this.up = this.down = this.left = this.right = false);
     }
 }
 
-IO.SPACE = 32
-IO.ESC = 27
-IO.ENTER = 13
+IO.SPACE = 32;
+IO.ESC = 27;
+IO.ENTER = 13;
 
-export default IO
+export default IO;

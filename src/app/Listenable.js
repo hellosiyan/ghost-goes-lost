@@ -1,4 +1,4 @@
-export default function Listenable (baseClass) {
+export default function Listenable(baseClass) {
     console.log('blurg');
 
     if (! baseClass) {
@@ -7,13 +7,13 @@ export default function Listenable (baseClass) {
 
     class Listenable extends baseClass {
         constructor() {
-            super()
+            super();
 
             this.eventHandlers = {};
         }
 
         on(event, handler) {
-            if (! (event in this.eventHandlers) ) {
+            if (! (event in this.eventHandlers)) {
                 this.eventHandlers[event] = [];
             }
 
@@ -21,13 +21,13 @@ export default function Listenable (baseClass) {
         }
 
         off(event, handler) {
-            if (! (event in this.eventHandlers) ) {
+            if (! (event in this.eventHandlers)) {
                 return;
             }
 
             const index = this.eventHandlers[event].indexOf(handler);
 
-            if ( index < 0 ) {
+            if (index < 0) {
                 return;
             }
 
@@ -35,7 +35,7 @@ export default function Listenable (baseClass) {
         }
 
         emit(event, data) {
-            if (! (event in this.eventHandlers) ) {
+            if (! (event in this.eventHandlers)) {
                 return;
             }
 

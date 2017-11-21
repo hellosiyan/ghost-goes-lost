@@ -1,22 +1,22 @@
-import Container from './Container'
+import Container from './Container';
 
 export default class AutoScrollView extends Container {
     constructor() {
-        super()
+        super();
 
         this.visible = false;
 
-        this.target = null
+        this.target = null;
         this.boundries = {
             left: 0,
             right: 1,
             top: 0,
             bottom: 1,
-        }
+        };
     }
 
     addChild (child) {
-        super.addChild(child)
+        super.addChild(child);
 
         if (this.children.length > 1) {
             throw 'AutoScrollView cannot have more than one child';

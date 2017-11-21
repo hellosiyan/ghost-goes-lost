@@ -1,10 +1,10 @@
-import SettableObject from './SettableObject'
-import Style from './Style'
-import Canvas from './Canvas'
+import SettableObject from './SettableObject';
+import Style from './Style';
+import Canvas from './Canvas';
 
 export default class Drawable extends SettableObject {
     constructor() {
-        super()
+        super();
 
         this.x = 0;
         this.y = 0;
@@ -12,10 +12,10 @@ export default class Drawable extends SettableObject {
         this.height = 1;
         this.visible = true;
         this.style = new Style();
-        this.parent = null
+        this.parent = null;
     }
 
-    draw(){}
+    draw() {}
 
     intersects (target) {
         if (this.x < target.x + target.width &&
@@ -33,25 +33,25 @@ export default class Drawable extends SettableObject {
         let targetCenter = target.center;
         let impulse = {
             x: 0,
-            y: 0
+            y: 0,
+        };
+
+        if (this.y >= targetCenter.y) {
+            impulse.y = target.y + target.height - this.y;
+        } else {
+            impulse.y = -1 * (this.y + this.height - target.y);
         }
 
-        if ( this.y >= targetCenter.y ) {
-            impulse.y = target.y + target.height - this.y
+        if (this.x >= targetCenter.x) {
+            impulse.x = target.x + target.width - this.x;
         } else {
-            impulse.y = -1*(this.y + this.height - target.y)
-        }
-
-        if ( this.x >= targetCenter.x ) {
-            impulse.x = target.x + target.width - this.x
-        } else {
-            impulse.x = -1*(this.x + this.width - target.x)
+            impulse.x = -1 * (this.x + this.width - target.x);
         }
 
         if (Math.abs(impulse.x) > Math.abs(impulse.y)) {
-            impulse.x = 0
+            impulse.x = 0;
         } else {
-            impulse.y = 0
+            impulse.y = 0;
         }
 
         return impulse;
@@ -62,27 +62,27 @@ export default class Drawable extends SettableObject {
     }
 
     setStyle(styles) {
-        this.style.set(styles)
-        return this
+        this.style.set(styles);
+        return this;
     }
 
     cache() {
         let offscreenCanvas = new Canvas();
         offscreenCanvas.setSize(this.width, this.height, false);
 
-        this.draw(offscreenCanvas.ctx)
+        this.draw(offscreenCanvas.ctx);
 
         this.draw = function (ctx) {
             ctx.drawImage(offscreenCanvas.node, this.x, this.y);
-        }
+        };
     }
 
     positionAtAncestor(ancestor) {
         let parent = this.parent;
         let position = {
             x: this.x,
-            y: this.y
-        }
+            y: this.y,
+        };
 
         while (parent !== null && ancestor !== parent) {
             position.x += parent.x;
@@ -105,8 +105,8 @@ export default class Drawable extends SettableObject {
 
     get center() {
         return {
-            x: this.x + this.width/2,
-            y: this.y + this.height/2,
-        }
+            x: this.x + this.width / 2,
+            y: this.y + this.height / 2,
+        };
     }
 }
