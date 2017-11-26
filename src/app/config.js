@@ -1,16 +1,18 @@
+const gridSize = (ratio) => Math.round(70 * ratio);
+
 export const config = {
     size: {
-        grid: 70,
-        me: 30,
+        grid: gridSize(1),
+        me: gridSize(0.4),
     },
     speed: {
-        initial: 10,
-        max: 180,
-        acceleration: 800,
+        initial: gridSize(0.14),
+        max: gridSize(2.6),
+        acceleration: gridSize(11.5),
     },
     shelf: {
-        faceSize: 50,
-        facePadding: 3,
+        faceSize: gridSize(0.7),
+        facePadding: gridSize(0.0429),
     },
     palette: {
         base1: '#133354',
