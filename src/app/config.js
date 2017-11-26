@@ -6,7 +6,7 @@ export const config = {
     speed: {
         initial: 10,
         max: 180,
-        acceleration: 500,
+        acceleration: 800,
     },
     shelf: {
         faceSize: 50,
