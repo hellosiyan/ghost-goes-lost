@@ -36,12 +36,10 @@ export default class Store {
     placePeople(player, mom) {
         let emptyTileGrid = this.tileGrid.filter(emptyTile);
         let playerTile = game.prngs.pcg.pick(emptyTileGrid);
+        const radius = 4;
 
-        let possibleTileGrid = TileGrid.outsideRadius(
-            emptyTileGrid,
-            playerTile,
-            Math.round(Math.max(this.width - 2, this.height - 2) / 1.5)
-        );
+        const possibleTileGrid = this.tileGrid.floodSelectOutsideRadius(playerTile, radius);
+
         let momTile = game.prngs.pcg.pick(possibleTileGrid);
 
         player.x = playerTile.x * game.config.size.grid;

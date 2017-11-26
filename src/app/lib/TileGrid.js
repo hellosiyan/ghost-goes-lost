@@ -1,3 +1,7 @@
+import PriorityQueue from '../PriorityQueue';
+
+const tileKey = (tile) => `${tile.x}.${tile.y}`;
+
 export default class TileGrid {
     constructor () {
         this.data = [];
@@ -27,6 +31,8 @@ export default class TileGrid {
                 this.data[this.width * y + x] = value;
             }
         }
+
+        return this;
     }
 
     fillRow (row, value) {
@@ -137,6 +143,67 @@ export default class TileGrid {
         copy.height = this.height;
 
         return copy;
+    }
+
+    neighbors(x, y) {
+        return [
+            { x: x, y: y - 1 },
+            { x: x - 1, y: y },
+            { x: x, y: y + 1 },
+            { x: x + 1, y: y },
+        ].filter(tile => {
+            if (tile.x < 0 || tile.y < 0) {
+                return false;
+            }
+
+            if (tile.x >= this.width || tile.y >= this.height) {
+                return false;
+            }
+
+            return true;
+        });
+    }
+
+    mapWalkableTilesFrom(source, walkableValues = [0]) {
+        const walkableTiles = [];
+        const frontier = new PriorityQueue();
+        const visited = [];
+        const costSoFar = {};
+
+        frontier.put(source, 0);
+        visited.push(tileKey(source));
+        costSoFar[tileKey(source)] = 0;
+
+        while (! frontier.empty()) {
+            const current = frontier.get();
+            const neighbors = this.neighbors(current.x, current.y)
+                .filter(tile => walkableValues.includes(this.get(tile.x, tile.y)));
+
+            neighbors.forEach((next) => {
+                const newCost = costSoFar[tileKey(current)] + 1;
+
+                if (! visited.includes(tileKey(next)) || newCost < costSoFar[tileKey(next)]) {
+                    costSoFar[tileKey(next)] = newCost;
+                    frontier.put(next, newCost);
+
+                    visited.push(tileKey(next));
+                    walkableTiles.push({
+                        x: next.x,
+                        y: next.y,
+                        distance: newCost,
+                        origin: current,
+                    });
+                }
+            });
+        }
+
+        return walkableTiles;
+    }
+
+    floodSelectOutsideRadius(source, radius, walkableValues = [0]) {
+        return this.mapWalkableTilesFrom(source, walkableValues)
+            .filter(tile => tile.distance > radius)
+            .map(tile => ({ x: tile.x, y: tile.y }));
     }
 
     static outsideRadius(coordinates, center, radius) {
