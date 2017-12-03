@@ -11,8 +11,8 @@ export default class ChildGhost extends Drawable {
         this.levitationTimeInterval = 0;
 
         this.direction = {
-            x: '', // [ud]
-            y: '', // [lr]
+            x: '', // (left|right)
+            y: '', // (up|down)
         };
     }
 
@@ -22,7 +22,7 @@ export default class ChildGhost extends Drawable {
         ctx.msImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
 
-        const spriteName = this.direction.y == 'u' ? 'back' : 'front';
+        const spriteName = this.direction.y == 'up' ? 'back' : 'front';
 
         this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt) % 2;
         const levitationHeightRatio = Math.abs(this.levitationTimeInterval - 1) * 0.2;
@@ -31,7 +31,7 @@ export default class ChildGhost extends Drawable {
         let x = this.x;
         let y = this.y - this.height - levitationY;
 
-        if (this.direction.x == 'r') {
+        if (this.direction.x == 'right') {
             ctx.scale(-1, 1);
             x = -1 * this.x - this.width;
         }
