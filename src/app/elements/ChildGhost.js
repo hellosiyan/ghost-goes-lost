@@ -11,9 +11,21 @@ export default class ChildGhost extends Drawable {
         this.levitationTimeInterval = 0;
 
         this.direction = {
-            x: '', // (left|right)
-            y: '', // (up|down)
+            x: 'left', // (left|right)
+            y: 'down', // (up|down)
         };
+    }
+
+    setDirection(direction) {
+        if (direction.x) {
+            this.direction.x = direction.x
+        }
+
+        if (direction.y) {
+            this.direction.y = direction.y
+        }
+
+        return this;
     }
 
     draw(ctx) {

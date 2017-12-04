@@ -1,19 +1,13 @@
 import Container from './lib/Container';
 import ChildGhost from './elements/ChildGhost';
+import Movable from './Movable';
 import game from './Game';
 
-const cos45 = 1 / Math.sqrt(2);
-
-export default class Player extends Container {
+export default class Player extends Movable(Container) {
     constructor() {
         super();
 
         this.visible = false;
-
-        this.direction = {
-            x: '', // (left|right)
-            y: '', // (up|down)
-        };
 
         this.ghost = new ChildGhost();
 
@@ -21,38 +15,39 @@ export default class Player extends Container {
 
         this.width = game.config.size.me;
         this.height = Math.ceil(Math.ceil(game.config.size.me / 20 * 26) * 0.1);
+    }
 
-        this.speed = 0;
+    draw(ctx) {
+        this.ghost.setDirection(this.direction);
+
+        super.draw(ctx);
     }
 
     move() {
         if (! (game.io.left || game.io.right || game.io.up || game.io.down)) {
-            this.speed = 0;
-            return;
+            this.speed *= Math.pow(0.6, (game.loop.dt * 60));
+            this.speed = this.speed < 0.1 ? 0 : this.speed;
+        } else {
+            this.speed += game.config.speed.acceleration * game.loop.dt;
+            this.speed = Math.min(this.speed, game.config.speed.max);
         }
 
-        this.speed += game.config.speed.acceleration * game.loop.dt;
-        this.speed = Math.min(this.speed, game.config.speed.max);
-
-        const movingDiagonally = (game.io.left || game.io.right) && (game.io.up || game.io.down);
-        const speed = this.speed * game.loop.dt * (movingDiagonally ? cos45 : 1);
-
         if (game.io.left) {
-            this.x -= speed;
             this.direction.x = 'left';
         } else if (game.io.right) {
-            this.x += speed;
             this.direction.x = 'right';
+        } else if (game.io.up || game.io.down) {
+            this.direction.x = '';
         }
 
         if (game.io.up) {
-            this.y -= speed;
             this.direction.y = 'up';
         } else if (game.io.down) {
-            this.y += speed;
             this.direction.y = 'down';
+        } else if (game.io.left || game.io.right) {
+            this.direction.y = '';
         }
 
-        this.ghost.direction = this.direction;
+        super.move();
     }
 }
