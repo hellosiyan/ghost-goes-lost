@@ -2,6 +2,8 @@ import Container from './lib/Container';
 import ChildGhost from './elements/ChildGhost';
 import game from './Game';
 
+const cos45 = 1 / Math.sqrt(2);
+
 export default class Player extends Container {
     constructor() {
         super();
@@ -20,55 +22,35 @@ export default class Player extends Container {
         this.width = game.config.size.me;
         this.height = Math.ceil(Math.ceil(game.config.size.me / 20 * 26) * 0.1);
 
-        this.speed = {
-            x: 0,
-            y: 0,
-        };
+        this.speed = 0;
     }
 
     move() {
-        if (! game.io.left && ! game.io.right) {
-            this.speed.x = 0;
-        } else {
-            const newDirection = game.io.left ? 'left' : 'right';
-
-            if (this.direction.x === newDirection) {
-                this.speed.x += game.config.speed.acceleration * game.loop.dt;
-            } else {
-                this.speed.x = game.config.speed.initial * game.loop.dt;
-            }
-
-            this.speed.x = Math.min(this.speed.x, game.config.speed.max);
-
-            this.direction.x = newDirection;
-
-            if (this.direction.x == 'left') {
-                this.x -= this.speed.x * game.loop.dt;
-            } else {
-                this.x += this.speed.x * game.loop.dt;
-            }
+        if (! (game.io.left || game.io.right || game.io.up || game.io.down)) {
+            this.speed = 0;
+            return;
         }
 
-        if (! game.io.up && ! game.io.down) {
-            this.speed.y = 0;
-        } else {
-            const newDirection = game.io.up ? 'up' : 'down';
+        this.speed += game.config.speed.acceleration * game.loop.dt;
+        this.speed = Math.min(this.speed, game.config.speed.max);
 
-            if (this.direction.y === newDirection) {
-                this.speed.y += game.config.speed.acceleration * game.loop.dt;
-            } else {
-                this.speed.y = game.config.speed.initial * game.loop.dt;
-            }
+        const movingDiagonally = (game.io.left || game.io.right) && (game.io.up || game.io.down);
+        const speed = this.speed * game.loop.dt * (movingDiagonally ? cos45 : 1);
 
-            this.speed.y = Math.min(this.speed.y, game.config.speed.max);
+        if (game.io.left) {
+            this.x -= speed;
+            this.direction.x = 'left';
+        } else if (game.io.right) {
+            this.x += speed;
+            this.direction.x = 'right';
+        }
 
-            this.direction.y = newDirection;
-
-            if (this.direction.y == 'up') {
-                this.y -= this.speed.y * game.loop.dt;
-            } else {
-                this.y += this.speed.y * game.loop.dt;
-            }
+        if (game.io.up) {
+            this.y -= speed;
+            this.direction.y = 'up';
+        } else if (game.io.down) {
+            this.y += speed;
+            this.direction.y = 'down';
         }
 
         this.ghost.direction = this.direction;
