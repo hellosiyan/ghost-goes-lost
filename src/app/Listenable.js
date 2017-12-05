@@ -1,6 +1,4 @@
 export default function Listenable(baseClass) {
-    console.log('blurg');
-
     if (! baseClass) {
         baseClass = class {};
     }

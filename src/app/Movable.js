@@ -3,8 +3,6 @@ import game from './Game';
 const cos45 = 1 / Math.sqrt(2);
 
 export default function Movable(baseClass) {
-    console.log('movable!');
-
     if (! baseClass) {
         baseClass = class {};
     }
