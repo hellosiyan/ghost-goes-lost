@@ -3,16 +3,13 @@ import Color from './lib/Color';
 import game from './Game';
 
 export default class Aisle extends Obstacle {
-    constructor() {
-        super();
-    }
-
     draw (ctx) {
-        let faceSize = game.config.shelf.faceSize;
-        let color = Color.fromHex(game.config.palette.base2);
+        const faceSize = game.config.shelf.faceSize;
+        const shadowSize = game.config.shelf.shadowSize;
+        const color = Color.fromHex(game.config.palette.base2);
 
         // Shadow
-        this.drawShadow(ctx, { x: 14, y: faceSize / 2 });
+        this.drawShadow(ctx, { x: shadowSize, y: faceSize / 2 });
 
         // Front Section (Base)
         ctx.fillStyle = color.toString();
@@ -41,25 +38,50 @@ export default class Aisle extends Obstacle {
     }
 
     drawShelves(ctx, maxHeight, color) {
-        const shelfWidth = Math.round(this.width / 2) - 10;
-
         const totalRows = game.prngs.pcg.pick([2, 3]);
         const isHorizontal = this.width >= this.height;
+        const shelfWidth = isHorizontal ? this.width : Math.round(this.width / 2) - game.config.shelf.sideSpacing;
 
         for (var i = totalRows; i >= 1; i--) {
-            const size = Math.round(maxHeight * (i / totalRows));
+            const shelfHeight = Math.round(maxHeight * (i / totalRows));
+            const dropShadow = i != totalRows;
 
             if (isHorizontal) {
-                this.drawShelf(ctx, color, this.x, this.y + this.height - maxHeight, this.width, size);
+                this.drawShelf(ctx, color, this.x, this.y + this.height - maxHeight, shelfWidth, shelfHeight, dropShadow);
             } else {
-                this.drawShelf(ctx, color, this.x, this.y + this.height - maxHeight, shelfWidth, size);
-                this.drawShelf(ctx, color, this.x + this.width - shelfWidth, this.y + this.height - maxHeight, shelfWidth, size);
+                // Left side
+                this.drawShelf(
+                    ctx, color,
+                    this.x,
+                    this.y + this.height - maxHeight,
+                    shelfWidth,
+                    shelfHeight,
+                    dropShadow
+                );
+
+                // Right side
+                this.drawShelf(
+                    ctx, color,
+                    this.x + this.width - shelfWidth,
+                    this.y + this.height - maxHeight,
+                    shelfWidth,
+                    shelfHeight,
+                    dropShadow
+                );
             }
         }
     }
 
-    drawShelf (ctx, color, x, y, width, height) {
-        const facePadding = game.config.shelf.facePadding;
+    drawShelf (ctx, color, x, y, width, height, withShadow) {
+        const padding = game.config.shelf.facePadding;
+
+        // Bottom shadow
+        if (withShadow) {
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(x + padding, y + height, width - padding * 2, padding);
+            ctx.globalAlpha = 1;
+        }
 
         // Bottom line
         ctx.fillStyle = color.toString();
@@ -67,31 +89,49 @@ export default class Aisle extends Obstacle {
 
         // Inner shadow
         ctx.fillStyle = color.copy().lighten(0.3).shiftHue(20).toString();
-        ctx.fillRect(x + facePadding, y + facePadding, width - facePadding * 2, height - facePadding * 2);
+        ctx.fillRect(
+            x + padding,
+            y + padding,
+            width - padding * 2,
+            height - padding * 2
+        );
 
         // Shelf
         ctx.fillStyle = color.copy().lighten(0.5).shiftHue(40).toString();
-        ctx.fillRect(x + facePadding + facePadding, y + facePadding + facePadding, width - facePadding * 2 * 2, height - facePadding * 2 * 2);
+        ctx.fillRect(
+            x + padding * 2,
+            y + padding * 2,
+            width - padding * 4,
+            height - padding * 4
+        );
 
         // Item
-        if (game.prngs.pcg.next() < 0.5) {
-            let itemWidth = Math.min(30, Math.round((width - facePadding * 4) * 0.9));
-            let itemX = Math.round(game.prngs.pcg.next() * (width - itemWidth - facePadding * 2 * 2));
-
-            this.drawItem(
-                ctx,
-                game.prngs.pcg.pick(game.spritesheets.items.sprites),
-                x + facePadding + facePadding + itemX,
-                y + height - facePadding - 20 - 1,
-                itemWidth
-            );
+        if (game.prngs.pcg.next() >= 0.5) {
+            return;
         }
+
+        const itemWidth = Math.min(
+            game.config.shelf.minItemWidth,
+            Math.round((width - padding * 4) * 0.9)
+        );
+
+        const itemX = Math.round(game.prngs.pcg.next() * (width - padding * 4 - itemWidth));
+
+        this.drawItem(
+            ctx,
+            game.prngs.pcg.pick(game.spritesheets.items.sprites),
+            x + padding * 2 + itemX,
+            y - padding * 2 + height,
+            itemWidth
+        );
     }
 
     drawItem(ctx, item, x, y, width) {
+        const sprite = game.spritesheets.items.get(item);
+
         ctx.imageSmoothingEnabled = false;
         ctx.globalCompositeOperation = 'luminosity';
-        game.spritesheets.items.drawToFit(item, ctx, x, y, width, 20);
+        game.spritesheets.items.drawToFit(item, ctx, x, y - sprite.height, sprite.width, sprite.height);
         ctx.globalCompositeOperation = 'source-over';
     }
 }
