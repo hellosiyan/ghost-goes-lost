@@ -1,5 +1,6 @@
-import Obstacle from '../Obstacle'
+import Rect from '../lib/Rect'
+import Collidable from '../Collidable'
 
-export default class Wall extends Obstacle {
+export default class Wall extends Collidable(Rect) {
 
 }

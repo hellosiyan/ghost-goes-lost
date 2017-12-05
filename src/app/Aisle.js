@@ -1,8 +1,9 @@
-import Obstacle from './Obstacle';
+import Drawable from './lib/Drawable';
 import Color from './lib/Color';
+import Collidable from './Collidable';
 import game from './Game';
 
-export default class Aisle extends Obstacle {
+export default class Aisle extends Collidable(Drawable) {
     draw (ctx) {
         const faceSize = game.config.shelf.faceSize;
         const shadowSize = game.config.shelf.shadowSize;
