@@ -1,6 +1,6 @@
-import Rect from './Rect';
+import Rectangle from './Rectangle';
 
-export default class Container extends Rect {
+export default class Container extends Rectangle {
     constructor() {
         super();
 

@@ -1,6 +1,6 @@
 import Drawable from './Drawable';
 
-export default class Rect extends Drawable{
+export default class Rectangle extends Drawable{
     draw (ctx) {
         ctx.fillStyle = this.style.color;
         ctx.globalAlpha = this.style.opacity;

@@ -1,7 +1,7 @@
-import Rect from './lib/Rect';
+import Rectangle from './lib/Rectangle';
 import game from './Game';
 
-export default class Mom extends Rect {
+export default class Mom extends Rectangle {
     constructor() {
         super();
 
