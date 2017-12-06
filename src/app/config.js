@@ -15,7 +15,7 @@ export const config = {
         facePadding: gridSize(0.0429),
         minItemWidth: gridSize(0.4),
         sideSpacing: gridSize(0.14),
-        shadowSize: gridSize(0.2)
+        shadowSize: gridSize(0.2),
     },
     palette: {
         base1: '#133354',

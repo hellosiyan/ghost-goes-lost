@@ -18,11 +18,11 @@ export default class ChildGhost extends Drawable {
 
     setDirection(direction) {
         if (direction.x) {
-            this.direction.x = direction.x
+            this.direction.x = direction.x;
         }
 
         if (direction.y) {
-            this.direction.y = direction.y
+            this.direction.y = direction.y;
         }
 
         return this;

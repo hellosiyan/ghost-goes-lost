@@ -1,10 +1,10 @@
-import Drawable from '../lib/Drawable'
+import Drawable from '../lib/Drawable';
 
 export default class TileFloor extends Drawable {
     constructor() {
         super();
 
-        this.tilePadding = 1
+        this.tilePadding = 1;
         this.tileWidth = 10;
         this.tileHeight = 10;
         this.tile = document.createElement('canvas');
@@ -25,7 +25,7 @@ export default class TileFloor extends Drawable {
         this.tile.height = this.tileHeight;
 
         // Base color
-        ctx.fillStyle = this.style.color.copy().lighten(0.1).toString()
+        ctx.fillStyle = this.style.color.copy().lighten(0.1).toString();
         ctx.fillRect(
             0,
             0,
@@ -34,7 +34,7 @@ export default class TileFloor extends Drawable {
         );
 
         // Padded base
-        ctx.fillStyle = this.style.color.copy().darken(0.25).toString()
+        ctx.fillStyle = this.style.color.copy().darken(0.25).toString();
         ctx.fillRect(
             this.tilePadding,
             this.tilePadding,
@@ -43,7 +43,7 @@ export default class TileFloor extends Drawable {
         );
 
         // 2nd padded base
-        ctx.fillStyle = this.style.color.copy().toString()
+        ctx.fillStyle = this.style.color.copy().toString();
         ctx.fillRect(
             this.tilePadding * 2,
             this.tilePadding * 2,
