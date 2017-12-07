@@ -106,33 +106,54 @@ export default class Aisle extends Collidable(Drawable) {
             height - padding * 4
         );
 
-        // Item
-        if (game.prngs.pcg.next() >= 0.5) {
-            return;
+        // Items
+        const sizeRatio = game.config.shelf.itemScaleRatio;
+        const shelfSparcity = game.prngs.pcg.pick([0.1, 0.3, 0.5, 0.7]);
+        let totalItemsLength = 0;
+
+        while (totalItemsLength < width - padding * 4) {
+            const item = game.spritesheets.items.get(game.prngs.pcg.pick(game.spritesheets.items.sprites));
+            const repeatItem = game.prngs.pcg.pick([1, 2, 3, 4]);
+
+            item.width *= sizeRatio;
+            item.height *= sizeRatio;
+
+            if (game.prngs.pcg.next() >= shelfSparcity) {
+                totalItemsLength += item.width;
+                continue;
+            }
+
+            for (var i = 0; i < repeatItem; i++) {
+                if (totalItemsLength + item.width >= width - padding * 4) {
+                    break;
+                }
+
+                this.drawItem(
+                    ctx,
+                    item.name,
+                    x + padding * 2 + totalItemsLength,
+                    y - padding * 2 + height,
+                    item.width,
+                    item.height
+                );
+
+                totalItemsLength += item.width + 2 * sizeRatio;
+            }
         }
-
-        const itemWidth = Math.min(
-            game.config.shelf.minItemWidth,
-            Math.round((width - padding * 4) * 0.9)
-        );
-
-        const itemX = Math.round(game.prngs.pcg.next() * (width - padding * 4 - itemWidth));
-
-        this.drawItem(
-            ctx,
-            game.prngs.pcg.pick(game.spritesheets.items.sprites),
-            x + padding * 2 + itemX,
-            y - padding * 2 + height,
-            itemWidth
-        );
     }
 
-    drawItem(ctx, item, x, y, width) {
-        const sprite = game.spritesheets.items.get(item);
-
+    drawItem(ctx, itemName, x, y, width, height) {
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
+
         ctx.globalCompositeOperation = 'luminosity';
-        game.spritesheets.items.drawToFit(item, ctx, x, y - sprite.height, sprite.width, sprite.height);
+        game.spritesheets.items.draw(itemName, ctx, x, y - height, width, height);
         ctx.globalCompositeOperation = 'source-over';
+
+        ctx.globalAlpha = 0.3;
+        game.spritesheets.items.draw(itemName, ctx, x, y - height, width, height);
+        ctx.globalAlpha = 1;
     }
 }

@@ -8,7 +8,13 @@ export default class Spritesheet extends SettableObject {
     }
 
     get(spriteName) {
-        return this.sprites[spriteName];
+        const sprite = this.sprites[spriteName];
+
+        return {
+            width: sprite.width,
+            height: sprite.height,
+            name: spriteName
+        }
     }
 
     drawToHeight(spriteName, ctx, x, y, destHeight) {
