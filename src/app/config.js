@@ -5,6 +5,7 @@ export const config = {
     size: {
         grid: gridSizeInt(1),
         me: gridSizeInt(0.6),
+        mom: gridSizeInt(0.45),
     },
     speed: {
         initial: gridSizeInt(0.14),
