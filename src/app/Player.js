@@ -9,12 +9,11 @@ export default class Player extends Movable(Container) {
 
         this.visible = false;
 
-        this.ghost = new ChildGhost();
-
-        this.addChild(this.ghost);
-
         this.width = game.config.size.me;
         this.height = Math.ceil(Math.ceil(game.config.size.me / 20 * 26) * 0.1);
+
+        this.ghost = new ChildGhost();
+        this.addChild(this.ghost);
     }
 
     draw(ctx) {

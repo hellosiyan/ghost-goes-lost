@@ -1,14 +1,14 @@
-const gridSizeFloat = (ratio) => 70 * ratio;
+const gridSizeFloat = (ratio) => 140 * ratio;
 const gridSizeInt = (ratio) => Math.round(gridSizeFloat(ratio));
 
 export const config = {
     size: {
         grid: gridSizeInt(1),
-        me: gridSizeInt(0.4),
+        me: gridSizeInt(0.6),
     },
     speed: {
         initial: gridSizeInt(0.14),
-        max: gridSizeInt(2.6),
+        max: gridSizeInt(2),
         acceleration: gridSizeInt(11.5),
     },
     shelf: {

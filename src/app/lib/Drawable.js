@@ -75,6 +75,8 @@ export default class Drawable extends SettableObject {
         this.draw = function (ctx) {
             ctx.drawImage(offscreenCanvas.node, this.x, this.y);
         };
+
+        return this;
     }
 
     positionAtAncestor(ancestor) {

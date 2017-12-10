@@ -10,11 +10,17 @@ export default class Pixmap extends SettableObject {
         this.map = [];
     }
 
-    toDrawable(pixelSize) {
-        const width = this.width * pixelSize;
-        const height = this.height * pixelSize;
+    toDrawable(options) {
+        let pixelSize = 1;
 
-        let drawable = new Drawable().set({width, height});
+        if (typeof options['fitWidth'] !== 'undefined') {
+            pixelSize = Math.floor(options.fitWidth / this.width);
+        }
+
+        let width = this.width * pixelSize;
+        let height = this.height * pixelSize;
+
+        let drawable = new Drawable().set({ width, height });
 
         drawable.draw = (ctx) => {
             this.map.forEach((color, index) => {
@@ -38,7 +44,7 @@ export default class Pixmap extends SettableObject {
 
         if (width === 0) {
             let firstNewlinePosition = literal.indexOf('\n');
-            width = firstNewlinePosition > 0 ? firstNewlinePosition: literal.length;
+            width = firstNewlinePosition > 0 ? firstNewlinePosition : literal.length;
         }
 
         for (let char of literal) {
