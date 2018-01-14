@@ -19,7 +19,7 @@ class Game {
         this.canvas = null;
         this.scene = null;
 
-        this.levelNumber = 4;
+        this.levelNumber = 1;
         this.level = null;
         this.howtoShown = false;
     }
@@ -58,7 +58,7 @@ class Game {
 
     initCanvas() {
         this.canvas = new Canvas();
-        this.canvas.setSize(640, 480);
+        this.canvas.setSize(1000, 1000);
 
         this.scene = new Container().set({
             width: this.canvas.width,

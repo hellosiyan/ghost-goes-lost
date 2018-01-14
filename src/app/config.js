@@ -3,13 +3,14 @@ const gridSizeInt = (ratio) => Math.round(gridSizeFloat(ratio));
 
 export const config = {
     size: {
+        pixel: 3,
         grid: gridSizeInt(1),
         me: gridSizeInt(0.6),
         mom: gridSizeInt(0.45),
     },
     speed: {
         initial: gridSizeInt(0.14),
-        max: gridSizeInt(2),
+        max: gridSizeInt(4),
         acceleration: gridSizeInt(11.5),
     },
     shelf: {

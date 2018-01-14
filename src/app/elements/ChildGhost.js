@@ -36,7 +36,7 @@ const pixmaps = {
 00000+=--......--==+++++=+
 000000+==------==++00000+0
 0000000++======++000000000
-000000000++++++00000000000`, colorKey).toDrawable({ fitWidth: config.size.me }).cache(),
+000000000++++++00000000000`, colorKey).toDrawable().cache(),
     back: Pixmap.load(`
 0000000++++++0000000000000
 00000++......++00000000000
@@ -61,7 +61,7 @@ const pixmaps = {
 00000+=--......--==+++++=+
 000000+==------==++00000+0
 0000000++======++000000000
-000000000++++++00000000000`, colorKey).toDrawable({ fitWidth: config.size.me }).cache(),
+000000000++++++00000000000`, colorKey).toDrawable().cache(),
 };
 
 export default class ChildGhost extends Drawable {

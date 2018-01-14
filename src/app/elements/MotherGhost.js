@@ -45,7 +45,7 @@ const pixmaps = {
 00+==---....-=+00000
 000++===------+00000
 00000++++======+0000
-000000000++++++00000`, colorKey).toDrawable({ fitWidth: config.size.mom }).cache(),
+000000000++++++00000`, colorKey).toDrawable().cache(),
 };
 
 export default class MotherGhost extends Drawable {

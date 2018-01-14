@@ -7,6 +7,7 @@ import game from './Game';
 
 import TileFloor from './elements/TileFloor';
 import Wall from './elements/Wall';
+import WallBuilder from './WallBuilder';
 
 const borderTile = 99;
 const emptyTile = 0;
@@ -31,6 +32,8 @@ export default class Store {
         this.generateSections();
         this.constructTileGrid();
         this.createDrawables();
+
+        this.floor = false;
     }
 
     placePeople(player, mom) {
@@ -57,62 +60,25 @@ export default class Store {
     }
 
     createFloor() {
-        let floor = new TileFloor();
+        this.floor = new TileFloor();
 
-        floor.style.color = Color.fromHex(game.config.palette.base1).darken(0.2);
+        this.floor.style.color = Color.fromHex(game.config.palette.base1).darken(0.2);
 
-        floor.set({
+        this.floor.set({
             tilePadding: 1,
             tileWidth: Math.round(game.config.size.grid / 4),
             tileHeight: Math.round(game.config.size.grid / 4),
-            x: 0,
-            y: 0,
-            width: this.width * game.config.size.grid,
-            height: this.height * game.config.size.grid,
+            x: 1 * game.config.size.grid,
+            y: 1 * game.config.size.grid,
+            width: (this.width - 2) * game.config.size.grid,
+            height: (this.height - 2) * game.config.size.grid,
         });
 
-        return floor;
+        return this.floor;
     }
 
     createWalls() {
-        let color = Color.fromHex(game.config.palette.base2).darken(0.5).toString();
-        let walls = [];
-
-        // top
-        walls.push(new Wall().set({
-            x: 0,
-            y: 0,
-            width: this.width * game.config.size.grid,
-            height: 1 * game.config.size.grid,
-        }));
-
-        // bottom
-        walls.push(new Wall().set({
-            x: 0,
-            y: (this.height - 1) * game.config.size.grid,
-            width: this.width * game.config.size.grid,
-            height: 1 * game.config.size.grid,
-        }));
-
-        // left
-        walls.push(new Wall().set({
-            x: 0,
-            y: 0,
-            width: 1 * game.config.size.grid,
-            height: this.height * game.config.size.grid,
-        }));
-
-        // right
-        walls.push(new Wall().set({
-            x: (this.width - 1) * game.config.size.grid,
-            y: 0,
-            width: 1 * game.config.size.grid,
-            height: this.height * game.config.size.grid,
-        }));
-
-        walls.forEach(wall => wall.setStyle({ color }));
-
-        return walls;
+        return WallBuilder.buildAround(this.floor);
     }
 
     createShelves() {
