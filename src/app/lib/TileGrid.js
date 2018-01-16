@@ -1,4 +1,4 @@
-import PriorityQueue from '../PriorityQueue';
+import PriorityQueue from './PriorityQueue';
 
 const tileKey = (tile) => `${tile.x}.${tile.y}`;
 
