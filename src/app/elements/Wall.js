@@ -1,17 +1,15 @@
 import Rectangle from '../lib/Rectangle';
 import Collidable from '../Collidable';
-import Pixmap from '../lib/Pixmap';
-import game from '../Game';
-
+import Pixmap from '../Pixmap';
 
 let colorKey = {
-    '0': '#000',//'#000',//'#000',
-    '3': '#0A0507',//'#2B1B07',//'#333',
-    '6': '#1D1833',//'#593A1B',//'#666',
-    '9': '#463E60',//'#875F33',//'#999',
-    'a': '#585072',//'#B47948',//'#ccc',
-    'c': '#6A628E',//'#B47948',//'#ccc',
-    'f': '#9084BC',//'#E29B5D',//'#fff',
+    0: '#000', //'#000',//'#000',
+    3: '#0A0507', //'#2B1B07',//'#333',
+    6: '#1D1833', //'#593A1B',//'#666',
+    9: '#463E60', //'#875F33',//'#999',
+    a: '#585072', //'#B47948',//'#ccc',
+    c: '#6A628E', //'#B47948',//'#ccc',
+    f: '#9084BC', //'#E29B5D',//'#fff',
 };
 
 const pixmaps = {
@@ -72,7 +70,7 @@ a
 9
 9
 6
-3`, colorKey)
+3`, colorKey),
 };
 
 export default class Wall extends Collidable(Rectangle) {
@@ -98,7 +96,7 @@ export default class Wall extends Collidable(Rectangle) {
     }
 
     placeAt(point) {
-        switch( this.type ) {
+        switch (this.type) {
             case 'top':
                 this.x = point.x;
                 this.y = point.y - this.getRenderSize().height;
@@ -121,7 +119,7 @@ export default class Wall extends Collidable(Rectangle) {
     }
 
     resizeTo(size) {
-        switch( this.type ) {
+        switch (this.type) {
             case 'top':
             case 'bottom':
                 this.width = Math.abs(size);
@@ -137,16 +135,15 @@ export default class Wall extends Collidable(Rectangle) {
         return this;
     }
 
-
     draw(ctx) {
-        switch(this.type) {
+        switch (this.type) {
             case 'top':
             case 'bottom':
                 pixmaps[this.type]
                     .toPatternedDrawable({ width: this.width }, 'repeat-x')
                     .set({
                         x: this.x,
-                        y: this.y
+                        y: this.y,
                     })
                     .draw(ctx);
                 break;
@@ -156,15 +153,10 @@ export default class Wall extends Collidable(Rectangle) {
                     .toPatternedDrawable({ height: this.height }, 'repeat-y')
                     .set({
                         x: this.x,
-                        y: this.y
+                        y: this.y,
                     })
                     .draw(ctx);
                 break;
         }
-
-        // ctx.fillStyle = '#0f0';
-        // ctx.globalAlpha = 0.2;
-        // ctx.fillRect(this.x, this.y, this.width, this.height);
-        // ctx.globalAlpha = 1;
     }
 }

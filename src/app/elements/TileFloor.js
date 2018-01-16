@@ -1,10 +1,10 @@
 import Drawable from '../lib/Drawable';
-import Pixmap from '../lib/Pixmap';
+import Pixmap from '../Pixmap';
 
 let colorKey = {
-    '0': '#132339',
-    '1': '#162c44',
-    '2': '#17314a',
+    0: '#132339',
+    1: '#162c44',
+    2: '#17314a',
 };
 
 const pixmap = Pixmap.load(`
@@ -30,7 +30,7 @@ export default class TileFloor extends Drawable {
             .toPatternedDrawable({ height: this.height, width: this.width }, 'repeat')
             .set({
                 x: this.x,
-                y: this.y
+                y: this.y,
             })
             .draw(ctx);
     }

@@ -1,10 +1,10 @@
 import Drawable from '../lib/Drawable';
-import Pixmap from '../lib/Pixmap';
+import Pixmap from '../Pixmap';
 import game from '../Game';
 import { config } from '../config';
 
 let colorKey = {
-    '0': 'rgba(0,0,0,0)',
+    0: 'rgba(0,0,0,0)',
     '.': '#fff',
     '+': '#666',
     '-': '#eee',
@@ -68,7 +68,7 @@ export default class ChildGhost extends Drawable {
     constructor() {
         super();
 
-        this.width = game.config.size.me;
+        this.width = pixmaps.front.width;
         this.height = pixmaps.front.height;
 
         this.levitationTimeInterval = 0;
@@ -92,11 +92,6 @@ export default class ChildGhost extends Drawable {
     }
 
     draw(ctx) {
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
-        ctx.imageSmoothingEnabled = false;
-
         const spriteName = this.direction.y == 'up' ? 'back' : 'front';
 
         this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt) % 2;
@@ -104,7 +99,7 @@ export default class ChildGhost extends Drawable {
         const levitationY = Math.round(levitationHeightRatio * this.height);
 
         let x = this.x;
-        let y = this.y - this.height - levitationY;
+        let y = this.y - levitationY;
 
         if (this.direction.x == 'right') {
             ctx.scale(-1, 1);
@@ -114,6 +109,6 @@ export default class ChildGhost extends Drawable {
         let drawable = pixmaps[spriteName];
         drawable.x = x;
         drawable.y = y;
-        drawable.draw(game.canvas.ctx);
+        drawable.draw(ctx);
     }
 }

@@ -1,9 +1,9 @@
 import SettableObject from './SettableObject';
 import Drawable from './Drawable';
 import Canvas from './Canvas';
-import { config } from '../config';
 
 export default class Pixmap extends SettableObject {
+
     constructor() {
         super();
 
@@ -13,16 +13,14 @@ export default class Pixmap extends SettableObject {
     }
 
     getRenderSize() {
-        let pixelSize = config.size.pixel;
+        let width = this.inPixels(this.width);
+        let height = this.inPixels(this.height);
 
-        let width = this.width * pixelSize;
-        let height = this.height * pixelSize;
-
-        return {width, height, pixelSize};
+        return { width, height };
     }
 
     toDrawable() {
-        let {width, height, pixelSize} = this.getRenderSize();
+        let { width, height } = this.getRenderSize();
 
         let drawable = new Drawable().set({ width, height });
 
@@ -30,10 +28,10 @@ export default class Pixmap extends SettableObject {
             this.map.forEach((color, index) => {
                 ctx.fillStyle = color;
                 ctx.fillRect(
-                    drawable.x + Math.floor(index % this.width) * pixelSize,
-                    drawable.y + Math.floor(index / this.width) * pixelSize,
-                    pixelSize,
-                    pixelSize
+                    drawable.x + this.inPixels(Math.floor(index % this.width)),
+                    drawable.y + this.inPixels(Math.floor(index / this.width)),
+                    this.inPixels(1),
+                    this.inPixels(1)
                 );
             });
         };
@@ -65,15 +63,15 @@ export default class Pixmap extends SettableObject {
         const drawable = new Drawable();
         drawable.set({
             width: pixmapCanvas.width,
-            height: pixmapCanvas.height
-        })
+            height: pixmapCanvas.height,
+        });
 
         if (options.width) {
-            drawable.set({width: options.width})
+            drawable.set({ width: options.width });
         }
 
         if (options.height) {
-            drawable.set({height: options.height})
+            drawable.set({ height: options.height });
         }
 
         // Botstrap pattern
@@ -89,6 +87,10 @@ export default class Pixmap extends SettableObject {
         };
 
         return drawable;
+    }
+
+    inPixels(value) {
+        return value;
     }
 
     static load(literal, colorKey, width = 0) {
@@ -114,7 +116,7 @@ export default class Pixmap extends SettableObject {
             colors.push(colorKey[char]);
         }
 
-        return new Pixmap().set({
+        return new this().set({
             map: colors,
             width: width,
             height: Math.ceil(colors.length / width),

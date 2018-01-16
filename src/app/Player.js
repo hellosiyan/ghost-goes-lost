@@ -2,6 +2,7 @@ import Container from './lib/Container';
 import ChildGhost from './elements/ChildGhost';
 import Movable from './Movable';
 import game from './Game';
+import { inPixels } from './utils';
 
 export default class Player extends Movable(Container) {
     constructor() {
@@ -9,11 +10,14 @@ export default class Player extends Movable(Container) {
 
         this.visible = false;
 
-        this.width = game.config.size.me;
-        this.height = Math.ceil(Math.ceil(game.config.size.me / 20 * 26) * 0.1);
-
         this.ghost = new ChildGhost();
         this.addChild(this.ghost);
+
+        this.width = this.ghost.width;
+        this.height = inPixels(3);
+
+        const ghostHoverHeight = inPixels(1);
+        this.ghost.y = this.height - this.ghost.height - ghostHoverHeight;
     }
 
     draw(ctx) {

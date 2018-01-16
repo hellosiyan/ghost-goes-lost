@@ -7,6 +7,7 @@ import Store from './Store';
 import Listenable from './Listenable';
 import game from './Game';
 import story from './Story';
+import { inGridTiles } from './utils';
 
 export default class Level extends Listenable(SettableObject) {
     constructor(number) {
@@ -23,7 +24,7 @@ export default class Level extends Listenable(SettableObject) {
         this.mom = new Mom();
 
         this.drawable = new Container().set({
-            visible: false
+            visible: false,
         });
 
         this.view = new AutoScrollView();
@@ -54,7 +55,7 @@ export default class Level extends Listenable(SettableObject) {
 
         this.detectCollisions();
 
-        if (this.player.distanceTo(this.mom) < 50) {
+        if (this.player.distanceTo(this.mom) < inGridTiles(0.5)) {
             return this.stop();
         }
 
@@ -67,8 +68,8 @@ export default class Level extends Listenable(SettableObject) {
         this.drawable.set({
             x: Math.round(game.canvas.width / 2 - this.drawable.width / 2),
             y: Math.round(game.canvas.height / 2 - this.drawable.height / 2),
-            width: this.store.width * game.config.size.grid,
-            height: this.store.height * game.config.size.grid,
+            width: inGridTiles(this.store.width),
+            height: inGridTiles(this.store.height),
         });
 
         this.drawable.addChild(this.store.drawable);

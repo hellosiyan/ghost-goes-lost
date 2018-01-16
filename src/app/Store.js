@@ -4,6 +4,7 @@ import TileGrid from './lib/TileGrid';
 import Aisle from './Aisle';
 import Section from './Section';
 import game from './Game';
+import { inGridTiles } from './utils';
 
 import TileFloor from './elements/TileFloor';
 import Wall from './elements/Wall';
@@ -22,8 +23,8 @@ export default class Store {
 
         this.tileGrid = new TileGrid();
         this.drawable = new Container().set({
-            width: this.width * game.config.size.grid,
-            height: this.height * game.config.size.grid,
+            width: inGridTiles(this.width),
+            height: inGridTiles(this.height),
             visible: false,
         });
 
@@ -45,10 +46,10 @@ export default class Store {
 
         let momTile = game.prngs.pcg.pick(possibleTileGrid);
 
-        player.x = playerTile.x * game.config.size.grid;
-        player.y = playerTile.y * game.config.size.grid;
-        mom.x = momTile.x * game.config.size.grid;
-        mom.y = momTile.y * game.config.size.grid;
+        player.x = inGridTiles(playerTile.x);
+        player.y = inGridTiles(playerTile.y);
+        mom.x = inGridTiles(momTile.x);
+        mom.y = inGridTiles(momTile.y);
     }
 
     createDrawables() {
@@ -65,13 +66,10 @@ export default class Store {
         this.floor.style.color = Color.fromHex(game.config.palette.base1).darken(0.2);
 
         this.floor.set({
-            tilePadding: 1,
-            tileWidth: Math.round(game.config.size.grid / 4),
-            tileHeight: Math.round(game.config.size.grid / 4),
-            x: 1 * game.config.size.grid,
-            y: 1 * game.config.size.grid,
-            width: (this.width - 2) * game.config.size.grid,
-            height: (this.height - 2) * game.config.size.grid,
+            x: inGridTiles(1),
+            y: inGridTiles(1),
+            width: inGridTiles(this.width - 2),
+            height: inGridTiles(this.height - 2),
         });
 
         return this.floor;
@@ -95,10 +93,10 @@ export default class Store {
 
             shelves.push(new Aisle()
                 .set({
-                    x: x * game.config.size.grid,
-                    y: y * game.config.size.grid,
-                    width: area.width * game.config.size.grid,
-                    height: area.height * game.config.size.grid,
+                    x: inGridTiles(x),
+                    y: inGridTiles(y),
+                    width: inGridTiles(area.width),
+                    height: inGridTiles(area.height),
                 })
             );
         });

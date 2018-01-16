@@ -1,16 +1,15 @@
 import Rectangle from '../lib/Rectangle';
 import Collidable from '../Collidable';
-import Pixmap from '../lib/Pixmap';
-import game from '../Game';
+import Pixmap from '../Pixmap';
 
 let colorKey = {
-    '0': '#000',
-    '3': '#0A0507',
-    '6': '#1D1833',
-    '9': '#463E60',
-    'a': '#585072',
-    'c': '#6A628E',
-    'f': '#9084BC',
+    0: '#000',
+    3: '#0A0507',
+    6: '#1D1833',
+    9: '#463E60',
+    a: '#585072',
+    c: '#6A628E',
+    f: '#9084BC',
 };
 
 const pixmaps = {
@@ -151,7 +150,7 @@ export default class Corner extends Collidable(Rectangle) {
     }
 
     placeAt(point) {
-        switch( this.type ) {
+        switch (this.type) {
             case 'leftTop':
                 this.x = point.x - this.width;
                 this.y = point.y - this.height;
@@ -185,13 +184,8 @@ export default class Corner extends Collidable(Rectangle) {
             .toDrawable()
             .set({
                 x: this.x,
-                y: this.y
+                y: this.y,
             })
             .draw(ctx);
-
-        // ctx.fillStyle = '#0f0';
-        // ctx.globalAlpha = 0.2;
-        // ctx.fillRect(this.x, this.y, this.width, this.height);
-        // ctx.globalAlpha = 1;
     }
 }
