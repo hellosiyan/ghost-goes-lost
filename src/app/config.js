@@ -3,7 +3,8 @@ const pixelSize = 3;
 export const config = {
     size: {
         pixel: pixelSize,
-        gridPixels: 50 * pixelSize,
+        gridPixels: 30 * pixelSize,
+        aisleHeight: 36 * pixelSize,
     },
     speed: {
         initial: 7 * pixelSize,
