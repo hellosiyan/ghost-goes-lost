@@ -1,10 +1,10 @@
 import SettableObject from './lib/SettableObject';
+import Listenable from './Listenable';
 import Container from './lib/Container';
 import AutoScrollView from './lib/AutoScrollView';
 import Player from './Player';
 import Mom from './Mom';
 import Store from './Store';
-import Listenable from './Listenable';
 import game from './Game';
 import story from './Story';
 import { inGridTiles } from './utils';

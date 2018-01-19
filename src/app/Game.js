@@ -5,7 +5,6 @@ import Loop from './lib/Loop';
 import IO from './lib/IO';
 import Canvas from './lib/Canvas';
 import Container from './lib/Container';
-import SpritesheetLoader from './lib/SpritesheetLoader';
 import Color from './lib/Color';
 
 import Level from './Level';

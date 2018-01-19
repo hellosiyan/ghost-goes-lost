@@ -1,6 +1,4 @@
-import Container from './lib/Container';
 import SortedContainer from './lib/SortedContainer';
-import Color from './lib/Color';
 import TileGrid from './lib/TileGrid';
 import Aisle from './Aisle';
 import Section from './Section';
@@ -8,7 +6,6 @@ import game from './Game';
 import { inGridTiles } from './utils';
 
 import TileFloor from './elements/TileFloor';
-import Wall from './elements/Wall';
 import WallBuilder from './WallBuilder';
 
 const borderTile = 99;
@@ -61,8 +58,6 @@ export default class Store {
 
     createFloor() {
         this.floor = new TileFloor();
-
-        this.floor.style.color = Color.fromHex(game.config.palette.base1).darken(0.2);
 
         this.floor.set({
             x: inGridTiles(1),
