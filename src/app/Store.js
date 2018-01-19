@@ -1,4 +1,5 @@
 import Container from './lib/Container';
+import SortedContainer from './lib/SortedContainer';
 import Color from './lib/Color';
 import TileGrid from './lib/TileGrid';
 import Aisle from './Aisle';
@@ -22,7 +23,7 @@ export default class Store {
         this.width = this.height = minimumSize + this.difficulty * difficultyToSizeRatio;
 
         this.tileGrid = new TileGrid();
-        this.drawable = new Container().set({
+        this.drawable = new SortedContainer().set({
             width: inGridTiles(this.width),
             height: inGridTiles(this.height),
             visible: false,
@@ -56,8 +57,6 @@ export default class Store {
         this.drawable.addChild(this.createFloor());
         this.drawable.addChild(this.createWalls());
         this.drawable.addChild(this.createShelves());
-
-        this.drawable.cache();
     }
 
     createFloor() {
@@ -71,6 +70,8 @@ export default class Store {
             width: inGridTiles(this.width - 2),
             height: inGridTiles(this.height - 2),
         });
+
+        this.floor.cache();
 
         return this.floor;
     }
@@ -98,6 +99,7 @@ export default class Store {
                     width: inGridTiles(area.width),
                     height: inGridTiles(area.height),
                 })
+                .assemble()
             );
         });
 

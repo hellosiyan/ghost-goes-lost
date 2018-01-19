@@ -1,6 +1,7 @@
 import Rectangle from '../lib/Rectangle';
 import Collidable from '../Collidable';
 import Pixmap from '../Pixmap';
+import { inGridTiles } from '../utils';
 
 let colorKey = {
     0: '#000',
@@ -132,15 +133,19 @@ export default class Corner extends Collidable(Rectangle) {
         super();
 
         this.setType('leftTop'); // (leftTop|rightTop|leftBottom|rightBottom)
+
+        this.width = inGridTiles(1);
+        this.height = inGridTiles(1);
+
+        this.graphic = {
+            x: 0,
+            y: 0,
+            canvas: false,
+        };
     }
 
     setType(type) {
         this.type = type;
-
-        const renderSize = this.getRenderSize();
-
-        this.width = renderSize.width;
-        this.height = renderSize.height;
 
         return this;
     }
@@ -173,19 +178,28 @@ export default class Corner extends Collidable(Rectangle) {
     }
 
     draw(ctx) {
-        ctx.fillStyle = '#f00';
-        ctx.globalAlpha = 0.2;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.globalAlpha = 1;
+        ctx.drawImage(
+            this.graphic.canvas.node,
+            this.x + this.graphic.x,
+            this.y + this.graphic.y
+        );
     }
 
-    draw(ctx) {
-        pixmaps[this.type]
-            .toDrawable()
-            .set({
-                x: this.x,
-                y: this.y,
-            })
-            .draw(ctx);
+    assemble() {
+        const drawable = pixmaps[this.type].toDrawable();
+
+        this.graphic.canvas = drawable.asCanvas();
+
+        // Align drawable to bottom
+        if (this.type.toLowerCase().includes('top')) {
+            this.graphic.y += this.height - drawable.height;
+        }
+
+        // Align drawable to right
+        if (this.type.toLowerCase().includes('left')) {
+            this.graphic.x += this.width - drawable.width;
+        }
+
+        return this;
     }
 }

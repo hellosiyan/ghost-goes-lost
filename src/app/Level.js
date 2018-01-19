@@ -64,6 +64,7 @@ export default class Level extends Listenable(SettableObject) {
 
     prepareScene() {
         this.store.placePeople(this.player, this.mom);
+        this.store.drawable.addChild([this.player, this.mom]);
 
         this.drawable.set({
             x: Math.round(game.canvas.width / 2 - this.drawable.width / 2),
@@ -73,8 +74,7 @@ export default class Level extends Listenable(SettableObject) {
         });
 
         this.drawable.addChild(this.store.drawable);
-        this.drawable.addChild(this.player);
-        this.drawable.addChild(this.mom);
+
 
         this.drawable.addTo(this.view);
 

@@ -136,15 +136,16 @@ export default class WallBuilder {
     pushCorner(type) {
         this.builtDrawbles.push(
             new Corner()
-            .setType(type)
-            .placeAt(this.pointer)
+                .setType(type)
+                .placeAt(this.pointer)
+                .assemble()
         );
 
         return this;
     }
 
     nextWall(type) {
-        this.builtDrawbles.push(this.currentWall);
+        this.builtDrawbles.push(this.currentWall.assemble());
 
         this.currentWall = new Wall()
             .setType(type)

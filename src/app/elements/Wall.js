@@ -1,6 +1,7 @@
 import Rectangle from '../lib/Rectangle';
 import Collidable from '../Collidable';
 import Pixmap from '../Pixmap';
+import { inGridTiles } from '../utils';
 
 let colorKey = {
     0: '#000', //'#000',//'#000',
@@ -78,15 +79,15 @@ export default class Wall extends Collidable(Rectangle) {
         super();
 
         this.setType('top'); // (top|bottom|left|right)
+
+        this.width = inGridTiles(1);
+        this.height = inGridTiles(1);
+
+        this.graphic = false;
     }
 
     setType(type) {
         this.type = type;
-
-        const renderSize = this.getRenderSize();
-
-        this.width = renderSize.width;
-        this.height = renderSize.height;
 
         return this;
     }
@@ -99,14 +100,14 @@ export default class Wall extends Collidable(Rectangle) {
         switch (this.type) {
             case 'top':
                 this.x = point.x;
-                this.y = point.y - this.getRenderSize().height;
+                this.y = point.y - this.height;
                 break;
             case 'bottom':
                 this.x = point.x;
                 this.y = point.y;
                 break;
             case 'left':
-                this.x = point.x - this.getRenderSize().width;
+                this.x = point.x - this.width;
                 this.y = point.y;
                 break;
             case 'right':
@@ -136,27 +137,29 @@ export default class Wall extends Collidable(Rectangle) {
     }
 
     draw(ctx) {
-        switch (this.type) {
-            case 'top':
-            case 'bottom':
-                pixmaps[this.type]
-                    .toPatternedDrawable({ width: this.width }, 'repeat-x')
-                    .set({
-                        x: this.x,
-                        y: this.y,
-                    })
-                    .draw(ctx);
-                break;
-            case 'left':
-            case 'right':
-                pixmaps[this.type]
-                    .toPatternedDrawable({ height: this.height }, 'repeat-y')
-                    .set({
-                        x: this.x,
-                        y: this.y,
-                    })
-                    .draw(ctx);
-                break;
+        ctx.translate(this.x, this.y);
+        this.graphic.draw(ctx);
+    }
+
+    assemble() {
+        const pixmap = pixmaps[this.type];
+
+        if (this.type === 'top' || this.type === 'bottom') {
+            this.graphic = pixmap.toPatternedDrawable({ width: this.width }, 'repeat-x');
+        } else {
+            this.graphic = pixmap.toPatternedDrawable({ height: this.height }, 'repeat-y');
         }
+
+        // Align drawable to bottom
+        if (this.type === 'top') {
+            this.graphic.y += this.height - this.graphic.height;
+        }
+
+        // Align drawable to right
+        if (this.type === 'left') {
+            this.graphic.x += this.width - this.graphic.width;
+        }
+
+        return this;
     }
 }

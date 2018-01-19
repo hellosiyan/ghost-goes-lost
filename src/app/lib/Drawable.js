@@ -67,16 +67,27 @@ export default class Drawable extends SettableObject {
     }
 
     cache() {
-        let offscreenCanvas = new Canvas();
-        offscreenCanvas.setSize(this.width, this.height, false);
-
-        this.draw(offscreenCanvas.ctx);
+        const canvas = this.asCanvas();
 
         this.draw = function (ctx) {
-            ctx.drawImage(offscreenCanvas.node, this.x, this.y);
+            ctx.drawImage(canvas.node, this.x, this.y);
         };
 
         return this;
+    }
+
+    asCanvas() {
+        const canvas = new Canvas()
+            .setSize(this.width, this.height, false);
+
+        canvas.ctx.save();
+        canvas.ctx.translate(-1 * this.x, -1 * this.y);
+
+        this.draw(canvas.ctx);
+
+        canvas.ctx.restore();
+
+        return canvas;
     }
 
     positionAtAncestor(ancestor) {
