@@ -1,5 +1,3 @@
-import game from './Game';
-
 const cos45 = 1 / Math.sqrt(2);
 
 export default function Movable(baseClass) {
@@ -19,9 +17,9 @@ export default function Movable(baseClass) {
             this.speed = 0;
         }
 
-        move() {
+        move(deltaTime) {
             const movingDiagonally = (this.direction.x) && (this.direction.y);
-            const speed = this.speed * game.loop.dt * (movingDiagonally ? cos45 : 1);
+            const speed = this.speed * deltaTime * (movingDiagonally ? cos45 : 1);
 
             if (this.direction.x == 'left') {
                 this.x -= speed;

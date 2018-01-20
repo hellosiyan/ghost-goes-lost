@@ -51,6 +51,6 @@ export default class Player extends Movable(Container) {
             this.direction.y = '';
         }
 
-        super.move();
+        super.move(game.loop.dt);
     }
 }
