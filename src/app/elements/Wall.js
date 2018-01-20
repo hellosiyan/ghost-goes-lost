@@ -136,6 +136,26 @@ export default class Wall extends Collidable(Rectangle) {
         return this;
     }
 
+    getCollisionBox() {
+        const cornerSize = inGridTiles(1);
+        const collisionBox = {
+            left: this.x,
+            right: this.x + this.width,
+            top: this.y,
+            bottom: this.y + this.height,
+        }
+
+        if (this.type === 'top' || this.type === 'bottom') {
+            collisionBox.left -= cornerSize;
+            collisionBox.right += cornerSize;
+        } else {
+            collisionBox.top -= cornerSize;
+            collisionBox.bottom += cornerSize;
+        }
+
+        return collisionBox;
+    }
+
     draw(ctx) {
         ctx.translate(this.x, this.y);
         this.graphic.draw(ctx);

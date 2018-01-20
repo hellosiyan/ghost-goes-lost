@@ -17,11 +17,23 @@ export default class Drawable extends SettableObject {
 
     draw() {}
 
+    getCollisionBox() {
+        return {
+            left: this.x,
+            right: this.x + this.width,
+            top: this.y,
+            bottom: this.y + this.height,
+        }
+    }
+
     intersects (target) {
-        if (this.x < target.x + target.width &&
-            this.x + this.width > target.x &&
-            this.y < target.y + target.height &&
-            this.height + this.y > target.y
+        const box = this.getCollisionBox();
+        const targetBox = target.getCollisionBox();
+
+        if (box.left < targetBox.right &&
+            box.right > targetBox.left &&
+            box.top < targetBox.bottom &&
+            box.bottom > targetBox.top
         ) {
             return true;
         }
