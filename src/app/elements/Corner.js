@@ -1,5 +1,4 @@
 import Rectangle from '../lib/Rectangle';
-import Collidable from '../Collidable';
 import Pixmap from '../Pixmap';
 import { inGridTiles } from '../utils';
 
@@ -128,7 +127,7 @@ aa9999963
 333333333`, colorKey),
 };
 
-export default class Corner extends Collidable(Rectangle) {
+export default class Corner extends Rectangle {
     constructor() {
         super();
 

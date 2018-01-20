@@ -23,7 +23,7 @@ export default class Drawable extends SettableObject {
             right: this.x + this.width,
             top: this.y,
             bottom: this.y + this.height,
-        }
+        };
     }
 
     intersects (target) {
@@ -39,34 +39,6 @@ export default class Drawable extends SettableObject {
         }
 
         return false;
-    }
-
-    collisionResponseImpulse (target) {
-        let targetCenter = target.center;
-        let impulse = {
-            x: 0,
-            y: 0,
-        };
-
-        if (this.y >= targetCenter.y) {
-            impulse.y = target.y + target.height - this.y;
-        } else {
-            impulse.y = -1 * (this.y + this.height - target.y);
-        }
-
-        if (this.x >= targetCenter.x) {
-            impulse.x = target.x + target.width - this.x;
-        } else {
-            impulse.x = -1 * (this.x + this.width - target.x);
-        }
-
-        if (Math.abs(impulse.x) > Math.abs(impulse.y)) {
-            impulse.x = 0;
-        } else {
-            impulse.y = 0;
-        }
-
-        return impulse;
     }
 
     addTo (container) {

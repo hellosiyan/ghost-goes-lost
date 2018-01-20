@@ -93,7 +93,7 @@ export default class Level extends Listenable(SettableObject) {
     }
 
     detectCollisions() {
-        let aisles = this.store.drawable.children;
+        const aisles = this.store.drawable.children;
 
         aisles.forEach(aisle => {
             if (! aisle.collidable || ! this.player.intersects(aisle)) {
