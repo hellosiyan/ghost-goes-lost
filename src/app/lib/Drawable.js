@@ -1,6 +1,7 @@
 import SettableObject from './SettableObject';
 import Style from './Style';
 import Canvas from './Canvas';
+import DrawCacheFactory from './DrawCacheFactory';
 
 export default class Drawable extends SettableObject {
     constructor() {
@@ -51,11 +52,7 @@ export default class Drawable extends SettableObject {
     }
 
     cache() {
-        const canvas = this.asCanvas();
-
-        this.draw = function (ctx) {
-            ctx.drawImage(canvas.node, this.x, this.y);
-        };
+        DrawCacheFactory.cache(this);
 
         return this;
     }

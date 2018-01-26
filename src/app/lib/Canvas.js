@@ -48,6 +48,8 @@ export default class Canvas {
 
     appendTo(container) {
         container.appendChild(this.node);
+
+        return this;
     }
 
     setScene (scene) {
@@ -66,6 +68,14 @@ export default class Canvas {
 
     clear () {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
+        return this;
+    }
+
+    getImageDataArray() {
+        const imageData = this.ctx.getImageData(0, 0, this.width, this.height);
+
+        return imageData.data;
     }
 
     _createCanvas() {
