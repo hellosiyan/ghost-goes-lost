@@ -9,37 +9,46 @@ export default class Shelf extends Container {
         super();
 
         this.height = Math.round(inGridTiles(0.5));
+        this.spaceBetweenItems = inPixels(1);
+        this.spaceUsed = 0;
     }
 
     assemble() {
         const randomType = () => game.prngs.pcg.pick(Item.types()).name;
-        const items = [];
-        const spacing = inPixels(1);
-        let spaceUsed = spacing;
+        const createItem = () => Item.create(randomType()).set({
+            y: -1 * Math.round(this.height / 2),
+        });
 
-        while (spaceUsed < this.width) {
-            const item = Item.create(randomType())
-                .set({
-                    x: spaceUsed,
-                    y: -1 * Math.round(this.height / 2),
-                });
+        let item = createItem();
 
-            items.push(item);
-
-            spaceUsed += item.width + spacing;
+        while (this.hasSpaceFor(item)) {
+            this.addChild(item);
+            item = createItem();
         }
-
-        // If the items overflow, drop the last one
-        if (spaceUsed > this.width) {
-            spaceUsed -= items.pop().width + spacing;
-
-            const spaceLeft = this.width - spaceUsed;
-
-            items[items.length - 1].x += spaceLeft;
-        }
-
-        this.addChild(items);
 
         this.cache();
+
+        return this;
+    }
+
+    hasSpaceFor(child) {
+        return this.spaceUsed + child.width + this.spaceBetweenItems < this.width;
+    }
+
+    addChild(child) {
+        if (Array.isArray(child)) {
+            return super.addChild(child);
+        }
+
+        child.x = this.spaceUsed;
+        this.spaceUsed += child.width + this.spaceBetweenItems;
+
+        return super.addChild(child);
+    }
+
+    removeChild (child) {
+        this.spaceUsed -= child.width + this.spaceBetweenItems;
+
+        return super.removeChild(child);
     }
 }
