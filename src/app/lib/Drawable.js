@@ -2,6 +2,7 @@ import SettableObject from './SettableObject';
 import Style from './Style';
 import Canvas from './Canvas';
 import DrawCacheFactory from './DrawCacheFactory';
+import AlignOp from './ops/Align';
 
 export default class Drawable extends SettableObject {
     constructor() {
@@ -95,6 +96,10 @@ export default class Drawable extends SettableObject {
         const distanceX = thisCenter.x - targetCenter.x;
         const distanceY = thisCenter.y - targetCenter.y;
         return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+    }
+
+    alignWith(base) {
+        return new AlignOp(base, this);
     }
 
     get center() {

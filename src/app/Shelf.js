@@ -8,22 +8,17 @@ export default class Shelf extends Container {
     constructor() {
         super();
 
-        this.height = Math.round(inGridTiles(0.5));
+        this.height = Math.round(inGridTiles(0.4));
         this.spaceBetweenItems = inPixels(1);
         this.spaceUsed = 0;
     }
 
     assemble() {
-        const randomType = () => game.prngs.pcg.pick(Item.types()).name;
-        const createItem = () => Item.create(randomType()).set({
-            y: -1 * Math.round(this.height / 2),
-        });
-
-        let item = createItem();
+        let item = this._createItem();
 
         while (this.hasSpaceFor(item)) {
             this.addChild(item);
-            item = createItem();
+            item = this._createItem();
         }
 
         this.cache();
@@ -46,9 +41,20 @@ export default class Shelf extends Container {
         return super.addChild(child);
     }
 
-    removeChild (child) {
+    removeChild(child) {
         this.spaceUsed -= child.width + this.spaceBetweenItems;
 
         return super.removeChild(child);
+    }
+
+    _createItem() {
+        const type = game.prngs.pcg.pick(Item.types()).name;
+
+        const item = Item.create(type)
+            .alignWith(this.innerBox).bottomEdges();
+
+        item.y -= inPixels(3);
+
+        return item;
     }
 }

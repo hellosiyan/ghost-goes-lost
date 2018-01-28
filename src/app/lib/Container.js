@@ -49,4 +49,13 @@ export default class Container extends Rectangle {
 
         ctx.restore();
     }
+
+    get innerBox() {
+        return {
+            x: 0,
+            y: 0,
+            width: this.width,
+            height: this.height,
+        }
+    }
 }

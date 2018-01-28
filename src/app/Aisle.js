@@ -6,9 +6,9 @@ import { inPixels } from './utils';
 
 export default class Aisle extends Collidable(Container) {
     assemble() {
-        const shelfSpacing = inPixels(12);
+        const shelfSpacing = inPixels(8);
 
-        for (var chelfIndex = 0; chelfIndex < 3; chelfIndex++) {
+        for (var chelfIndex = 0; chelfIndex < 4; chelfIndex++) {
             const shelf = new Shelf();
 
             shelf.set({
