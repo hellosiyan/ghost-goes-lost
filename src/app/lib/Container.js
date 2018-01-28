@@ -1,6 +1,6 @@
-import Rectangle from './Rectangle';
+import Drawable from './Drawable';
 
-export default class Container extends Rectangle {
+export default class Container extends Drawable {
     constructor() {
         super();
 
@@ -30,10 +30,6 @@ export default class Container extends Rectangle {
     }
 
     draw (ctx) {
-        if (this.visible) {
-            super.draw(ctx);
-        }
-
         this.drawChildren(ctx);
     }
 

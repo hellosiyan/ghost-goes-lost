@@ -12,7 +12,6 @@ export default class Drawable extends SettableObject {
         this.y = 0;
         this.width = 1;
         this.height = 1;
-        this.visible = true;
         this.style = new Style();
         this.parent = null;
     }

@@ -6,8 +6,6 @@ export default class Mom extends Container {
     constructor() {
         super();
 
-        this.visible = false;
-
         this.ghost = new MotherGhost();
         this.addChild(this.ghost);
 

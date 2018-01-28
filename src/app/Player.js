@@ -8,8 +8,6 @@ export default class Player extends Movable(Container) {
     constructor() {
         super();
 
-        this.visible = false;
-
         this.ghost = new ChildGhost();
         this.addChild(this.ghost);
 

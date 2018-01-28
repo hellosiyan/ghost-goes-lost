@@ -23,9 +23,7 @@ export default class Level extends Listenable(SettableObject) {
         this.player = new Player();
         this.mom = new Mom();
 
-        this.drawable = new Container().set({
-            visible: false,
-        });
+        this.drawable = new Container();
 
         this.view = new AutoScrollView();
     }

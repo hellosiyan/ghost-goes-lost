@@ -2,10 +2,6 @@ import Container from './Container';
 
 export default class SortedContainer extends Container {
     draw (ctx) {
-        if (this.visible) {
-            super.draw(ctx);
-        }
-
         this.drawChildren(ctx);
     }
 

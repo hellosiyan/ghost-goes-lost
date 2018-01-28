@@ -4,8 +4,6 @@ export default class AutoScrollView extends Container {
     constructor() {
         super();
 
-        this.visible = false;
-
         this.target = null;
         this.boundries = {
             left: 0,

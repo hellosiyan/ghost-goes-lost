@@ -23,7 +23,6 @@ export default class Store {
         this.drawable = new SortedContainer().set({
             width: inGridTiles(this.width),
             height: inGridTiles(this.height),
-            visible: false,
         });
 
         this.sections = [];
