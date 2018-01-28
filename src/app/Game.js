@@ -80,7 +80,8 @@ class Game {
     }
 
     initPrngs() {
-        let seed = 822505;//Math.round(Math.random()*10000);
+        const seed = 822505;//Math.round(Math.random()*10000);
+
         this.prngs.pcg = new NumberSequence(seed);
     }
 }

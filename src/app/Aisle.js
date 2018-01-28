@@ -1,47 +1,30 @@
-import Drawable from './lib/Drawable';
-import Color from './lib/Color';
+import Container from './lib/Container';
 import Collidable from './Collidable';
+import Shelf from './Shelf';
 import { config } from './config';
+import { inPixels } from './utils';
 
-export default class Aisle extends Collidable(Drawable) {
-    constructor() {
-        super();
-
-        this.graphic = new Drawable();
-    }
-
-    draw (ctx) {
-        ctx.translate(this.x, this.y + this.height - this.graphic.height);
-
-        this.graphic.draw(ctx);
-
-        return this;
-    }
-
+export default class Aisle extends Collidable(Container) {
     assemble() {
-        const aisle = this;
+        const shelfSpacing = inPixels(12);
 
-        this.graphic.set({
-            x: 0,
-            y: 0,
-            width: this.width,
-            height: this.height + config.size.aisleHeight / 2,
-            draw: function (ctx) {
-                const color = Color.fromHex(config.palette.base2);
+        for (var chelfIndex = 0; chelfIndex < 3; chelfIndex++) {
+            const shelf = new Shelf();
 
-                // Front Section (Base)
-                ctx.fillStyle = color.toString();
-                ctx.fillRect(this.x, this.y + config.size.aisleHeight / 2, aisle.width, aisle.height);
+            shelf.set({
+                    x: 0,
+                    y: this.height - shelf.height - shelfSpacing * chelfIndex,
+                    width: this.width,
+                })
+                .setStyle({
+                    color: '#' + (chelfIndex * 2 + 1).toString().repeat(3),
+                })
+                .assemble();
 
-                // Top
-                ctx.fillStyle = color.copy().darken(0.2).toString();
-                ctx.fillRect(this.x, this.y, aisle.width, aisle.height - config.size.aisleHeight / 2);
+            this.addChild(shelf);
+        }
 
-                return this;
-            },
-        });
-
-        this.graphic.cache();
+        this.cache();
 
         return this;
     }

@@ -60,7 +60,7 @@ export default class Section extends SettableObject {
     divide () {
         if (this.area < 24) return false;
 
-        const [position, size] = this.w > this.h ? ['x', 'w'] : ['y', 'h'];
+        const [position, size] = this.w >= this.h ? ['x', 'w'] : ['y', 'h'];
         const cutRatio = (0.5 + (game.prngs.pcg.next() - 0.5) * 0.2);
         const cutSize = Math.round(this[size] * cutRatio);
         const cutExtraGap = 1; // Extra gap to the default 1 unit gap
