@@ -56,6 +56,11 @@ export default class Color extends SettableObject {
         return this;
     }
 
+    setAlpha(value) {
+        this.a = Math.min(1, Math.max(0, value));
+        return this;
+    }
+
     copy() {
         return new Color().set({
             h: this.h,
