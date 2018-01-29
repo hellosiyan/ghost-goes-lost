@@ -1,7 +1,7 @@
 import Container from './lib/Container';
 import Collidable from './Collidable';
 import Rectangle from './lib/Rectangle';
-import Shelf from './Shelf';
+import Shelf from './elements/Shelf';
 import { config } from './config';
 import { inPixels } from './utils';
 

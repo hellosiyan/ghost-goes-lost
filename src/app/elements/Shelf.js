@@ -1,9 +1,9 @@
-import Container from './lib/Container';
-import Color from './lib/Color';
-import Item from './elements/Item';
-import game from './Game';
-import { config } from './config';
-import { inPixels, inGridTiles } from './utils';
+import Container from '../lib/Container';
+import Color from '../lib/Color';
+import Item from './Item';
+import game from '../Game';
+import { config } from '../config';
+import { inPixels, inGridTiles } from '../utils';
 
 export default class Shelf extends Container {
 
