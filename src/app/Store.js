@@ -1,6 +1,6 @@
 import SortedContainer from './lib/SortedContainer';
 import TileGrid from './lib/TileGrid';
-import Aisle from './Aisle';
+import AisleBuilder from './AisleBuilder';
 import Section from './Section';
 import game from './Game';
 import { inGridTiles } from './utils';
@@ -52,7 +52,7 @@ export default class Store {
     createDrawables() {
         this.drawable.addChild(this.createFloor());
         this.drawable.addChild(this.createWalls());
-        this.drawable.addChild(this.createShelves());
+        this.drawable.addChild(this.createAisles());
     }
 
     createFloor() {
@@ -74,30 +74,27 @@ export default class Store {
         return WallBuilder.buildAround(this.floor);
     }
 
-    createShelves() {
-        const shelves = [];
+    createAisles() {
+        const aisles = [];
         const grid = this.tileGrid.copy();
         const skipTiles = [emptyTile, borderTile];
 
         grid.each((x, y, tile) => {
             if (skipTiles.includes(tile)) return;
 
-            let area = grid.continuousSelect(x, y);
+            const area = grid.continuousSelect(x, y);
 
             grid.fill(x, y, x + area.width, y + area.height, emptyTile);
 
-            shelves.push(new Aisle()
-                .set({
-                    x: inGridTiles(x),
-                    y: inGridTiles(y),
-                    width: inGridTiles(area.width),
-                    height: inGridTiles(area.height),
-                })
-                .assemble()
-            );
+            aisles.push(AisleBuilder.newAisle({
+                x: inGridTiles(x),
+                y: inGridTiles(y),
+                width: inGridTiles(area.width),
+                height: inGridTiles(area.height),
+            }));
         });
 
-        return shelves;
+        return aisles;
     }
 
     constructTileGrid() {

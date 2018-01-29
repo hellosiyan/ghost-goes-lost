@@ -1,9 +1,9 @@
-import Container from './lib/Container';
-import Collidable from './Collidable';
-import Rectangle from './lib/Rectangle';
-import Shelf from './elements/Shelf';
-import { config } from './config';
-import { inPixels } from './utils';
+import Container from '../lib/Container';
+import Collidable from '../Collidable';
+import Rectangle from '../lib/Rectangle';
+import Shelf from './Shelf';
+import { config } from '../config';
+import { inPixels } from '../utils';
 
 export default class Aisle extends Collidable(Container) {
     assemble() {
