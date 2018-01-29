@@ -18,4 +18,10 @@ export const config = {
         high2: '#DC657B',
         mid1: '#A86C7D',
     },
+    colors: {
+        aisle: {
+            shelf: '#6A628E',
+            edges: '#463E60',
+        }
+    }
 };
