@@ -136,11 +136,7 @@ export default class Corner extends Rectangle {
         this.width = inGridTiles(1);
         this.height = inGridTiles(1);
 
-        this.graphic = {
-            x: 0,
-            y: 0,
-            canvas: false,
-        };
+        this.graphic = false;
     }
 
     setType(type) {
@@ -177,26 +173,21 @@ export default class Corner extends Rectangle {
     }
 
     draw(ctx) {
-        ctx.drawImage(
-            this.graphic.canvas.node,
-            this.x + this.graphic.x,
-            this.y + this.graphic.y
-        );
+        ctx.translate(this.x, this.y);
+        this.graphic.draw(ctx);
     }
 
     assemble() {
-        const drawable = pixmaps[this.type].toDrawable();
-
-        this.graphic.canvas = drawable.asCanvas();
+        this.graphic = pixmaps[this.type].toDrawable().cache();
 
         // Align drawable to bottom
         if (this.type.toLowerCase().includes('top')) {
-            this.graphic.y += this.height - drawable.height;
+            this.graphic.alignWith(this).bottomEdges();
         }
 
         // Align drawable to right
         if (this.type.toLowerCase().includes('left')) {
-            this.graphic.x += this.width - drawable.width;
+            this.graphic.alignWith(this).rightEdges();
         }
 
         return this;

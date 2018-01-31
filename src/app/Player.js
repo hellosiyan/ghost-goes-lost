@@ -14,8 +14,10 @@ export default class Player extends Movable(Container) {
         this.width = this.ghost.width;
         this.height = inPixels(3);
 
+        this.ghost.alignWith(this.innerBox).bottomEdges();
+
         const ghostHoverHeight = inPixels(1);
-        this.ghost.y = this.height - this.ghost.height - ghostHoverHeight;
+        this.ghost.y -= ghostHoverHeight;
     }
 
     draw(ctx) {

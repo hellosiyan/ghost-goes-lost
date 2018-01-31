@@ -12,7 +12,9 @@ export default class Mom extends Container {
         this.width = this.ghost.width;
         this.height = inPixels(3);
 
+        this.ghost.alignWith(this.innerBox).bottomEdges();
+
         const ghostHoverHeight = inPixels(1);
-        this.ghost.y = this.height - this.ghost.height - ghostHoverHeight;
+        this.ghost.y -= ghostHoverHeight;
     }
 }

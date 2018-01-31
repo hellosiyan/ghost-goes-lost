@@ -143,7 +143,7 @@ export default class Wall extends Collidable(Rectangle) {
             right: this.x + this.width,
             top: this.y,
             bottom: this.y + this.height,
-        }
+        };
 
         if (this.type === 'top' || this.type === 'bottom') {
             collisionBox.left -= cornerSize;
@@ -172,12 +172,12 @@ export default class Wall extends Collidable(Rectangle) {
 
         // Align drawable to bottom
         if (this.type === 'top') {
-            this.graphic.y += this.height - this.graphic.height;
+            this.graphic.alignWith(this).bottomEdges();
         }
 
         // Align drawable to right
         if (this.type === 'left') {
-            this.graphic.x += this.width - this.graphic.width;
+            this.graphic.alignWith(this).rightEdges();
         }
 
         return this;
