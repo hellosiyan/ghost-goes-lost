@@ -37,6 +37,11 @@ export default class Section extends SettableObject {
         let padding = Math.round(game.prngs.pcg.next());
         let step = Math.round(game.prngs.pcg.next()) + 2;
 
+        // Disallow horizontal aisles with height > 1
+        if (! vertical && this.w > 2) {
+            step = 2;
+        }
+
         // Remove random padding for odd lengths
         if (vertical && ((this.w % 2) == 1)) {
             padding = 0;
