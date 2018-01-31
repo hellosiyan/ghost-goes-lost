@@ -73,6 +73,13 @@ export default class Canvas {
     }
 
     getImageDataArray() {
+        const maxCanvasArea = 50000000;
+        const canvasArea = this.width * this.height;
+
+        if (canvasArea > maxCanvasArea) {
+            throw `Cannot get imageData for canvas area bigger than ${maxCanvasArea}`;
+        }
+
         const imageData = this.ctx.getImageData(0, 0, this.width, this.height);
 
         return imageData.data;
