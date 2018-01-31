@@ -1,5 +1,5 @@
 import IO from './lib/IO';
-import Listenable from './Listenable';
+import Listenable from './lib/Listenable';
 import game from './Game';
 
 export default class TextOverlay extends Listenable() {

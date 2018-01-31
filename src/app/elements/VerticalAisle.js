@@ -1,5 +1,5 @@
 import Container from '../lib/Container';
-import Collidable from '../Collidable';
+import Collidable from '../lib/Collidable';
 import Rectangle from '../lib/Rectangle';
 import Color from '../lib/Color';
 import VerticalShelf from './VerticalShelf';

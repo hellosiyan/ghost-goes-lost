@@ -1,5 +1,5 @@
 import SettableObject from './lib/SettableObject';
-import Listenable from './Listenable';
+import Listenable from './lib/Listenable';
 import Container from './lib/Container';
 import AutoScrollView from './lib/AutoScrollView';
 import Player from './Player';

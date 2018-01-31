@@ -1,5 +1,5 @@
 import Rectangle from '../lib/Rectangle';
-import Collidable from '../Collidable';
+import Collidable from '../lib/Collidable';
 import Pixmap from '../Pixmap';
 import { inGridTiles } from '../utils';
 

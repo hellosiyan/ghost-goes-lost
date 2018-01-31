@@ -1,6 +1,6 @@
 import Container from './lib/Container';
+import Movable from './lib/Movable';
 import ChildGhost from './elements/ChildGhost';
-import Movable from './Movable';
 import game from './Game';
 import { inPixels } from './utils';
 
