@@ -2,7 +2,10 @@ import Canvas from './Canvas';
 import Drawable from './Drawable';
 
 const maxPadIterations = 20;
-const defaultPadSize = 6;
+const padRestictions = {
+    min: 1,
+    max: 50
+}
 
 export default class DrawCacheFactory {
     static cache(drawable) {
@@ -32,6 +35,15 @@ export default class DrawCacheFactory {
             right: 0,
         };
 
+        /**
+         * Making padSize a function of the drawable's longest dimension
+         * ensures that the canvas can grow enough within maxPadIterations
+         */
+        this.padSize = Math.round(Math.min(
+            padRestictions.max,
+            padRestictions.min + Math.max(this.drawable.width, this.drawable.height) / 10
+        ));
+
         this.discovered = {
             top: false,
             bottom: false,
@@ -54,10 +66,10 @@ export default class DrawCacheFactory {
         let padIteration = 0;
 
         this.pad({
-            top: defaultPadSize,
-            bottom: defaultPadSize,
-            left: defaultPadSize,
-            right: defaultPadSize,
+            top: this.padSize,
+            bottom: this.padSize,
+            left: this.padSize,
+            right: this.padSize,
         });
 
         do {
@@ -93,7 +105,7 @@ export default class DrawCacheFactory {
                 this.discovered[direction] = true;
             } else {
                 // no empty area - expand in that direction
-                padBy[direction] = defaultPadSize;
+                padBy[direction] = this.padSize;
             }
         });
 
