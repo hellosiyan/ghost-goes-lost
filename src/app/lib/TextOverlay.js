@@ -1,5 +1,5 @@
-import io from './lib/IO';
-import Listenable from './lib/Listenable';
+import Listenable from './Listenable';
+import io from './IO';
 
 export default class TextOverlay extends Listenable() {
     constructor() {

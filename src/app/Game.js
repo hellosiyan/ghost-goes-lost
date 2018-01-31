@@ -6,9 +6,9 @@ import IO from './lib/IO';
 import Canvas from './lib/Canvas';
 import Container from './lib/Container';
 import Color from './lib/Color';
+import TextOverlay from './lib/TextOverlay';
 
 import Level from './Level';
-import TextOverlay from './TextOverlay';
 
 class Game {
     constructor() {
