@@ -25,7 +25,6 @@ class Game {
         this.initCanvas();
         this.initPrngs();
         this.initLoop();
-        this.initIO();
     }
 
     start() {
@@ -67,10 +66,6 @@ class Game {
 
         this.canvas.setScene(this.scene);
         this.canvas.appendTo(document.body);
-    }
-
-    initIO() {
-        this.io = new IO();
     }
 
     initLoop() {

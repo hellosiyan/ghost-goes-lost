@@ -78,8 +78,10 @@ class IO {
     }
 }
 
-IO.SPACE = 32;
-IO.ESC = 27;
-IO.ENTER = 13;
+const io = new IO();
 
-export default IO;
+io.KEY_SPACE = 32;
+io.KEY_ESC = 27;
+io.KEY_ENTER = 13;
+
+export default io;

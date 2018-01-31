@@ -1,7 +1,7 @@
 import Container from './lib/Container';
 import Movable from './lib/Movable';
 import ChildGhost from './elements/ChildGhost';
-import game from './Game';
+import io from './lib/IO';
 import { config } from './config';
 import { inPixels } from './utils';
 
@@ -28,7 +28,7 @@ export default class Player extends Movable(Container) {
     }
 
     move(dt) {
-        if (! (game.io.left || game.io.right || game.io.up || game.io.down)) {
+        if (! (io.left || io.right || io.up || io.down)) {
             this.speed *= Math.pow(0.6, (dt * 60));
             this.speed = this.speed < 0.1 ? 0 : this.speed;
         } else {
@@ -36,19 +36,19 @@ export default class Player extends Movable(Container) {
             this.speed = Math.min(this.speed, config.speed.max);
         }
 
-        if (game.io.left) {
+        if (io.left) {
             this.direction.x = 'left';
-        } else if (game.io.right) {
+        } else if (io.right) {
             this.direction.x = 'right';
-        } else if (game.io.up || game.io.down) {
+        } else if (io.up || io.down) {
             this.direction.x = '';
         }
 
-        if (game.io.up) {
+        if (io.up) {
             this.direction.y = 'up';
-        } else if (game.io.down) {
+        } else if (io.down) {
             this.direction.y = 'down';
-        } else if (game.io.left || game.io.right) {
+        } else if (io.left || io.right) {
             this.direction.y = '';
         }
 

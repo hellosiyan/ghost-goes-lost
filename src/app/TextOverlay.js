@@ -1,6 +1,5 @@
-import IO from './lib/IO';
+import io from './lib/IO';
 import Listenable from './lib/Listenable';
-import game from './Game';
 
 export default class TextOverlay extends Listenable() {
     constructor() {
@@ -10,7 +9,7 @@ export default class TextOverlay extends Listenable() {
         this.node.classList.add('text-overlay');
         this.node.innerHTML = '{{placeholder}}';
 
-        this.nextKeys = [IO.SPACE, IO.ESC, IO.ENTER];
+        this.nextKeys = [io.KEY_SPACE, io.KEY_ESC, io.KEY_ENTER];
     }
 
     setText(text) {
@@ -44,11 +43,11 @@ export default class TextOverlay extends Listenable() {
 
     _bindHideEvents() {
         let onHide = () => {
-            game.io.off(this.nextKeys, onHide);
+            io.off(this.nextKeys, onHide);
             this.hide();
         };
 
-        game.io.on(this.nextKeys, onHide);
+        io.on(this.nextKeys, onHide);
 
         this.node.querySelector('button')
             .addEventListener('click', onHide);
