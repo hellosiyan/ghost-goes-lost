@@ -49,7 +49,7 @@ export default class Level extends Listenable(SettableObject) {
     }
 
     loopHandler(dt) {
-        this.player.move();
+        this.player.move(dt);
 
         this.detectCollisions();
 

@@ -12,7 +12,6 @@ import TextOverlay from './TextOverlay';
 
 class Game {
     constructor() {
-        this.config = config;
         this.prngs = {};
         this.canvas = null;
         this.scene = null;
@@ -62,7 +61,7 @@ class Game {
             height: this.canvas.height,
         });
 
-        let bgColor = Color.fromHex(this.config.palette.base1).darken(0.7).toString();
+        let bgColor = Color.fromHex(config.palette.base1).darken(0.7).toString();
         this.canvas.node.style.backgroundColor = bgColor;
         document.body.style.backgroundColor = bgColor;
 
