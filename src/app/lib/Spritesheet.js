@@ -1,6 +1,6 @@
-import SettableObject from './SettableObject';
+import Settable from './Settable';
 
-export default class Spritesheet extends SettableObject {
+export default class Spritesheet extends Settable() {
     constructor() {
         super();
 

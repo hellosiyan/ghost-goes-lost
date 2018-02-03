@@ -1,10 +1,10 @@
-import SettableObject from './SettableObject';
+import Settable from './Settable';
 import Style from './Style';
 import Canvas from './Canvas';
 import DrawCacheFactory from './DrawCacheFactory';
 import AlignOp from './ops/Align';
 
-export default class Drawable extends SettableObject {
+export default class Drawable extends Settable() {
     constructor() {
         super();
 

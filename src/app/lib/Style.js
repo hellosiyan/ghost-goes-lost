@@ -1,6 +1,6 @@
-import SettableObject from './SettableObject';
+import Settable from './Settable';
 
-export default class Style extends SettableObject {
+export default class Style extends Settable() {
     constructor () {
         super();
 

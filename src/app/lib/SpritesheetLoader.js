@@ -1,4 +1,3 @@
-import SettableObject from './SettableObject';
 import Spritesheet from './Spritesheet';
 
 const SpritesheetLoader = {

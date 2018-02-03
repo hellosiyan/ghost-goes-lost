@@ -1,8 +1,8 @@
-import SettableObject from './lib/SettableObject';
+import Settable from './lib/Settable';
 import TileGrid from './lib/TileGrid';
 import game from './Game';
 
-export default class Section extends SettableObject {
+export default class Section extends Settable() {
     constructor() {
         super();
 

@@ -1,4 +1,4 @@
-import SettableObject from './lib/SettableObject';
+import Settable from './lib/Settable';
 import Listenable from './lib/Listenable';
 import Container from './lib/Container';
 import AutoScrollView from './lib/AutoScrollView';
@@ -9,7 +9,7 @@ import game from './Game';
 import story from './Story';
 import { inGridTiles } from './utils';
 
-export default class Level extends Listenable(SettableObject) {
+export default class Level extends Listenable(Settable()) {
     constructor(number) {
         super();
 

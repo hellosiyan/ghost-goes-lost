@@ -1,8 +1,8 @@
-import SettableObject from './SettableObject';
+import Settable from './Settable';
 import Drawable from './Drawable';
 import Canvas from './Canvas';
 
-export default class Pixmap extends SettableObject {
+export default class Pixmap extends Settable() {
 
     constructor() {
         super();
