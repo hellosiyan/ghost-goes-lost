@@ -83,10 +83,10 @@ export default class Level extends Listenable(Settable()) {
         });
 
         Object.assign(this.view.boundries, {
-            left: Math.round(this.view.width * 0.35),
-            right: Math.round(this.view.width * 0.65),
-            top: Math.round(this.view.height * 0.35),
-            bottom: Math.round(this.view.height * 0.65),
+            left: Math.round(this.view.width * 0.2),
+            right: Math.round(this.view.width * 0.8),
+            top: Math.round(this.view.height * 0.5),
+            bottom: Math.round(this.view.height * 0.8),
         });
     }
 

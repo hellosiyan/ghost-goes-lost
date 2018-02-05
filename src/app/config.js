@@ -8,7 +8,7 @@ export const config = {
     },
     speed: {
         initial: 7 * pixelSize,
-        max: 200 * pixelSize,
+        max: 100 * pixelSize,
         acceleration: 550 * pixelSize,
     },
     palette: {

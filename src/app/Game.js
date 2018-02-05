@@ -53,7 +53,7 @@ class Game {
 
     initCanvas() {
         this.canvas = new Canvas();
-        this.canvas.setSize(1000, 1000);
+        this.canvas.setSize(400, 300);
 
         this.scene = new Container().set({
             width: this.canvas.width,
