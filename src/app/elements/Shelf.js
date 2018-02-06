@@ -43,7 +43,14 @@ export default class Shelf extends Container {
 
             while (this.hasSpaceFor(item)) {
                 this.addChild(item);
-                item = this._createItem();
+
+                let newItem = this._createItem();
+
+                if (newItem.type !== item.type) {
+                    this.addSpace();
+                }
+
+                item = newItem;
             }
         }
 
@@ -54,6 +61,10 @@ export default class Shelf extends Container {
 
     hasSpaceFor(child) {
         return this.spaceUsed + child.width + this.spaceBetweenItems < this.width;
+    }
+
+    addSpace() {
+        this.spaceUsed += inPixels(4);
     }
 
     addChild(child) {
@@ -79,6 +90,7 @@ export default class Shelf extends Container {
         const item = Item.create(type)
             .alignWith(this.innerBox).bottomEdges();
 
+        // Items look better when placed a few pixels away from the bottom edge
         item.y -= inPixels(3);
 
         return item;

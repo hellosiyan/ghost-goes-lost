@@ -103,6 +103,6 @@ export default class Item {
     }
 
     static create(type) {
-        return pixmaps[type].toDrawable();
+        return pixmaps[type].toDrawable().set({type});
     }
 }
