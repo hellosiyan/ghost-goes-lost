@@ -8,6 +8,7 @@ const archiver = require('archiver');
 const cleanCSS = require('gulp-clean-css');
 const  inlinesource = require('gulp-inline-source');
 const rename = require('gulp-rename');
+const notifier = require('node-notifier');
 
 gulp.task('build', () => {
     return do_rollup('./src/index.js', './dist/library.js')
@@ -23,11 +24,15 @@ gulp.task('default', () => {
 });
 
 gulp.task('build_source', () => {
-    return do_rollup('./src/index.js', './dist/library.js');
+    return do_rollup('./src/index.js', './dist/library.cjs.js')
+        .then(() => do_inline_source('./src/index.template.html', './dist'))
+        .then(() => notifier.notify('JS compiled.'));
 });
 
 gulp.task('build_styles', () => {
-    return do_clean_css('./src/styles/main.css', 'dist');
+    return do_clean_css('./src/styles/main.css', 'dist')
+        .then(() => do_inline_source('./src/index.template.html', './dist'))
+        .then(() => notifier.notify('CSS compiled.'));
 });
 
 gulp.task('watch', function() {
