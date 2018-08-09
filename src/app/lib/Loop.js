@@ -1,4 +1,6 @@
-let stats = require('stats.js')(0);
+import statsJs from 'stats.js';
+
+const stats = statsJs(0);
 
 export default class Loop {
 
